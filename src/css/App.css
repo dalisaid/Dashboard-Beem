@@ -1,0 +1,16 @@
+/********** authentification : sign in page *********/
+.bg {
+  background-color: #441879;
+}
+
+.logo {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  color: #F64C02;
+  font-weight: bold;
+}
+.logo img {
+  height: 60px;
+}
+/***********************************************/
