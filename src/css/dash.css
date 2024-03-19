@@ -1,0 +1,82 @@
+.dashboard-container {
+    width: 240px;
+    height: 960px;
+    position: relative;
+}
+
+.background {
+    width: 100%; /* Adjusted */
+    height: 100%; /* Adjusted */
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: #441879;
+}
+
+.accounts-container {
+    width: 200px;
+    height: 291px;
+    position: absolute;
+    left: 20px;
+    top: 104px;
+}
+
+.dashboard-box {
+    width: 102px;
+    height: 18px;
+    position: absolute;
+    left: 20px;
+    top: 35px;
+}
+
+.dashboard-text {
+    position: absolute;
+    left: 30px;
+    top: 3px;
+    color: white;
+    font-size: 12px;
+    font-family: Poppins;
+    font-weight: 500;
+    line-height: 12px;
+    letter-spacing: 0.50px;
+}
+
+.dashboard-icon {
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    left: 1.5px;
+    top: 1.5px;
+}
+
+.menu-text {
+    position: absolute;
+    left: 20px;
+    top: 0px;
+    opacity: 0.50;
+    color: white;
+    font-size: 11px;
+    font-family: Poppins;
+    font-weight: 400;
+    line-height: 11px;
+    letter-spacing: 1px;
+}
+.submenu {
+    position: absolute;
+    top: 100%; /* Position submenu below the dashboard box */
+    left: 0;
+    width: 200px; /* Adjust width as needed */
+    background-color: #ffffff; /* Background color of the submenu */
+    border: 1px solid #ccc; /* Optional border for the submenu */
+    border-radius: 5px; /* Optional border radius */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional box shadow */
+}
+
+.submenu-item {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.submenu-item:hover {
+    background-color: #f0f0f0; /* Change background color on hover */
+}
