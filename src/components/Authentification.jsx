@@ -3,6 +3,19 @@ import { Link } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 
 export const SignIn = () => {
+  const getData = async (url) => {
+    const newData = await fetch(url, {
+    method: 'GET',
+    headers: {
+    'content-type': 'application/json',
+    'Accept': 'application/json'
+    }
+    })
+    .then(res => res.json());
+    console.log(newData);
+    }
+
+getData('http://localhost:5000/api');
   
   return (
     <div className='login template d-flex justify-content-center align-items-center vh-100 bg'>
