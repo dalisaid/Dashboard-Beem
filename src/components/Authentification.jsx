@@ -2,28 +2,55 @@ import React , { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import { useNavigate} from 'react-router-dom';
+import { useMutation  } from 'react-query';
+
+const authenticateUser = async ({ email, password }) => {
+  
+  
+  
+    const response = await fetch('http://localhost:5000/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    });
+    
+    if (response.ok) {
+      // Handle successful signin
+      return response.json();
+      
+      
+    } else {
+      // Handle failed signin
+      
+      throw new Error(' user data fetching data'); // Throw an error if failed to fetch data
+      
+    }
+   
+};
+
+
+
 
 export const SignIn = () => {
 
  
-/*************************************** 
-  const getData = async (url) => {
-    const newData = await fetch(url, {
-    method: 'GET',
+/*************************************** work in progress
+  const postData = async (url, requestData) => {
+  const newData = await fetch('http://localhost:5000'+url, {
+    method: 'POST', // Changed method to POST
     headers: {
-    'content-type': 'application/json',
-    'Accept': 'application/json'
-    }
-    })
-    .then(res => res.json());
-    console.log(newData);
-    }
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify(requestData) // Stringify the request data
+  }).then(res => res.json());
+  
+  return newData;
+}
 
-
-
-
-
-getData('http://localhost:5000/api');
+const url = '/login';
   /**************************************** */
 
 
@@ -31,37 +58,29 @@ getData('http://localhost:5000/api');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  
 
 
+  const { mutate, isLoading } = useMutation(authenticateUser, {
+    onSuccess: (data) => {
+      // Handle successful login (e.g., redirect to dashboard)
+      console.log('Login successful',data);
+      navigate('/dashboard');
+    },
+    onError: (error) => {
+      // Handle login error
+      
+      console.error('Login failed:', error.message);
+      alert('invalide email and password');
+    },
+  });
+ 
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    try {
-      const response = await fetch('http://localhost:5000/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-      
-      if (response.ok) {
-        // Handle successful sign-in, e.g., redirect to dashboard
-        console.log('User signed in successfully');
-        navigate('/dashboard');
-        // Redirect to dashboard page
-      } else {
-        // Handle failed sign-in
-        console.error('Sign-in failed');
-        alert('Invalid email or password');
-      }
-    } catch (error) {
-      console.error('Error signing in:', error);
-      alert('An error occurred while signing in');
-    }
+    // Call the authenticateUser function
+    mutate({ email, password });
   };
- 
-
 
   return (
     <div className='login template d-flex justify-content-center align-items-center vh-100 bg'>

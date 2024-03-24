@@ -1,7 +1,7 @@
 const config =require('./dbconfig'),
       sql =  require('mssql');
 
-
+/*****************************************************************************self explanatory check the query */
       const getUser= async() => {
         try {
         let pool= await sql.connect(config);
@@ -17,35 +17,36 @@ const config =require('./dbconfig'),
 
 /********************************************sends sql query to database and check if user exists  */
 
-        const checkUser = async (email, password) => {
-            try {
-                // Connect to the SQL Server
-                const pool = await sql.connect(config);
-        
-                // Execute a parameterized query to check if the user exists
-             
-                const result = await pool.request()
-                .input('email', sql.VarChar, email)
-                .input('password', sql.VarChar, password)
-                .query(`
-                  SELECT COUNT(*) AS UserCount 
-                  FROM dashboarduser 
-                  WHERE email = @email AND pass = @password
-                `);
-                // Check if the user exists
-                const userExists = result.recordset[0].UserCount > 0;
-        
-                // Return response based on user existence
-                if (userExists) {
-                    return { status: 200, message: 'User authenticated successfully' };
-                } else {
-                    return { status: 401, message: 'Invalid email or password' };
-                }
-            } catch (error) {
-                console.error('Error signing in:', error);
-                return { status: 500, message: 'An error occurred while signing in' };
-            }
-        };
+const checkUser = async (email, password) => {
+    try {
+        // Connect to the SQL Server
+        const pool = await sql.connect(config);
+
+        // Execute a parameterized query to retrieve user data
+        const result = await pool.request()
+            .input('email', sql.VarChar, email)
+            .input('password', sql.VarChar, password)
+            .query(`
+                SELECT *
+                FROM dashboarduser 
+                WHERE email = @email AND pass = @password
+            `);
+
+        // Check if the user exists
+        if (result.recordset.length > 0) {
+            const userData = result.recordset[0];
+            console.log('User authenticated successfully');
+            console.log(JSON.stringify(userData));
+            return { status: 200, data: userData };
+        } else {
+            console.log('Invalid email or password');
+            return { status: 401 };
+        }
+    } catch (error) {
+        console.error('Error signing in:', error);
+        return { status: 500, message: 'An error occurred while signing in' };
+    }
+};
 /**************************************** */
 
         module.exports ={

@@ -12,7 +12,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 
-/*******************************************simple function for data acquisition */
+/*******************************************simple function for data acquisition useless as of now */
 app.get('/api', function(req, res) {
     console.log('here is your data !');
 
@@ -28,11 +28,11 @@ app.get('/api', function(req, res) {
     });
 });
 
-/********************************** checks with the database if a user exists*/
+/********************************** checks with the database if a user exists and sends his data back */
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
     const result = await dboperations.checkUser(email, password);
-    res.status(result.status).json({ message: result.message });
+    res.status(result.status).json({ data: result.data });
 });
 
 /********************************** */
