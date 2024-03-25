@@ -4,7 +4,8 @@ import { Table, Form, FormControl } from 'react-bootstrap';
 export const ClientTable = () => {
   return (
     <div>
-        <h2>All Client</h2>
+      
+        <h2>All Clients</h2>
         <div style={{ display: "flex", justifyContent: "right", marginRight:"10%" }}>
         {/* Placeholder for search bar */}
         <Form className="mt-3">
@@ -44,6 +45,9 @@ export const ClientTable = () => {
             <td>New York</td>
             <td>Male</td>
             <td>Software Engineer</td>
+            <td><button>Update</button></td>
+            <td><button>Delete</button></td>
+
           </tr>
           <tr >
             <td>2</td>
@@ -52,54 +56,68 @@ export const ClientTable = () => {
             <td>Los Angeles</td>
             <td>Female</td>
             <td>Doctor</td>
+            <td><button>Update</button></td>
+            <td><button>Delete</button></td>
           </tr>
           <tr >
-            <td>2</td>
+            <td>3</td>
             <td>Jane Smith</td>
             <td>28</td>
             <td>Los Angeles</td>
             <td>Female</td>
             <td>Doctor</td>
+            <td><button>Update</button></td>
+            <td><button>Delete</button></td>
           </tr>
           <tr >
-            <td>2</td>
+            <td>4</td>
             <td>Jane Smith</td>
             <td>28</td>
             <td>Los Angeles</td>
             <td>Female</td>
             <td>Doctor</td>
+            <td><button>Update</button></td>
+            <td><button>Delete</button></td>
           </tr>
           <tr >
-            <td>2</td>
+            <td>5</td>
+            <td>Jane Smith</td>
+            <td>28</td>
+            <td>Los Angeles</td>
+            <td>Female</td>
+            <td>Developper</td>
+            <td><button>Update</button></td>
+            <td><button>Delete</button></td>
+          </tr>
+          <tr >
+            <td>6</td>
             <td>Jane Smith</td>
             <td>28</td>
             <td>Los Angeles</td>
             <td>Female</td>
             <td>Doctor</td>
+            <td><button>Update</button></td>
+            <td><button>Delete</button></td>
           </tr>
           <tr >
-            <td>2</td>
+            <td>7</td>
+            <td>Jane Smith</td>
+            <td>28</td>
+            <td>Los Angeles</td>
+            <td>Female</td>
+            <td>Developper</td>
+            <td><button>Update</button></td>
+            <td><button>Delete</button></td>
+          </tr>
+          <tr >
+            <td>8</td>
             <td>Jane Smith</td>
             <td>28</td>
             <td>Los Angeles</td>
             <td>Female</td>
             <td>Doctor</td>
-          </tr>
-          <tr >
-            <td>2</td>
-            <td>Jane Smith</td>
-            <td>28</td>
-            <td>Los Angeles</td>
-            <td>Female</td>
-            <td>Doctor</td>
-          </tr>
-          <tr >
-            <td>2</td>
-            <td>Jane Smith</td>
-            <td>28</td>
-            <td>Los Angeles</td>
-            <td>Female</td>
-            <td>Doctor</td>
+            <td><button>Update</button></td>
+            <td><button>Delete</button></td>
           </tr>
           
           {/* Add more data as needed */}
