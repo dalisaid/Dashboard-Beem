@@ -1,22 +1,63 @@
 import React from 'react';
-import { Container, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import '../css/sidebar.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { 
+    faChartBar, 
+    faUser, 
+    faCar, 
+    faMoneyCheckAlt, 
+    faCog, 
+    faUserCircle ,
+    faUserFriends
+} from '@fortawesome/free-solid-svg-icons'; 
 
 export const Sidebar = () => {
-  return (
-    <div style={{ backgroundColor: '#8a2be2', width: '15%', minHeight: '100vh', padding: '20px' }}>
-      <h3 style={{ color: 'white', marginBottom: '20px' ,color:"orange" }}>Beem Dashboard</h3>
-      {/* Add other sidebar content here */}
-      <p style={{color: 'rgba(255, 255, 255, 0.5)' ,fontSize:" 17px", marginLeft:"50px"}}>MENU</p>
-      <ul  style={{ listStyleType: 'none', padding: 0, textAlign:"center" }}>
-        <li style={{ marginBottom: '10px' }}>
-          <a href="#" style={{ color: 'rgba(255, 255, 255, 0.5)', textDecoration: 'none' }}>Link 1</a>
-        </li>
-        <li style={{ marginBottom: '10px' }}>
-          <a href="#" style={{ color: 'rgba(255, 255, 255, 0.5)', textDecoration: 'none' }}>Link 2</a>
-        </li>
-        {/* Add more links as needed */}
-      </ul>
-    </div>
-  );
-};
-
+    return (
+        <div className="sidebar-container">
+            <div className="sidebar-content">
+                <div className="logo">
+                    <img src="/img/logo.jpg" alt="Logo" />
+                    <span className="bold-text">Beem Tunisie</span>
+                </div>
+                <div className="menu-text">MENU</div>
+                <div className="dashboard-box">
+                    <a href="#" className="dashboard-link">
+                        <span className="icon">
+                            <FontAwesomeIcon icon={faChartBar} />
+                        </span> Dashboard
+                    </a>
+                    <a href="#" className="dashboard-link">
+                        <span className="icon">
+                            <FontAwesomeIcon icon={faUser} />
+                        </span> Drivers
+                    </a>
+                    <a href="#" className="dashboard-link">
+                        <span className="icon">
+                            <FontAwesomeIcon icon={faUserFriends} />
+                        </span> Customers
+                    </a>
+                    <a href="#" className="dashboard-link">
+                        <span className="icon">
+                            <FontAwesomeIcon icon={faCar} />
+                        </span> Rides
+                    </a>
+                    <a href="#" className="dashboard-link">
+                        <span className="icon">
+                            <FontAwesomeIcon icon={faMoneyCheckAlt} />
+                        </span> Transaction
+                    </a>
+                    <a href="#" className="dashboard-link">
+                        <span className="icon">
+                            <FontAwesomeIcon icon={faCog} />
+                        </span> Settings
+                    </a>
+                    <a href="#" className="dashboard-link">
+                        <span className="icon">
+                            <FontAwesomeIcon icon={faUserCircle} />
+                        </span> Accounts
+                    </a>
+                </div>
+            </div>
+        </div>
+    );
+}
