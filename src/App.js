@@ -1,15 +1,23 @@
-import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-import {Authentification} from "./components/Authentification";
+import React, { useState } from 'react';
+import './App.css';
 import { DriversTable } from './components/Drivers';
+import { Modal } from './components/modal'; 
 const App = () => {
+  const [modalOpen, setModalOpen] = useState(false);
+
   return (
     <div className='App'>
-   <DriversTable></DriversTable>
+      <DriversTable openModal={() => setModalOpen(true)} />
+      <button onClick={() => setModalOpen(true)} className="btn">
+        Add Driver
+      </button>
+      {modalOpen && <Modal
+        closeModal={() => {
+          setModalOpen(false);
+        }}
+      />}
     </div>
   );
 };
 
 export default App;
-
