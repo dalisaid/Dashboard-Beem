@@ -34,10 +34,10 @@ const checkUser = async (email, password) => {
 
         // Check if the user exists
         if (result.recordset.length > 0) {
-            const userData = result.recordset[0];
+            
             console.log('User authenticated successfully');
-            console.log(JSON.stringify(userData));
-            return { status: 200, data: userData };
+            
+            return { status: 200  };
         } else {
             console.log('Invalid email or password');
             return { status: 401 };

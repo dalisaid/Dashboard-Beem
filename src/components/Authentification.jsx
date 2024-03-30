@@ -2,33 +2,32 @@ import React , { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import { useNavigate} from 'react-router-dom';
-import { useMutation  } from 'react-query';
+import axios from 'axios';
 
-const authenticateUser = async ({ email, password }) => {
+const authenticateUser = async ({ email, password,navigate }) => {
   
   
   
-    const response = await fetch('http://localhost:5000/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
+  try {
+    const response = await axios.post('http://localhost:5000/login', {
+      email,
+      password
     });
-    
-    if (response.ok) {
+
+    if (response.status === 200) {
       // Handle successful signin
-      return response.json();
-      
-      
+      console.log('Login successful');
+      navigate('/dashboard');
     } else {
       // Handle failed signin
-      
-      throw new Error(' user data fetching data'); // Throw an error if failed to fetch data
-      
+      console.error('Failed to login:', response.status, response.statusText);
+      alert('Invalid email and password');
     }
-   
-};
+  } catch (error) {
+    console.error('Error while logging in:', error);
+    alert('Error while logging in');
+  }
+}
 
 
 
@@ -44,7 +43,7 @@ export const SignIn = () => {
       'Content-Type': 'application/json',
       'Accept': 'application/json'
     },
-    body: JSON.stringify(requestData) // Stringify the request data
+    body: JSON.stringify({requestData}) // Stringify an object containing email and password
   }).then(res => res.json());
   
   return newData;
@@ -61,25 +60,13 @@ const url = '/login';
   
 
 
-  const { mutate, isLoading } = useMutation(authenticateUser, {
-    onSuccess: (data) => {
-      // Handle successful login (e.g., redirect to dashboard)
-      console.log('Login successful',data);
-      navigate('/dashboard');
-    },
-    onError: (error) => {
-      // Handle login error
-      
-      console.error('Login failed:', error.message);
-      alert('invalide email and password');
-    },
-  });
+  
  
  
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Call the authenticateUser function
-    mutate({ email, password });
+    authenticateUser({ email, password,navigate });
   };
 
   return (
