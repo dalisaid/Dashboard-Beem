@@ -7,7 +7,7 @@ import { Modal } from './components/modal';
 import { Sidebar } from './components/Sidebar';
 
 const App = () => {
-  const [modalOpen, setModalOpen] = useState(false);
+  
 
   return (
     <div className='App'>
