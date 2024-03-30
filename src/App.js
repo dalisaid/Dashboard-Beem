@@ -1,11 +1,10 @@
 import React from 'react';
-
-import {Authentification} from "./components/Authentification";
+import { Sidebar } from './components/Sidebar';
 
 const App = () => {
   return (
     <div className='App'>
-   <Authentification></Authentification>
+   <Sidebar/>
     </div>
   );
 };
