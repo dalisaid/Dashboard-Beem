@@ -46,6 +46,7 @@
   }
 }
 
+
 /*******************Modal*************************************************************************/
 .modal-container {
   position: fixed;
@@ -199,4 +200,11 @@
   outline: none; /* Remove outline on focus */
   border-color: #007bff; /* Change border color on focus */
 }
+
+
+
+/************************************************/
+
+
+
 
