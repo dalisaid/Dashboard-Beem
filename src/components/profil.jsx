@@ -8,8 +8,6 @@ import {
   MDBCardBody,
   MDBCardImage,
   MDBBtn,
-  MDBBreadcrumb,
-  MDBBreadcrumbItem,
   MDBProgress,
   MDBProgressBar,
   MDBIcon,
@@ -21,8 +19,8 @@ import {BsFillPencilFill } from "react-icons/bs";
 
 export const ProfilDetails = ({openModal}) => {
     return (
-        <div style={{ marginTop: '150px' }}>
-    <section style={{ backgroundColor: '#eee' }}>
+        <div style={{ marginTop: '150px' , marginLeft:'240px',}}>
+    <section>
       <MDBContainer className="py-5">
         <MDBRow>
           <MDBCol lg="4">
