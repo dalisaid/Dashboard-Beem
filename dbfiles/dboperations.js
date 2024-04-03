@@ -49,6 +49,18 @@ const checkUser = async (email, password) => {
 };
 /**************************************** */
 
+const getDrivers = async () => {
+    try {
+        let pool = await sql.connect(config);
+        let Drivers = await pool.request().query("SELECT * from Drivers");
+        const result = Drivers.recordset;
+        
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+}
+/***************************************** */
         module.exports ={
-            getUser,checkUser
+            getUser,checkUser,getDrivers
         }

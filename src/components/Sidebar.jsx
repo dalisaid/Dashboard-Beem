@@ -11,6 +11,23 @@ import { Link } from 'react-router-dom';
 
 
 export const Sidebar = () => {
+const linkstyle ={ 
+
+display: 'flex',
+alignItems: 'center',
+padding: '10px 10px 10px 53px',
+marginBottom: '5px',
+color: 'white',
+textDecoration: 'none',
+borderRadius: '5px',
+marginRight: '10px',
+marginLeft: '10px',
+position: 'relative',
+transition: 'background 0.3s ease',
+
+
+}
+
     return (
         <div style={{ display: 'flex' }}> {/* Add this div with display: 'flex' to align components */}
               <div className="sidebar-container" style={{
@@ -61,19 +78,9 @@ export const Sidebar = () => {
 
 
                     <Link to={`/dashboard`} style={{ textDecoration: 'none', color: 'white' }}>
-                        <div className="dashboard-link" style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            padding: '10px 10px 10px 53px',
-                            marginBottom: '5px',
-                            color: 'white',
-                            textDecoration: 'none',
-                            borderRadius: '5px',
-                            marginRight: '10px',
-                            marginLeft: '10px',
-                            position: 'relative',
-                            transition: 'background 0.3s ease', // Adding transition for smooth color change
-                        }}
+                        <div className="dashboard-link" style={linkstyle}
+                            // Adding transition for smooth color change
+
                             onMouseEnter={(e) => { e.target.style.backgroundColor = '#584cac'; }}
                             onMouseLeave={(e) => { e.target.style.backgroundColor = 'transparent'; }}
                         >
@@ -91,19 +98,9 @@ export const Sidebar = () => {
 
                     {/* Drivers */}
                     <Link to={`/Drivers`} style={{ textDecoration: 'none', color: 'white' }}>
-                        <div className="dashboard-link" style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            padding: '10px 10px 10px 53px',
-                            marginBottom: '5px',
-                            color: 'white',
-                            textDecoration: 'none',
-                            borderRadius: '5px',
-                            marginRight: '10px',
-                            marginLeft: '10px',
-                            position: 'relative',
-                            transition: 'background 0.3s ease', // Adding transition for smooth color change
-                        }}
+                        <div className="dashboard-link" style={
+                            linkstyle // Adding transition for smooth color change
+                        }
                             onMouseEnter={(e) => { e.target.style.backgroundColor = '#584cac'; }}
                             onMouseLeave={(e) => { e.target.style.backgroundColor = 'transparent'; }}
                         >
@@ -120,19 +117,7 @@ export const Sidebar = () => {
 
                     {/* Clients */}
                     <Link to={`/Clients`} style={{ textDecoration: 'none', color: 'white' }}>
-                        <div className="dashboard-link" style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            padding: '10px 10px 10px 53px',
-                            marginBottom: '5px',
-                            color: 'white',
-                            textDecoration: 'none',
-                            borderRadius: '5px',
-                            marginRight: '10px',
-                            marginLeft: '10px',
-                            position: 'relative',
-                            transition: 'background 0.3s ease', // Adding transition for smooth color change
-                        }}
+                        <div className="dashboard-link" style={ linkstyle}
                             onMouseEnter={(e) => { e.target.style.backgroundColor = '#584cac'; }}
                             onMouseLeave={(e) => { e.target.style.backgroundColor = 'transparent'; }}
                         >
@@ -149,19 +134,7 @@ export const Sidebar = () => {
 
                     {/* Rides */}
                     <Link to={`/rides`} style={{ textDecoration: 'none', color: 'white' }}>
-                        <div className="dashboard-link" style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            padding: '10px 10px 10px 53px',
-                            marginBottom: '5px',
-                            color: 'white',
-                            textDecoration: 'none',
-                            borderRadius: '5px',
-                            marginRight: '10px',
-                            marginLeft: '10px',
-                            position: 'relative',
-                            transition: 'background 0.3s ease', // Adding transition for smooth color change
-                        }}
+                        <div className="dashboard-link" style={ linkstyle}
                             onMouseEnter={(e) => { e.target.style.backgroundColor = '#584cac'; }}
                             onMouseLeave={(e) => { e.target.style.backgroundColor = 'transparent'; }}
                         >
@@ -178,19 +151,7 @@ export const Sidebar = () => {
 
                     {/* Transaction */}
                     <Link to={`/transaction`} style={{ textDecoration: 'none', color: 'white' }}>
-                        <div className="dashboard-link" style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            padding: '10px 10px 10px 53px',
-                            marginBottom: '5px',
-                            color: 'white',
-                            textDecoration: 'none',
-                            borderRadius: '5px',
-                            marginRight: '10px',
-                            marginLeft: '10px',
-                            position: 'relative',
-                            transition: 'background 0.3s ease', // Adding transition for smooth color change
-                        }}
+                        <div className="dashboard-link" style={ linkstyle}
                             onMouseEnter={(e) => { e.target.style.backgroundColor = '#584cac'; }}
                             onMouseLeave={(e) => { e.target.style.backgroundColor = 'transparent'; }}
                         >
@@ -207,19 +168,7 @@ export const Sidebar = () => {
 
                     {/* Settings */}
                     <Link to={`/settings`} style={{ textDecoration: 'none', color: 'white' }}>
-                        <div className="dashboard-link" style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            padding: '10px 10px 10px 53px',
-                            marginBottom: '5px',
-                            color: 'white',
-                            textDecoration: 'none',
-                            borderRadius: '5px',
-                            marginRight: '10px',
-                            marginLeft: '10px',
-                            position: 'relative',
-                            transition: 'background 0.3s ease', // Adding transition for smooth color change
-                        }}
+                        <div className="dashboard-link" style={ linkstyle}
                             onMouseEnter={(e) => { e.target.style.backgroundColor = '#584cac'; }}
                             onMouseLeave={(e) => { e.target.style.backgroundColor = 'transparent'; }}
                         >
@@ -236,19 +185,7 @@ export const Sidebar = () => {
 
                     {/* Accounts */}
                     <Link to={`/accounts`} style={{ textDecoration: 'none', color: 'white' }}>
-                        <div className="dashboard-link" style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            padding: '10px 10px 10px 53px',
-                            marginBottom: '5px',
-                            color: 'white',
-                            textDecoration: 'none',
-                            borderRadius: '5px',
-                            marginRight: '10px',
-                            marginLeft: '10px',
-                            position: 'relative',
-                            transition: 'background 0.3s ease', // Adding transition for smooth color change
-                        }}
+                        <div className="dashboard-link" style={ linkstyle}
                             onMouseEnter={(e) => { e.target.style.backgroundColor = '#584cac'; }}
                             onMouseLeave={(e) => { e.target.style.backgroundColor = 'transparent'; }}
                         >

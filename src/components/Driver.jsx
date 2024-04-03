@@ -1,236 +1,182 @@
-import React, { useState } from 'react';
-
+import React, { useState,useEffect } from 'react';
+import axios from 'axios';
 import { BsFillTrashFill, BsFillPencilFill } from "react-icons/bs";
 import { Table, Form, FormControl, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
-
+import Pagination from 'react-bootstrap/Pagination';
 export const DriversTable = () => {
+  /***************************************************************************** */
+  const [DriverData, setDriverData] = useState([]);
+
+useEffect(() => {
+  const getDrivers = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/getDrivers', {
+        withCredentials: true
+      });
+
+      if (response.status === 200) {
+        // Handle successful response
+        setDriverData(response.data.result);
+        
+      } else {
+        // Handle other status codes if needed
+        console.log('Unexpected status code:', response.status);
+        alert('error getting data from token');
+      }
+    } catch (error) {
+      // Handle network errors or other issues
+      console.error('Error:', error);
+      alert('Network error or other issue occurred');
+    }
+  };
+
+  // Call the function when component mounts
+  getDrivers();
+
+
+}, []);
+/***************************************************************** */
+const data=DriverData;
+const itemsPerPage=10;
+// Pagination state
+const [currentPage, setCurrentPage] = React.useState(1);
+
+// Calculate total number of pages
+const totalPages = Math.ceil(data.length / itemsPerPage);
+
+// Slice data to display only items for the current page
+const startIndex = (currentPage - 1) * itemsPerPage;
+const endIndex = startIndex + itemsPerPage;
+const currentItems = data.slice(startIndex, endIndex);
+
+// Handle page change
+const handlePageChange = (page) => {
+  setCurrentPage(page);
+};
+
+
+
+
+
+
+
+/***************************************************************** */
+
+
   const [showModal, setShowModal] = useState(false);
 
   const handleCloseModal = () => setShowModal(false);
   const handleShowModal = () => setShowModal(true);
 
   return (
-    <div>
-    <div className="container" >
+    <div className="container" style={{ marginTop: '200px' }}>
+      <h4 style={{ marginLeft: '190px', marginBottom: '-80px' }}>Drivers</h4>
 
-      <h4 style={{ marginLeft: '190px', marginTop: '200px', marginBottom: '-80px' }}>
-        Drivers
-      </h4>
-
-      <div className="header" style={{
-        display: 'relative', // Corrected value from "relative" to "'relative'"
-        justifyContent: 'space-between', // Corrected value from "space-between" to "'space-between'"
-        width: '80%', // Corrected value from 80% to '80%'
-        marginTop: '100px', // Corrected value from 100px to '100px'
-        marginBottom: '-50px', // Corrected value from -50px to '-50px'
-      }}>
-
-        <div style={{ display: "flex", justifyContent: "right", marginRight: "10%" }}>
-
-
-        </div>
-      </div>
-      <div className="table-wrapper" style={{
-        width: '100%', // Specify width as a string with units
-        marginLeft: '50px', // Adjust the value as needed
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: 'column', // Ensure the table is centered vertically
-        height: '60vh', // Optionally, set a height to center vertically on the page
-      }}>
-        <Table hover style={{
-          width: '80%', textAlign: "left", padding: '10px', height: '100%',
-          '.table th, .table td': {
-            padding: "10px"
-          },
-          marginTop: '80px'
-        }}>
-          <thead>
-            <tr>
-              <th colSpan="6">
-
-                <Button onClick={handleShowModal}
-                  variant="primary" style={{
-                    marginTop: '1rem', // Changed margin-top to a string value
-                    border: 'none',
-                    backgroundColor: '#0b6608',
-                    color: '#fff',
-                    padding: '0.5rem 1rem', // Changed padding to a string value
-                    borderRadius: '10px', // Changed border-radius to a string value
-                    cursor: 'pointer',
-                    boxShadow: '0px 5px 5px #ccc', // Changed boxShadow to a string value
-                  }}>Add Driver</Button>
-
-
-
-                {showModal && (
-                  <div
-                    style={{
-                      position: 'fixed',
-                      top: 0,
-                      left: 0,
-                      width: '100%',
-                      height: '100%',
-                      backgroundColor: 'rgba(0,0,0,0.5)',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <div
-                      style={{
-                        backgroundColor: '#fff',
-                        padding: '2rem',
-                        borderRadius: '10px',
-                        boxShadow: '0px 5px 5px #ccc',
-                        width:'35%'
-                      }}
-                    >
-                      <h2>Add Driver</h2>
-                      <Form>
+      <div className="header" style={{ display: 'relative', justifyContent: 'space-between', width: '80%', marginTop: '100px', marginBottom: '-50px' }}>
+        <Button onClick={handleShowModal} variant="primary">Add Driver</Button>
+        <Modal show={showModal} onHide={handleCloseModal} centered>
+          <Modal.Body>
+            <h2>Add Driver</h2>
+            <Form>
               <Table>
                 <tbody>
                   <tr>
                     <td>ID:</td>
-                    <td><Form.Control type="text" name="id"  /></td>
+
+                
+                    <td><Form.Control type="text" name="id" /></td>
                   </tr>
-                  <tr>
-                    <td>Name:</td>
-                    <td><Form.Control type="text" name="name"  /></td>
-                  </tr>
-                  <tr>
-                    <td>Age:</td>
-                    <td><Form.Control type="text" name="age" /></td>
-                  </tr>
-                  <tr>
-                    <td>City:</td>
-                    <td><Form.Control type="text" name="city"  /></td>
-                  </tr>
-                  <tr>
-                    <td>Gender:</td>
-                    <td><Form.Control type="text" name="gender"  /></td>
-                  </tr>
-                  <tr>
-                    <td>Email:</td>
-                    <td><Form.Control type="email" name="email"  /></td>
-                  </tr>
+                  {/* Add more form fields as needed */}
                 </tbody>
               </Table>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}> {/* Added flexbox styles */}
-                <Button variant="secondary" onClick={handleCloseModal}>
-                  Close
-                </Button>
-               
-                <Button  variant="success" type="submit">
-                 Save Changes 
-                </Button>
-                </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
+                <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
+                <Button variant="success" type="submit">Save Changes</Button>
+              </div>
             </Form>
-                    </div>
-                  </div>
-                )}
-
-
-
-
-                {/* Add your button here */}
-              </th> {/* Empty cells to align the search input and filter bar */}
-              <th colSpan="1"> {/* Set colspan to span one column */}
-                <div className="d-flex align-items-center justify-content-end"> {/* Use flexbox to align items */}
-                  <Form className="mt-3 mr-3"> {/* Added margin-right for spacing */}
-                    <FormControl
-                      type="text"
-                      placeholder="Search"
-                      className="mr-sm-2 search-input"
-                      style={{
-                        border: '1px solid #ced4da', // Add border
-                        borderRadius: '5px', // Add border radius
-                        padding: '0.5rem', // Add padding
-                        width: '250px', // Set width as per your requirement
-                        marginRight: '20px', // Add margin to the right
-                        ':focus': { // Apply styles when the input is focused
-                          outline: 'none', // Remove outline on focus
-                          borderColor: '#007bff', // Change border color on focus
-                        }
-                      }}
-                    />
-                  </Form>
-                  <Form className="mt-3 mr-3"> {/* Added margin-right for spacing */}
-                    <Form.Control as="select" className="filter-select" style={{
-                      border: '1px solid #ced4da', // Add border
-                      borderRadius: '5px', // Add border radius
-                      padding: '0.5rem', // Add padding
-                      width: '150px', // Set width as per your requirement
-                      backgroundColor: '#fff', // Set background color
-                      ':focus': { // Apply styles when the select input is focused
-                        outline: 'none', // Remove outline on focus
-                        borderColor: '#007bff', // Change border color on focus
-                      }
-                    }}>
-                      <option>Filter by City</option>
-                      <option>New York</option>
-                      <option>Los Angeles</option>
-                      {/* Add more cities as needed */}
-                    </Form.Control>
-                  </Form>
-                </div>
-              </th>
-            </tr>
-
-            <tr >
-              <th>#</th>
-              <th>Name</th>              <th>Age</th>
-              <th>City</th>
-              <th>Gender</th>
-              <th>Email</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {/* Sample data */}
-            {/* Wrap each row with Link */}
-            <tr>
-
-              <td>1</td>
-              <td>Doe</td>
-              <td>30</td>
-              <td>New York</td>
-              <td>Male</td>
-              <td>jhon@gmail.com</td>
-              <td className="fit">
-                <span className="actions" style={{
-                  display: 'flex',
-                  justifyContent: 'flex-end', // Changed 'space-between' to 'flex-end'
-                  alignItems: 'center',
-                }}>
-                  <BsFillTrashFill className="delete-btn" style={{
-                    color: '#e10d05',
-                    marginRight: '5mm',
-                  }} />
-                  <Link to="/profil" style={{ textDecoration: 'none', color: 'black', marginRight: '1mm', }}> {/* Removed unnecessary 's' */}
-                    <BsFillPencilFill
-                      className="edit-btn"
-
-
-                    />
-                  </Link>
-                </span>
-              </td>
-
-
-            </tr>
-
-
-            
-            {/* Add more data as needed */}
-          </tbody>
-        </Table>
+          </Modal.Body>
+        </Modal>
       </div>
-    </div>
-    
+
+
+
+
+      <div className="table-wrapper" style={{ width: '100%', marginLeft: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', height: '60vh' }}>
+      <Table hover style={{ width: '80%', textAlign: "left", padding: '10px', height: '100%', marginTop: '80px' }}>
+  <thead>
+    <tr>
+      <th colSpan="6">
+        <div className="d-flex align-items-center justify-content-end">
+          <Form className="mt-3 mr-3">
+            <FormControl type="text" placeholder="Search" className="mr-sm-2 search-input" style={{ border: '1px solid #ced4da', borderRadius: '5px', padding: '0.5rem', width: '250px', marginRight: '20px' }} />
+          </Form>
+          <Form className="mt-3 mr-3">
+            <Form.Control as="select" className="filter-select" style={{ border: '1px solid #ced4da', borderRadius: '5px', padding: '0.5rem', width: '150px', backgroundColor: '#fff' }}>
+              <option>Filter by City</option>
+              <option>New York</option>
+              <option>Los Angeles</option>
+            </Form.Control>
+          </Form>
+        </div>
+      </th>
+    </tr>
+    <tr>
+      <th>id</th>
+      <th>CIN</th>
+      <th>fullName</th>
+      <th>City</th>
+      <th>Phone</th>
+      <th>email</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    { currentItems.map((driver, index) => (
+      <tr key={index}>
+        <td>{driver.id}</td>
+        <td>{driver.CIN}</td>
+        <td>{driver.fullName}</td>
+        <td>{driver.city}</td>
+        <td>{driver.phone}</td>
+        <td>{driver.email}</td>
+        <td className="fit">
+          <span className="actions" style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+            <BsFillTrashFill className="delete-btn" style={{ color: '#e10d05', marginRight: '5mm' }} />
+            <Link to="/profil" style={{ textDecoration: 'none', color: 'black', marginRight: '1mm' }}>
+              <BsFillPencilFill className="edit-btn" />
+            </Link>
+          </span>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</Table>
+<Pagination>
+        <Pagination.Prev
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+        />
+        {[...Array(totalPages).keys()].map((page) => (
+          <Pagination.Item
+            key={page}
+            active={page + 1 === currentPage}
+            onClick={() => handlePageChange(page + 1)}
+          >
+            {page + 1}
+          </Pagination.Item>
+        ))}
+        <Pagination.Next
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        />
+      </Pagination>
+      </div>
+
+
+
+
     </div>
   );
 };

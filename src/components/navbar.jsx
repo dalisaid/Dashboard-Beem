@@ -51,7 +51,9 @@ export const NavBar = () => {
         withCredentials: true
       });
       // Handle the response, e.g., redirect to login page
+      if (response){
       window.location.href = '/';
+    }
     } catch (error) {
       console.error('Error logging out:', error);
     }

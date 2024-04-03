@@ -25,7 +25,7 @@ app.use(cookieParser(process.env.JWT_SECRET));
 
 const generateToken = (payload) => {
     // Sign the token with a secret key and options (such as expiration)
-    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '10min' });
+    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '24h' });
 };
 
 
@@ -89,8 +89,26 @@ app.get('/connecteduser', (req, res) => {
   );
   
     
-    
-    
+  app.get('/getDrivers', async (req, res) => {
+    const token = req.cookies.authToken;
+  
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  
+      if (!decoded) {
+        console.log('Generated token:', token);
+        return res.status(401).json({ message: 'Unauthorized: No token provided or invalid token' });
+      } else {
+        // If the token is valid, proceed with fetching data
+        const result = await dboperations.getDrivers();
+        res.status(200).json({ result });
+      }
+    } catch (error) {
+      // If decoding fails due to an invalid token, handle the error appropriately
+      console.error('Invalid token:', error.message);
+      return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+    }
+  });
     
     
     
