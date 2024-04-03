@@ -8,9 +8,11 @@ const authenticateUser = async ({ email, password, navigate }) => {
 
   try {
     const response = await axios.post('http://localhost:5000/login', {
-      email,
-      password
-    });
+  email,
+  password
+}, {
+  withCredentials: true
+});
 
     if (response.status === 200) {
       // Handle successful signin
@@ -33,23 +35,7 @@ const authenticateUser = async ({ email, password, navigate }) => {
 export const SignIn = () => {
 
 
-  /*************************************** work in progress
-    const postData = async (url, requestData) => {
-    const newData = await fetch('http://localhost:5000'+url, {
-      method: 'POST', // Changed method to POST
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({requestData}) // Stringify an object containing email and password
-    }).then(res => res.json());
-    
-    return newData;
-  }
   
-  const url = '/login';
-    /**************************************** */
-
 
 
   const [email, setEmail] = useState('');

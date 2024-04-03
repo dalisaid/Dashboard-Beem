@@ -10,7 +10,11 @@
 const API_PORT = process.env.PORT || 5000;
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000', // Replace with your allowed origin
+    credentials: true
+    
+  }));
 app.use(bodyParser.json());
 app.use(cookieParser(process.env.JWT_SECRET));
 
@@ -52,11 +56,45 @@ app.post('/login', async (req, res) => {
     const result = await dboperations.checkUser(email, password);
     const token = generateToken({ email,password });
     console.log('Generated token:', token);
-    res.cookie('authToken', token, { httpOnly: true });
+    res.cookie('authToken', token, { sameSite: 'None', secure:true, httpOnly: true });
     
     
     res.status(result.status).json({  });
 });
+
+app.get('/logout', (req, res) => {
+    // Invalidate the user's session (e.g., clear session data)
+    // Clear the HTTP-only authentication cookie
+    res.clearCookie('authToken');
+    
+    // Send response indicating successful logout
+    res.send('Logged out successfully.');
+});
+app.get('/connecteduser', (req, res) => {
+
+    
+    const token = req.cookies.authToken;
+  
+    if (!token) {
+        console.log('Generated token:', token);
+      return res.status(401).json({ message: 'Unauthorized: No token provided' });
+    } else { // Corrected placement of else
+     
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const { email } = decoded; // Extracting email from decoded token
+       
+        res.status(200).json({ email });
+      } 
+    }
+  );
+  
+    
+    
+    
+    
+    
+    
+
 
 /********************************** */
 

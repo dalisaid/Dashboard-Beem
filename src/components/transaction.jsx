@@ -1,30 +1,22 @@
 import React from "react";
-import { BsFillTrashFill, BsFillPencilFill } from "react-icons/bs";
-import { Table, Form, FormControl ,Button} from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { BsFillTrashFill} from "react-icons/bs";
+import { Table} from 'react-bootstrap';
 
 export const Transaction = ({ openModal }) => {
   return (
     <div className="container">
-      <div className="container">
-        <img src="/img/vc1.jpg" alt="" style={{ width: '120%', height: '190px', marginTop: '-50px', marginRight: '20%' }} />
-
-        <h4 style={{
-          textAlign: 'left',
-          marginLeft: '40px',
-          marginTop: '-120px',// Adjust the value as needed
-          color: 'white'
-        }}>
-Transaction        </h4></div>
+   
+   <h4 style={{marginLeft:'190px' , marginTop:'200px',marginBottom:'-230px'}}>
+          Transaction
+        </h4>
 
       <div className="header" style={{
         display: 'relative', // Corrected value from "relative" to "'relative'"
         justifyContent: 'space-between', // Corrected value from "space-between" to "'space-between'"
         width: '80%', // Corrected value from 80% to '80%'
-        marginRight: '10%', // Corrected value from 10% to '10%'
-        marginTop: '100px', // Corrected value from 100px to '100px'
-        marginBottom: '-50px', // Corrected value from -50px to '-50px'
+        marginBottom: '260px', // Corrected value from -50px to '-50px'
       }}>
+        
 
         <div style={{ display: "flex", justifyContent: "right", marginRight: "10%" }}>
 
@@ -45,8 +37,7 @@ Transaction        </h4></div>
         '.table th, .table td': {
           padding: "10px"
         },
-        width: '95%',
-        textAlign: 'left',
+     
         marginTop:'80px'
       }}>
           <thead>
