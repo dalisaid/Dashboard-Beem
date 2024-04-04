@@ -60,7 +60,7 @@ export const NavBar = () => {
   };
 
   return (
-    <Navbar style={{ backgroundColor: '#441879', marginRight: '0px', marginBottom: '-50px', display: 'flex', justifyContent: 'space-between' }}>
+    <Navbar style={{  marginRight: '0px', marginBottom: '-50px', display: 'flex', justifyContent: 'space-between' }}>
       <Container>
         {/* Left side of the Navbar */}
       </Container>
