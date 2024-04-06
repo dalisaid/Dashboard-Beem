@@ -7,29 +7,12 @@
 }
 
 
-@media (max-width: 1380px){
-  html,
-  body {
-      max-width: 95vw;
-  }
-}
 
 
-/* Small screens (phones) */
-@media only screen and (max-width: 600px) {
-  /* CSS styles for small screens */
-}
 
-/* Medium screens (tablets) */
-@media only screen and (min-width: 601px) and (max-width: 1024px) {
-  /* CSS styles for medium screens */
-}
 
-/* Large screens (desktops) */
-@media only screen and (min-width: 1025px) {
-  /* CSS styles for large screens */
-}
 
+/*
 .modal-container {
   position: fixed;
   z-index: 1;
@@ -83,3 +66,4 @@
   border-radius: 0.3rem;
   margin-bottom: 1rem;
 }
+*/

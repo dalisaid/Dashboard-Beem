@@ -1,5 +1,6 @@
 import React, { useState,useEffect } from 'react';
 import axios from 'axios';
+import '../css/App.css';
 import { BsFillTrashFill, BsFillPencilFill } from "react-icons/bs";
 import { Table, Form, FormControl, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
@@ -118,16 +119,21 @@ const handleDeletedriver = async (driverId) => {
 
 
     return (
-      <div className="container" style={{ marginTop: '200px' }}>
-        <h4 style={{ marginLeft: '190px', marginBottom: '-10px' }}>Drivers</h4>
+      <div className="container-" style={{ marginTop: '200px' }}>
+      
+        <h4 style={{ marginLeft: '290px', marginBottom: '-10px' }}>Drivers</h4>
     
-        <div className="table-wrapper" style={{ width: '100%', marginLeft: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', height: '60vh' }}>
+        <div className="table-wrapper" style={{ width: '100%', marginLeft: '100px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', height: '60vh' }}>
           <Table hover style={{ width: '80%', textAlign: "left", padding: '10px', height: '100%', marginTop: '80px' }}>
+           
+     
             <thead>
               <tr>
-                <th colSpan="7">
-                  <div className="d-flex align-items-center justify-content-between">
-                    <Button onClick={handleShowModal} variant="primary">Add Driver</Button>
+                <th colSpan="6">
+                <Button onClick={handleShowModal} variant="primary">Add Driver</Button>
+
+                  <div className="d-flex align-items-center justify-content-end">
+
                     <Form className="mt-3 mr-3">
                       <FormControl type="text" placeholder="Search" className="mr-sm-2 search-input" style={{ border: '1px solid #ced4da', borderRadius: '5px', padding: '0.5rem', width: '250px', marginRight: '20px' }} />
                     </Form>
@@ -164,7 +170,7 @@ const handleDeletedriver = async (driverId) => {
                     <span className="actions" style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
                       <BsFillTrashFill className="delete-btn" style={{ color: '#e10d05', marginRight: '5mm' }}  onClick={() => handleDeletedriver(driver.id)} />
                       <Link to="/profil" style={{ textDecoration: 'none', color: 'black', marginRight: '1mm' }}>
-                        <BsFillPencilFill className="edit-btn" />
+                        <BsFillPencilFill className="edit-btn"  />
                       </Link>
                     </span>
                   </td>

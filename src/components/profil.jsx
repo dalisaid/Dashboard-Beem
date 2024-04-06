@@ -1,5 +1,4 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom'; // Import withRouter
 import {
   MDBCol,
   MDBContainer,

@@ -123,8 +123,8 @@ const App = () => {
    <QueryClientProvider client={queryClient}>
    <Router>
 <Routes>
-  <Route path="/" element={<SignIn />} />
-  <Route path="/SignUp" element={<SignUp />} />
+ <Route path="/" element={<SignIn />} />
+ <Route path="/SignUp" element={<SignUp />} />
 
 
   <Route
@@ -134,7 +134,7 @@ const App = () => {
         <NavBar />
         <Sidebar/>
         <Routes>
-          <Route path="/Drivers" element={<DriversTable />} />
+        <Route path="/drivers" element={<DriversTable />} />
           <Route path="/Clients" element={<ClientsTable />} />
           <Route path="/profil" element={<ProfilDetails />} />
           <Route path="/dashboard" element={<Dashboard />} />
@@ -144,6 +144,7 @@ const App = () => {
       </>
     }
   />
+
 </Routes>
 </Router>
     
