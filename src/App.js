@@ -20,135 +20,37 @@ const queryClient = new QueryClient();
 const App = () => {
 
   return (
-    /************************ 
-    <QueryClientProvider client={queryClient}>
-      <Router>
-        <Routes>
-          <Route path="/" element={<SignIn />} />
-          <Route path="/SignUp" element={<SignUp />} />
-          <Route
-            path="/Drivers"
-            element={
-              <div style={{ backgroundColor: '#f0f0f0', minHeight: '100vh' }}>
-                <NavBar />
-                <div style={{ display: 'flex', marginTop: '20px' }}>
-                  <Sidebar />
-                  <div style={{ marginLeft: '100px', flexGrow: 1, marginTop: '100px' }}>
-                    <DriversTable />
-                  </div>
-                </div>
-              </div>
-            }
-          />
-          <Route
-            path="/Clients"
-            element={
-              <div style={{ backgroundColor: '#f0f0f0', minHeight: '100vh' }}>
-                <NavBar />
-                <div style={{ display: 'flex', marginTop: '20px' }}>
-                  <Sidebar />
-                  <div style={{ marginLeft: '100px', flexGrow: 1, marginTop: '100px' }}>
-                    <ClientsTable />
-                  </div>
-                </div>
-              </div>
-            }
-          />
-          <Route
-            path="/profil"
-            element={
-              <div style={{ backgroundColor: '#f0f0f0', minHeight: '100vh' }}>
-                <NavBar />
-                <div style={{ display: 'flex' }}>
-                  <Sidebar />
-                  <div style={{ marginLeft: '240px', flexGrow: 1 }}>
-                    <ProfilDetails />
-                  </div>
-                </div>
-              </div>
-            }
-            
-          />
-          <Route
-            path="/dashboard"
-            element={
-              <div style={{ backgroundColor: '#f0f0f0', minHeight: '100vh' }}>
-                <NavBar />
-                <Sidebar />
-
-                <Dashboard />
-              </div>
-            }
-          />
-
-          <Route
-            path="/transaction"
-            element={
-              <div style={{ backgroundColor: '#f0f0f0', minHeight: '100vh' }}>
-                <NavBar />
-                <div style={{ display: 'flex', marginTop: '20px' }}>
-                  <Sidebar />
-                  <div style={{ marginLeft: '100px', flexGrow: 1, marginTop: '100px' }}>
-                    <Transaction />
-                  </div>
-                </div>
-              </div>
-            }
-          />
-
-          <Route
-            path="/rides"
-            element={
-              <div style={{ backgroundColor: '#f0f0f0', minHeight: '100vh' }}>
-                <NavBar />
-                <Sidebar />
-
-                <div style={{ display: 'flex', marginTop: '20px' }}>
-                  <div style={{ marginLeft: '100px', flexGrow: 1, marginTop: '100px' }}>
-                    <Rides />
-                  </div>
-                </div>
-              </div>
-            }
-          />
-        </Routes>
-
-
-      </Router>
-
- 
-    </QueryClientProvider>
-   /************************/
+    
     
    <QueryClientProvider client={queryClient}>
    <Router>
-<Routes>
- <Route path="/" element={<SignIn />} />
- <Route path="/SignUp" element={<SignUp />} />
+     <Routes>
+       <Route path="/" element={<SignIn />} />
+       <Route path="/SignUp" element={<SignUp />} />
 
-
-  <Route
-    path="/*"
-    element={
-      <>
-        <NavBar />
-        <Sidebar/>
-        <Routes>
-        <Route path="/drivers" element={<DriversTable />} />
-          <Route path="/Clients" element={<ClientsTable />} />
-          <Route path="/profil" element={<ProfilDetails />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/transaction" element={<Transaction />} />
-          <Route path="/rides" element={<Rides />} />
-        </Routes>
-      </>
-    }
-  />
-
-</Routes>
-</Router>
-    
-  </QueryClientProvider>
+       <Route
+         path="/*"
+         element={
+           <div style={{ display: 'flex' }}>
+             
+             <Sidebar />
+             <div style={{ flex: 1  }}>
+             <NavBar />
+               <Routes>
+                 <Route path="/drivers" element={<DriversTable />} />
+                 <Route path="/Clients" element={<ClientsTable />} />
+                 <Route path="/profil" element={<ProfilDetails />} />
+                 <Route path="/dashboard" element={<Dashboard />} />
+                 <Route path="/transaction" element={<Transaction />} />
+                 <Route path="/rides" element={<Rides />} />
+               </Routes>
+             </div>
+           </div>
+         }
+       />
+     </Routes>
+   </Router>
+ </QueryClientProvider>
 
 
   
