@@ -68,7 +68,7 @@ export const SignIn = () => {
       marginRight: '10px', // Add margin to the right
     }}
   />
-  <h4 style={{ color: '#F64C02', margin: '0' }}>Beem Tunisie</h4>
+  <h4 style={{ color: '#F64C02', margin: '0' }}>Beem Smart Taxi</h4>
 </div>
 
         <h3 className="text-center">Sign In</h3>

@@ -1,156 +1,426 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../css/App.css';
 import { BsFillTrashFill, BsFillPencilFill } from "react-icons/bs";
-import { Table, Form, FormControl ,Button} from 'react-bootstrap';
+import { Table, Form, FormControl, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Pagination from 'react-bootstrap/Pagination';
+import { orderBy } from 'lodash';
+import Modal from 'react-bootstrap/Modal';
+import { Statistic, Space, Card } from 'antd'; // Import Typography and Space from Ant Design
+import { UserOutlined } from '@ant-design/icons'; // Import UserOutlined from Ant Design
+
+
+
 
 
 export const ClientsTable = () => {
 
-  const [CustomerData, setCustomerData] = useState([]);
+  // Modal logic
+  const [showModal, setShowModal] = React.useState(false);
+  const handleCloseModal = () => setShowModal(false);
+  const handleShowModal = () => setShowModal(true);
 
-  useEffect(() => {
-    const getCustomers = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/getCustomers', {
-          withCredentials: true
-        });
-  
-        if (response.status === 200) {
-          // Handle successful response
-          setCustomerData(response.data.result);
-          
-        } else {
-          // Handle other status codes if needed
-          console.log('Unexpected status code:', response.status);
-          alert('error getting data from token');
-        }
-      } catch (error) {
-        // Handle network errors or other issues
-        console.error('Error:', error);
-        alert('Network error or other issue occurred');
-      }
-    };
-  
-    // Call the function when component mounts
-    getCustomers();
-  
-  }, []);
 
-  /******************************************** */
-  const handleDeleteCustomer = async (CustomerId) => {
+  // Form data state
+  const [formData, setFormData] = useState({
+    id: '',
+    CIN: '',
+    fullName: '',
+    city: '',
+    phone: '',
+    email: ''
+  });
+
+
+
+  // Handle form input change
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+
+
+
+  // Handle form submission for add a driver
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log('formData:', formData); // Log formData before making the request
+
     try {
-      // Send a DELETE request to the server to delete the driver
-      await axios.delete(`http://localhost:5000/deleteCustomer/${CustomerId}`, {
+      const response = await axios.post('http://localhost:5000/addCustomer', formData, {
         withCredentials: true // Ensure credentials are included in the request
       });
-  
-      // Remove the deleted driver from the local state
-      setCustomerData(CustomerData.filter(Customer => Customer.id !== CustomerId));
+      console.log('Response:', response.data); // Log the response from the server
+
+      handleCloseModal();
+      getCustomers();    
     } catch (error) {
       console.error('Error:', error);
       alert('Network error or other issue occurred');
     }
   };
-  /************************************************* */
 
 
-  const data=CustomerData;
-  const itemsPerPage=10;
-  // Pagination state
+  // State for storing customer data
+  const [CustomerData, setCustomerData] = useState([]);
+
+
+
+  // Fetch customer data from the server
+    const getCustomers = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/getCustomers', {
+          withCredentials: true
+        });
+
+        if (response.status === 200) {                   // Handle successful response
+          setCustomerData(response.data.result);
+
+        } else {
+          console.log('Unexpected status code:', response.status);            // Handle other status codes if needed
+          alert('error getting data from token');
+        }
+      } catch (error) {
+        console.error('Error:', error);          // Handle network errors or other issues
+        alert('Network error or other issue occurred');
+      }
+    };
+    useEffect(() => {
+    getCustomers();     // Call the function when component mounts
+  }, []);
+
+
+
+  // Delete a customer
+  const handleDeleteCustomer = async (CustomerId) => {
+    try {
+      await axios.delete(`http://localhost:5000/deleteCustomer/${CustomerId}`, {        // Send a DELETE request to the server to delete the driver
+        withCredentials: true // Ensure credentials are included in the request
+      });
+      setCustomerData(CustomerData.filter(Customer => Customer.id !== CustomerId));       // Remove the deleted driver from the local state
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Network error or other issue occurred');
+    }
+  };
+
+
+
+  // Search
+  const [search, setsearch] = useState('');
+  const filteredItems = CustomerData.filter((Customer) => {
+    return search.toLowerCase() === '' ? Customer : String(Customer.id).toLowerCase().includes(search) ||
+      String(Customer.CIN).toLowerCase().includes(search) ||
+      Customer.fullName.toLowerCase().includes(search) ||
+      Customer.city.toLowerCase().includes(search) ||
+      String(Customer.phone).toLowerCase().includes(search) ||
+      Customer.email.toLowerCase().includes(search);
+  });
+  useEffect(() => {                             // Reset current page to 1 if the search is successful
+    if (search && filteredItems.length > 0) {
+      setCurrentPage(1);
+    }
+  }, [search, filteredItems]);
+
+
+
+
+  // Sorting
+  const [sort, setSort] = useState(null); // Initialize the sorting property
+  const [sortDirection, setSortDirection] = useState('asc'); // Initialize the sorting direction
+  const handleSort = (sortBy) => {
+    if (sortBy === sort) {     // Toggle sorting direction if already sorting by the same property
+      setSortDirection((prevSortDirection) => (prevSortDirection === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSort(sortBy);     // Set the new sorting property and reset sorting direction to ascending
+      setSortDirection('asc');
+    }
+  };
+
+  
+  // Pagination
   const [currentPage, setCurrentPage] = React.useState(1);
-  
-  // Calculate total number of pages
+  const data = filteredItems;
+  const itemsPerPage = 10;
   const totalPages = Math.ceil(data.length / itemsPerPage);
-  
-  // Slice data to display only items for the current page
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentItems = data.slice(startIndex, endIndex);
-  
-// Handle page change
-const handlePageChange = (page) => {
-  setCurrentPage(page);
-};
+
+  // Handle page change
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+
+  // Get total number of customers
+  const getTotalDriversCount = () => {
+    return filteredItems.length;
+  };
+
 
 
   return (
-    <div className="container-" style={{ marginTop: '200px' }}>
-      
-    <h4 style={{ marginLeft: '290px', marginBottom: '-10px' }}>Customers</h4>
 
-    <div className="table-wrapper" style={{ width: '100%', marginLeft: '100px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', height: '60vh' }}>
-      <Table hover style={{ width: '80%', textAlign: "left", padding: '10px', height: '100%', marginTop: '80px' }}>
-<thead>
-    <tr>
-      <th colSpan="6">
-        <div className="d-flex align-items-center justify-content-end">
-                    <Form className="mt-3 mr-3">
-                      <FormControl type="text" placeholder="Search" className="mr-sm-2 search-input" style={{ border: '1px solid #ced4da', borderRadius: '5px', padding: '0.5rem', width: '250px', marginRight: '20px' }} />
-                    </Form>
-                    <Form className="mt-3 mr-3">
-                      <Form.Control as="select" className="filter-select" style={{ border: '1px solid #ced4da', borderRadius: '5px', padding: '0.5rem', width: '150px', backgroundColor: '#fff' }}>
-                        <option>Filter by City</option>
-                        <option>New York</option>
-                        <option>Los Angeles</option>
-                      </Form.Control>
-                    </Form>
-        </div>
-      </th>
-    </tr>
-    <tr>
-      <th>id</th>
-      <th>CIN</th>
-      <th>fullName</th>
-      <th>City</th>
-      <th>Phone</th>
-      <th>email</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    { currentItems.map((Customer, index) => (
-      <tr key={index}>
-              <td>{Customer.id}</td>
-              <td>{Customer.CIN}</td>
-              <td>{Customer.fullName}</td>
-              <td>{Customer.city}</td>
-              <td>{Customer.phone}</td>
-              <td>{Customer.email}</td>       
-        <td className="fit">
-          <span className="actions" style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-            <BsFillTrashFill className="delete-btn" style={{ color: '#e10d05', marginRight: '5mm' }} onClick={() => handleDeleteCustomer(Customer.id)} />
-            <Link to="/profil" style={{ textDecoration: 'none', color: 'black', marginRight: '1mm' }}>
-              <BsFillPencilFill className="edit-btn" />
-            </Link>
-          </span>
-        </td>
-      </tr>
-    ))}
-  </tbody>
-</Table>
-        <Pagination>
-        <Pagination.Prev
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-        />
-        {[...Array(totalPages).keys()].map((page) => (
-          <Pagination.Item
-            key={page}
-            active={page + 1 === currentPage}
-            onClick={() => handlePageChange(page + 1)}
-          >
-            {page + 1}
-          </Pagination.Item>
-        ))}
-        <Pagination.Next
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-        />
-      </Pagination>
+
+
+    <div className="container-" style={{
+      width: "80vw",
+      height: "auto",
+      marginLeft: "14%",
+      marginRight: "auto",
+      marginTop: "190px",
+      boxShadow: "0 .4rem .8rem #0005",
+      borderRadius: ".8rem",
+      overflow: "hidden",
+      padding: "20px"
+    }}>
+
+      <section
+        className="table__header"
+        style={{
+          width: "100%",
+          height: "10%",
+          backgroundColor: "#fff4",
+          padding: ".8rem 1rem",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center"
+        }}
+      >
+        <h1>Customers</h1>
+        <Form className="mt-3 mr-3">
+          <div style={{ position: 'relative' }}>
+            <FormControl
+              type="text"
+              placeholder="Search"
+              className="mr-sm-2 search-input"
+              style={{
+                border: '1px solid #ced4da',
+                borderRadius: '25px', // Adding border radius
+                padding: '0.5rem 2rem 0.5rem 1rem', // Adjusting padding for the icon
+                width: '350px',
+                marginRight: '20px'
+              }}
+              value={search}
+              onChange={(e) => setsearch(e.target.value)}
+            />
+            <img
+              src="./img/search.png"
+              alt="Search"
+              style={{
+                position: 'absolute',
+                top: '50%',
+                right: '30px',
+                transform: 'translateY(-50%)',
+                width: '1.5rem', // Adjust icon size as needed
+                height: 'auto'
+              }}
+            />
+          </div>
+        </Form>
+      </section>
+      <Space style={{ marginTop: '20px', marginLeft: '20px' }} size={20}>
+        <Card className="custom-card">
+          <Space direction='horizontal'>
+            <UserOutlined style={{ fontSize: '28px', color: 'purple', marginBottom: '10px', backgroundColor: "rgba(255,0, 255, 0.25)", borderRadius: 20, padding: 8 }} />
+            <Statistic title="Total Number of Drivers" value={getTotalDriversCount()} />
+          </Space>
+        </Card>
+      </Space>
+
+      <div className="table_body" style={{
+        width: "95%",
+        maxHeight: "calc(89% - 1.6rem)",
+        backgroundColor: "#fffb",
+        margin: ".8rem auto",
+        borderRadius: ".6rem",
+        overflow: "auto",
+        overflowY: "overlay"
+      }}>
+
+        <Table hover  >
+          <thead>
+            <tr>
+              <th colSpan="6">
+                <Button
+                  onClick={handleShowModal}
+
+                  style={{
+                    position: "relative",
+                    padding: "10px 22px",
+                    backgroundColor: "#584cac",
+                    borderRadius: "6px",
+                    color: "#fff",
+                    border: "none",
+                    fontSize: "18px",
+                    fontWeight: "400",
+                    cursor: "pointer",
+                    boxShadow: "0 5px 10px black rgba(0,0,0,0.1)",
+
+                  }}
+                >
+                  Add Customer
+                </Button>
+              </th>
+              <th></th>
+
+
+            </tr>
+
+            <tr>
+              <th onClick={() => handleSort('id')} style={{ cursor: 'pointer', top: 0, left: 0, backgroundColor: '#d5d1defe', borderCollapse: 'collapse' }} class="icon-arrow">
+                ID {sort === 'id' && (sortDirection === 'asc' ? '▲' : '▼')}
+              </th> <th onClick={() => handleSort('CIN')} style={{ cursor: 'pointer', top: 0, left: 0, backgroundColor: '#d5d1defe', borderCollapse: 'collapse' }} class="icon-arrow">
+                CIN {sort === 'CIN' && (sortDirection === 'asc' ? '▲' : '▼')}
+              </th>
+
+              <th onClick={() => handleSort('fullName')} style={{ cursor: 'pointer', top: 0, left: 0, backgroundColor: '#d5d1defe', borderCollapse: 'collapse' }} class="icon-arrow">
+                Full Name {sort === 'fullName' && (sortDirection === 'asc' ? '▲' : '▼')}
+              </th>
+              <th onClick={() => handleSort('city')} style={{ cursor: 'pointer', top: 0, left: 0, backgroundColor: '#d5d1defe', borderCollapse: 'collapse' }} class="icon-arrow">
+                City {sort === 'city' && (sortDirection === 'asc' ? '▲' : '▼')}
+              </th>
+              <th onClick={() => handleSort('phone')} style={{ cursor: 'pointer', top: 0, left: 0, backgroundColor: '#d5d1defe', borderCollapse: 'collapse' }} class="icon-arrow">
+                Phone {sort === 'phone' && (sortDirection === 'asc' ? '▲' : '▼')}
+              </th>
+              <th onClick={() => handleSort('email')} style={{ cursor: 'pointer', top: 0, left: 0, backgroundColor: '#d5d1defe', borderCollapse: 'collapse' }} class="icon-arrow">
+                Email {sort === 'email' && (sortDirection === 'asc' ? '▲' : '▼')}
+              </th>
+              <th class="icon-arrow" style={{ cursor: 'pointer', top: 0, left: 0, backgroundColor: '#d5d1defe', borderCollapse: 'collapse' }}></th >
+            </tr>
+          </thead>
+          <tbody>
+
+            {orderBy(
+              currentItems,
+              [
+                (Customer) => {
+                  switch (sort) {
+                    case 'id':
+                      return String(Customer.id);
+                    case 'CIN':
+                      return String(Customer.CIN);
+                    case 'fullName':
+                      return Customer.fullName.toLowerCase();
+                    case 'city':
+                      return Customer.city.toLowerCase();
+                    case 'phone':
+                      return String(Customer.phone);
+                    case 'email':
+                      return Customer.email.toLowerCase();
+
+                    default:
+                      return Customer.id; // Default to sorting by ID
+                  }
+                }
+              ],
+              [sortDirection]
+            ).map((Customer) => (
+              <tr key={Customer.id}>
+                <td >{Customer.id}</td>
+                <td >{Customer.CIN}</td>
+                <td>{Customer.fullName}</td>
+                <td>{Customer.city}</td>
+                <td>{Customer.phone}</td>
+                <td>{Customer.email}</td>
+                <td className="fit">
+                  <span className="actions" style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+                    <BsFillTrashFill className="delete-btn" style={{ color: '#e10d05', marginRight: '5mm' }} onClick={() => handleDeleteCustomer(Customer.id)} />
+                    <Link to="/profil" style={{ textDecoration: 'none', color: 'black', marginRight: '1mm' }}>
+                      <BsFillPencilFill className="edit-btn" />
+                    </Link>
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
       </div>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Pagination>
+          <Pagination.Prev
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          />
+          {[...Array(totalPages).keys()].map((page) => (
+            <Pagination.Item
+              key={page}
+              active={page + 1 === currentPage}
+              onClick={() => handlePageChange(page + 1)}
+            >
+              {page + 1}
+            </Pagination.Item>
+          ))}
+          <Pagination.Next
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          />
+        </Pagination>
+
+      </div>
+      <Modal show={showModal} onHide={handleCloseModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title style={{ textAlign: 'center' }}>Add Driver</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group controlId="id">
+              <Form.Label>ID</Form.Label>
+              <Form.Control type="text" name="id" value={formData.id} onChange={handleChange} />
+            </Form.Group>
+            <Form.Group controlId="CIN">
+              <Form.Label>CIN</Form.Label>
+              <Form.Control type="text" name="CIN" value={formData.CIN} onChange={handleChange} />
+            </Form.Group>
+            <Form.Group controlId="fullName">
+              <Form.Label>Full Name</Form.Label>
+              <Form.Control type="text" name="fullName" value={formData.fullName} onChange={handleChange} />
+            </Form.Group>
+            <Form.Group controlId="city">
+              <Form.Label>City</Form.Label>
+              <Form.Control type="text" name="city" value={formData.city} onChange={handleChange} />
+            </Form.Group>
+            <Form.Group controlId="phone">
+              <Form.Label>Phone</Form.Label>
+              <Form.Control type="text" name="phone" value={formData.phone} onChange={handleChange} />
+            </Form.Group>
+            <Form.Group controlId="email">
+              <Form.Label>Email</Form.Label>
+              <Form.Control type="email" name="email" value={formData.email} onChange={handleChange} style={{ marginBottom: '20px' }} />
+            </Form.Group>
+            <div className="d-flex justify-content-between">
+              <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
+              <Button variant="success" type="submit">Save Changes</Button>
+            </div>
+          </Form>
+        </Modal.Body>
+      </Modal>
     </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   );
-};
+
+
+
+
+
+
+}

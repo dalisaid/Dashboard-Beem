@@ -56,19 +56,16 @@ app.post('/login', async (req, res) => {
     const result = await dboperations.checkUser(email, password);
     const token = generateToken({ email,password });
     console.log('Generated token:', token);
-    res.cookie('authToken', token, { sameSite: 'None', secure:true, httpOnly: true });
-    
-    
+    res.cookie('authToken', token, { sameSite: 'None', secure:true, httpOnly: true }); 
     res.status(result.status).json({  });
 });
+
 
 app.get('/logout', (req, res) => {
     // Invalidate the user's session (e.g., clear session data)
     // Clear the HTTP-only authentication cookie
     res.clearCookie('authToken');
-    
-    // Send response indicating successful logout
-    res.send('Logged out successfully.');
+    res.send('Logged out successfully.');     // Send response indicating successful logout
 });
 app.get('/connecteduser', (req, res) => {
 
@@ -78,9 +75,8 @@ app.get('/connecteduser', (req, res) => {
     if (!token) {
         console.log('Generated token:', token);
       return res.status(401).json({ message: 'Unauthorized: No token provided' });
-    } else { // Corrected placement of else
-     
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } else { 
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const { email } = decoded; // Extracting email from decoded token
        
         res.status(200).json({ email });
@@ -88,8 +84,9 @@ app.get('/connecteduser', (req, res) => {
     }
   );
   
-    
-  app.get('/getDrivers', async (req, res) => {
+    /*********************************Driver*************************** */
+
+  app.get('/getDrivers', async (req, res) => {    /****************/
     const token = req.cookies.authToken;
   
     try {
@@ -99,104 +96,96 @@ app.get('/connecteduser', (req, res) => {
         console.log('Generated token:', token);
         return res.status(401).json({ message: 'Unauthorized: No token provided or invalid token' });
       } else {
-        // If the token is valid, proceed with fetching data
-        const result = await dboperations.getDrivers();
+        const result = await dboperations.getDrivers();          // If the token is valid, proceed with fetching data
         res.status(200).json({ result });
       }
     } catch (error) {
-      // If decoding fails due to an invalid token, handle the error appropriately
-      console.error('Invalid token:', error.message);
+      console.error('Invalid token:', error.message);        // If decoding fails due to an invalid token, handle the error appropriately
       return res.status(401).json({ message: 'Unauthorized: Invalid token' });
     }
   });
     
-    
-    
-   
-  app.get('/getCustomers', async (req, res) => {
-    const token = req.cookies.authToken;
   
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  
-      if (!decoded) {
-        console.log('Generated token:', token);
-        return res.status(401).json({ message: 'Unauthorized: No token provided or invalid token' });
-      } else {
-        // If the token is valid, proceed with fetching data
-        const result = await dboperations.getCustomers();
-        res.status(200).json({ result });
-      }
-    } catch (error) {
-      // If decoding fails due to an invalid token, handle the error appropriately
-      console.error('Invalid token:', error.message);
-      return res.status(401).json({ message: 'Unauthorized: Invalid token' });
-    }
-  });
-
-
-
-
   app.post('/addDriver', async (req, res) => {
     try {
       const token = req.cookies.authToken; // Get the JWT token from the request cookies
   
       if (!token) {
-        // If no token is found, respond with a 401 Unauthorized error
-        return res.status(401).json({ message: 'Unauthorized: Missing token' });
+        return res.status(401).json({ message: 'Unauthorized: Missing token' });          // If no token is found, respond with a 401 Unauthorized error
       }
-  
-      // Verify the JWT token to ensure authentication
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  
-      // Extract driver details from request body
-      const { id, CIN, fullName, city, phone, email } = req.body;
-  
-      // Call the addDriver function to add the driver to the database
-      const result = await dboperations.addDriver({ id, CIN, fullName, city, phone, email });
-  
-      // Respond with a success message
-      res.status(200).json({ message: 'Driver added successfully', result });
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);         // Verify the JWT token to ensure authentication
+      const { id, CIN, fullName, city, phone, email } = req.body;       // Extract driver details from request body
+      const result = await dboperations.addDriver({ id, CIN, fullName, city, phone, email });       // Call the addDriver function to add the driver to the database
+      res.status(200).json({ message: 'Driver added successfully', result });       // Respond with a success message
     } catch (error) {
-      // If decoding the token fails or if the token is invalid, respond with a 401 Unauthorized error
-      console.error('Invalid token:', error.message);
+      console.error('Invalid token:', error.message);      // If decoding the token fails or if the token is invalid, respond with a 401 Unauthorized error
       return res.status(401).json({ message: 'Unauthorized: Invalid token' });
     }
   });
   
-  /********************************** */
 
 
   app.delete('/deleteDriver/:id', async (req, res) => {
     try {
       const driverId = req.params.id;
-  
-      // Call the deleteDriver function to delete the driver from the database
-      await dboperations.Deletedriver(driverId);
-  
-      // Respond with a success message
-      res.status(200).json({ message: 'Driver deleted successfully' });
+      await dboperations.Deletedriver(driverId);       // Call the deleteDriver function to delete the driver from the database
+      res.status(200).json({ message: 'Driver deleted successfully' });   // Respond with a success message
     } catch (error) {
       console.error('Error deleting driver:', error);
       res.status(500).json({ message: 'Internal server error' });
     }
   });
+    
+    /*********************Customers********************** */
+
+   
+  app.get('/getCustomers', async (req, res) => {
+    const token = req.cookies.authToken;
+   try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      if (!decoded) {
+        console.log('Generated token:', token);
+        return res.status(401).json({ message: 'Unauthorized: No token provided or invalid token' });
+      } else {
+        const result = await dboperations.getCustomers();         // If the token is valid, proceed with fetching data
+        res.status(200).json({ result });
+      }
+    } catch (error) {
+      console.error('Invalid token:', error.message);
+      return res.status(401).json({ message: 'Unauthorized: Invalid token' });       // If decoding fails due to an invalid token, handle the error appropriately
+    }
+  });
 
 
-/***************************************** */
+
 
 app.delete('/deleteCustomer/:id', async (req, res) => {
   try {
       const customerId = req.params.id; // Change variable name to customerId
-
-      // Call the deleteCustomer function to delete the customer from the database
-      await dboperations.DeleteCustomer(customerId); // Use customerId here
-
-      // Respond with a success message
-      res.status(200).json({ message: 'Customer deleted successfully' });
+      await dboperations.DeleteCustomer(customerId);       // Call the deleteCustomer function to delete the customer from the database
+      res.status(200).json({ message: 'Customer deleted successfully' });      // Respond with a success message
   } catch (error) {
       console.error('Error deleting Customer:', error);
       res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+
+app.post('/addCustomer', async (req, res) => {
+  try {
+    const token = req.cookies.authToken; // Get the JWT token from the request cookies
+
+    if (!token) {
+      return res.status(401).json({ message: 'Unauthorized: Missing token' });    // If no token is found, respond with a 401 Unauthorized error
+    }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);     // Verify the JWT token to ensure authentication
+    const { id, CIN, fullName, city, phone, email } = req.body;     // Extract driver details from request body
+    const result = await dboperations.addCustomer({ id, CIN, fullName, city, phone, email });     // Call the addDriver function to add the driver to the database
+    res.status(200).json({ message: 'Customer added successfully', result });   // Respond with a success message
+  } catch (error) {
+    console.error('Invalid token:', error.message);     // If decoding the token fails or if the token is invalid, respond with a 401 Unauthorized error
+    return res.status(401).json({ message: 'Unauthorized: Invalid token' });
   }
 });
 

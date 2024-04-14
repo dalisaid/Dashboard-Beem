@@ -1,223 +1,269 @@
 import React, { useState } from 'react';
-import { Table, Button } from 'react-bootstrap';
+import { Table, Button, Form} from 'react-bootstrap';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import { BsGeoFill } from 'react-icons/bs';
 
 export const Rides = () => {
-    const [view, setView] = useState('all');
 
+    const [view, setView] = useState('all');
     const handleViewChange = (option) => {
         setView(option);
     };
 
     return (
-        <div className="container"  >
-     
-     <h4 style={{marginLeft:'190px' , marginTop:'200px',marginBottom:'-230px'}}>
-          Rides
-        </h4>
-        <div style={{ display: 'flex', flexDirection: 'row', marginTop: '350px'}}>
-            
-            <div style={{ width: '80%', marginLeft: '190px' }}>
-                <Table striped bordered hover>
-                    <thead>
-                        <tr>
-                            <th colSpan="2">
-                                <Button variant="outline-primary" className="btn btn-outline-warning" onClick={() => handleViewChange('all')}>ALL</Button>{' '}
-                                <Button variant="outline-primary" className="btn btn-outline-warning" onClick={() => handleViewChange('completed')}>COMPLETED</Button>{' '}
-                                <Button variant="outline-primary" className="btn btn-outline-warning" onClick={() => handleViewChange('accepted')}>ACCEPTED</Button>{' '}
-                                <Button variant="outline-primary" className="btn btn-outline-warning" onClick={() => handleViewChange('canceled')}>CANCELED</Button>{' '}
-                            </th>
-                        </tr>
-                        <tr>
 
-                        </tr>
+
+        <div className="container-" style={{
+            width: "70vw",
+            height: "70vh",
+            backgroundColor: "#fff5",
+            marginLeft: "270px",
+            marginTop: "190px",
+            backdropFilter: "blur(7px)",
+            boxShadow: "0 .4rem .8rem #0005",
+            borderRadius: ".8rem",
+            overflow: "hidden"
+        }} >
+
+            <section
+                className="table__header"
+                style={{
+                    width: "100%",
+                    height: "10%",
+                    backgroundColor: "#fff4",
+                    padding: ".8rem 1rem",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center"
+                }}
+            >
+                <h1>Rides</h1>
+                <Form className="mt-3 mr-3">
+                    <div style={{ position: 'relative' }}>
+
+
+                    </div>
+                </Form>
+            </section>
+            <div className="table_body" style={{
+                width: "95%",
+                maxHeight: "calc(89% - 1.6rem)",
+                backgroundColor: "#fffb",
+                margin: ".8rem auto",
+                borderRadius: ".6rem",
+                overflow: "auto",
+                overflowY: "overlay"
+            }}>
+
+                <Table >
+                    <thead>
+
+
                     </thead>
                     <tbody>
-                        {view === 'all' && (
-                            <tr>
-                                <td>
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <FaMapMarkerAlt style={{ color: '#F64C02', marginRight: '5px' }} />
-                                        Manouba                                    </div>
-                                    <br />
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <BsGeoFill style={{ color: 'green', marginRight: '5px' }} />
-                                        Ezzahra                                    </div>
-                                </td>
-                                
-                            </tr>
 
-                             )}
-                              {view === 'all' && (
-                            <tr>
-                                <td>
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <FaMapMarkerAlt style={{ color: '#F64C02', marginRight: '5px' }} />
-                                        Manouba                                    </div>
-                                    <br />
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <BsGeoFill style={{ color: 'green', marginRight: '5px' }} />
-                                        Ezzahra                                    </div>
-                                </td>
-                                
-                            </tr>
 
-                             )}
+
+
+
+
+                        <Table striped bordered hover>
+                            <thead>
+                                <tr>
+                                    <th colSpan="2">
+                                        <Button variant="outline-primary" className="btn btn-outline-warning" onClick={() => handleViewChange('all')}>ALL</Button>{' '}
+                                        <Button variant="outline-primary" className="btn btn-outline-warning" onClick={() => handleViewChange('completed')}>COMPLETED</Button>{' '}
+                                        <Button variant="outline-primary" className="btn btn-outline-warning" onClick={() => handleViewChange('accepted')}>ACCEPTED</Button>{' '}
+                                        <Button variant="outline-primary" className="btn btn-outline-warning" onClick={() => handleViewChange('canceled')}>CANCELED</Button>{' '}
+                                    </th>
+                                </tr>
+                                <tr>
+
+                                </tr>
+                            </thead>
+                            <tbody>
                                 {view === 'all' && (
-                            <tr>
-                                <td>
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <FaMapMarkerAlt style={{ color: '#F64C02', marginRight: '5px' }} />
-                                        Manouba                                    </div>
-                                    <br />
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <BsGeoFill style={{ color: 'green', marginRight: '5px' }} />
-                                        Ezzahra                                    </div>
-                                </td>
-                                
-                            </tr>
+                                    <tr>
+                                        <td>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <FaMapMarkerAlt style={{ color: '#F64C02', marginRight: '5px' }} />
+                                                Manouba                                    </div>
+                                            <br />
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <BsGeoFill style={{ color: 'green', marginRight: '5px' }} />
+                                                Ezzahra                                    </div>
+                                        </td>
 
-                             )}
+                                    </tr>
+
+                                )}
                                 {view === 'all' && (
-                            <tr>
-                                <td>
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <FaMapMarkerAlt style={{ color: '#F64C02', marginRight: '5px' }} />
-                                        Manouba                                    </div>
-                                    <br />
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <BsGeoFill style={{ color: 'green', marginRight: '5px' }} />
-                                        Ezzahra                                    </div>
-                                </td>
-                                
-                            </tr>
+                                    <tr>
+                                        <td>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <FaMapMarkerAlt style={{ color: '#F64C02', marginRight: '5px' }} />
+                                                Manouba                                    </div>
+                                            <br />
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <BsGeoFill style={{ color: 'green', marginRight: '5px' }} />
+                                                Ezzahra                                    </div>
+                                        </td>
 
-                             )}
+                                    </tr>
+
+                                )}
                                 {view === 'all' && (
-                            <tr>
-                                <td>
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <FaMapMarkerAlt style={{ color: '#F64C02', marginRight: '5px' }} />
-                                        Manouba                                    </div>
-                                    <br />
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <BsGeoFill style={{ color: 'green', marginRight: '5px' }} />
-                                        Ezzahra                                    </div>
-                                </td>
-                                
-                            </tr>
+                                    <tr>
+                                        <td>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <FaMapMarkerAlt style={{ color: '#F64C02', marginRight: '5px' }} />
+                                                Manouba                                    </div>
+                                            <br />
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <BsGeoFill style={{ color: 'green', marginRight: '5px' }} />
+                                                Ezzahra                                    </div>
+                                        </td>
 
-                             )}
-                        {view === 'completed' && (
-                            <tr>
-                                <td>
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <FaMapMarkerAlt style={{ color: '#F64C02', marginRight: '5px' }} />
-                                        Ezzahra                                    </div>
-                                    <br />
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <BsGeoFill style={{ color: 'green', marginRight: '5px' }} />
-                                        Manouba                                    </div>
-                                </td>
-                            </tr>
-                        )}
-                          {view === 'completed' && (
-                            <tr>
-                                <td>
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <FaMapMarkerAlt style={{ color: '#F64C02', marginRight: '5px' }} />
-                                        Ezzahra                                    </div>
-                                    <br />
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <BsGeoFill style={{ color: 'green', marginRight: '5px' }} />
-                                        Manouba                                    </div>
-                                </td>
-                            </tr>
-                        )}
-                        {view === 'accepted' && (
-                            <tr>
-                                <td>
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <FaMapMarkerAlt style={{ color: '#F64C02', marginRight: '5px' }} />
-                                        Megrine                                    </div>
-                                    <br />
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <BsGeoFill style={{ color: 'green', marginRight: '5px' }} />
-                                        Manouba                                    </div>
-                                </td>
-                            </tr>
-                        )}
-                        {view === 'accepted' && (
-                            <tr>
-                                <td>
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <FaMapMarkerAlt style={{ color: '#F64C02', marginRight: '5px' }} />
-                                        Megrine                                    </div>
-                                    <br />
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <BsGeoFill style={{ color: 'green', marginRight: '5px' }} />
-                                        Manouba                                    </div>
-                                </td>
-                            </tr>
-                        )}
-                         {view === 'accepted' && (
-                            <tr>
-                                <td>
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <FaMapMarkerAlt style={{ color: '#F64C02', marginRight: '5px' }} />
-                                        Megrine                                    </div>
-                                    <br />
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <BsGeoFill style={{ color: 'green', marginRight: '5px' }} />
-                                        Manouba                                    </div>
-                                </td>
-                            </tr>
-                        )}
-                        {view === 'canceled' && (
-                            <tr>
-                                <td>
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <FaMapMarkerAlt style={{ color: '#F64C02', marginRight: '5px' }} />
-                                        Bardo                                    </div>
-                                    <br />
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <BsGeoFill style={{ color: 'green', marginRight: '5px' }} />
-                                        Menzah                                    </div>
-                                </td>
-                            </tr>
-                        )}
-                         {view === 'canceled' && (
-                            <tr>
-                                <td>
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <FaMapMarkerAlt style={{ color: '#F64C02', marginRight: '5px' }} />
-                                        Bardo                                    </div>
-                                    <br />
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <BsGeoFill style={{ color: 'green', marginRight: '5px' }} />
-                                        Menzah                                    </div>
-                                </td>
-                            </tr>
-                        )}
+                                    </tr>
+
+                                )}
+                                {view === 'all' && (
+                                    <tr>
+                                        <td>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <FaMapMarkerAlt style={{ color: '#F64C02', marginRight: '5px' }} />
+                                                Manouba                                    </div>
+                                            <br />
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <BsGeoFill style={{ color: 'green', marginRight: '5px' }} />
+                                                Ezzahra                                    </div>
+                                        </td>
+
+                                    </tr>
+
+                                )}
+                                {view === 'all' && (
+                                    <tr>
+                                        <td>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <FaMapMarkerAlt style={{ color: '#F64C02', marginRight: '5px' }} />
+                                                Manouba                                    </div>
+                                            <br />
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <BsGeoFill style={{ color: 'green', marginRight: '5px' }} />
+                                                Ezzahra                                    </div>
+                                        </td>
+
+                                    </tr>
+
+                                )}
+                                {view === 'completed' && (
+                                    <tr>
+                                        <td>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <FaMapMarkerAlt style={{ color: '#F64C02', marginRight: '5px' }} />
+                                                Ezzahra                                    </div>
+                                            <br />
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <BsGeoFill style={{ color: 'green', marginRight: '5px' }} />
+                                                Manouba                                    </div>
+                                        </td>
+                                    </tr>
+                                )}
+                                {view === 'completed' && (
+                                    <tr>
+                                        <td>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <FaMapMarkerAlt style={{ color: '#F64C02', marginRight: '5px' }} />
+                                                Ezzahra                                    </div>
+                                            <br />
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <BsGeoFill style={{ color: 'green', marginRight: '5px' }} />
+                                                Manouba                                    </div>
+                                        </td>
+                                    </tr>
+                                )}
+                                {view === 'accepted' && (
+                                    <tr>
+                                        <td>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <FaMapMarkerAlt style={{ color: '#F64C02', marginRight: '5px' }} />
+                                                Megrine                                    </div>
+                                            <br />
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <BsGeoFill style={{ color: 'green', marginRight: '5px' }} />
+                                                Manouba                                    </div>
+                                        </td>
+                                    </tr>
+                                )}
+                                {view === 'accepted' && (
+                                    <tr>
+                                        <td>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <FaMapMarkerAlt style={{ color: '#F64C02', marginRight: '5px' }} />
+                                                Megrine                                    </div>
+                                            <br />
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <BsGeoFill style={{ color: 'green', marginRight: '5px' }} />
+                                                Manouba                                    </div>
+                                        </td>
+                                    </tr>
+                                )}
+                                {view === 'accepted' && (
+                                    <tr>
+                                        <td>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <FaMapMarkerAlt style={{ color: '#F64C02', marginRight: '5px' }} />
+                                                Megrine                                    </div>
+                                            <br />
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <BsGeoFill style={{ color: 'green', marginRight: '5px' }} />
+                                                Manouba                                    </div>
+                                        </td>
+                                    </tr>
+                                )}
+                                {view === 'canceled' && (
+                                    <tr>
+                                        <td>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <FaMapMarkerAlt style={{ color: '#F64C02', marginRight: '5px' }} />
+                                                Bardo                                    </div>
+                                            <br />
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <BsGeoFill style={{ color: 'green', marginRight: '5px' }} />
+                                                Menzah                                    </div>
+                                        </td>
+                                    </tr>
+                                )}
+                                {view === 'canceled' && (
+                                    <tr>
+                                        <td>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <FaMapMarkerAlt style={{ color: '#F64C02', marginRight: '5px' }} />
+                                                Bardo                                    </div>
+                                            <br />
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <BsGeoFill style={{ color: 'green', marginRight: '5px' }} />
+                                                Menzah                                    </div>
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </Table>
+
+
+
+
+
+
+
+
                     </tbody>
                 </Table>
             </div>
-            <div style={{ width: '70%',marginLeft:'20px'}}>
-                <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3278.4210652689494!2d10.760096210373385!3d34.74498458072413!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1301d35aeaf8b55d%3A0x98b078173fb62f2f!2sSMART%20TAXI%20-%20Transport%20a%C3%A9roport%20toute%20la%20Tunisie%20-%20transport%20entre%20gouvernorat!5e0!3m2!1sfr!2stn!4v1711933300295!5m2!1sfr!2stn"
-                    width="100%"
-                    height="450"
-                    style={{ border: 0 }}
-                    allowFullScreen=""
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    title="Beem-tunisie"
 
-                ></iframe>
-            </div>
-        </div>
         </div>
 
     );
 };
+

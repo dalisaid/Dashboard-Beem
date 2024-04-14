@@ -1,15 +1,9 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartBar, faUser, faCar, faMoneyCheckAlt, faCog, faUserCircle, faUsers } from '@fortawesome/free-solid-svg-icons';
-import { ClientsTable } from '../components/Client';
-import { Transaction } from '../components/transaction';
-import { DriversTable } from '../components/Driver';
-import { Rides } from '../components/rides';
 import { Link } from 'react-router-dom';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { Button } from 'react-bootstrap'; 
-import { Dashboard } from '../components/dashbord';
-import { ProfilDetails } from '../components/profil';
 
 
 
@@ -83,7 +77,7 @@ export const Sidebar = () => {
 
     const mainContentStyle = {
         width:'100%',
-        marginLeft: expanded ? '80px' : '-80px',
+        marginLeft: expanded ? '50px' : '-80px',
         transition: 'margin-left 0.3s ease'
     };
 
@@ -123,7 +117,7 @@ export const Sidebar = () => {
 
 
                         <div className='links'>
-                            <Link to={`/dashboard`} style={{ textDecoration: 'none' }} /*onClick={() => handleComponentSelect('dashboard')}*/>
+                            <Link to={`/dashboard`} style={{ textDecoration: 'none' }} >
                                 <div className="dashboard-link" style={linkstyle} {...hoverEffects}>
                                     <span className="icon" style={iconstyle}>
                                         <FontAwesomeIcon icon={faChartBar} />
@@ -135,7 +129,7 @@ export const Sidebar = () => {
                             </Link>
 
                             {/* Drivers */}
-                            <Link to={`/Drivers`} style={{ textDecoration: 'none' }} /*onClick={() => handleComponentSelect('drivers')}*/>
+                            <Link to={`/Drivers`} style={{ textDecoration: 'none' }} >
                                 <div className="dashboard-link" style={linkstyle}
                                     {...hoverEffects}
                                 >
@@ -150,7 +144,7 @@ export const Sidebar = () => {
 
                             {/* Clients */}
 
-                            <Link to={`/Clients`} style={{ textDecoration: 'none' }} /*onClick={() => handleComponentSelect('clients')}*/> 
+                            <Link to={`/Clients`} style={{ textDecoration: 'none' }} > 
                                 <div className="dashboard-link" style={linkstyle}
                                     {...hoverEffects}
                                 >
@@ -164,7 +158,7 @@ export const Sidebar = () => {
                             </Link>
 
                             {/* Rides */}
-                            <Link to={`/rides`} style={{ textDecoration: 'none' }} /* onClick={() => handleComponentSelect('rides')}*/>
+                            <Link to={`/rides`} style={{ textDecoration: 'none' }}>
                                 <div className="dashboard-link" style={linkstyle}
                                     {...hoverEffects}
                                 >
@@ -178,7 +172,7 @@ export const Sidebar = () => {
                             </Link>
 
                             {/* Transaction */}
-                            <Link to={`/transaction`} style={{ textDecoration: 'none' }}/* onClick={() => handleComponentSelect('transaction')}*/>
+                            <Link to={`/transaction`} style={{ textDecoration: 'none' }}>
                                 <div className="dashboard-link" style={linkstyle}
                                     {...hoverEffects}
                                 >
@@ -215,17 +209,7 @@ export const Sidebar = () => {
                 </div>
             </div>
             <div style={mainContentStyle}>
-    {/* Render selected component 
 
-    {selectedComponent === 'drivers' && <DriversTable />}
-    {selectedComponent === 'clients' && <ClientsTable />}
-    {selectedComponent === 'rides' && <Rides />}
-    {selectedComponent === 'transaction' && <Transaction />}
-    {selectedComponent === 'dashboard' && <Dashboard />}
-    {selectedComponent === 'profil' && <ProfilDetails />}
-
-
-    Add more components as needed */}
 </div>
            
         </div>

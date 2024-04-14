@@ -21,7 +21,7 @@ const App = () => {
 
   return (
     
-    
+    <div style={{backgroundColor: '#eee' }}>
    <QueryClientProvider client={queryClient}>
    <Router>
      <Routes>
@@ -37,7 +37,7 @@ const App = () => {
              <div style={{ flex: 1  }}>
              <NavBar />
                <Routes>
-                 <Route path="/drivers" element={<DriversTable />} />
+                 <Route path="/drivers" element={<DriversTable  />} />
                  <Route path="/Clients" element={<ClientsTable />} />
                  <Route path="/profil" element={<ProfilDetails />} />
                  <Route path="/dashboard" element={<Dashboard />} />
@@ -52,7 +52,7 @@ const App = () => {
    </Router>
  </QueryClientProvider>
 
-
+ </div>
   
   );
 };

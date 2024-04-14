@@ -1,55 +1,56 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../css/App.css';
 import { BsFillTrashFill, BsFillPencilFill } from "react-icons/bs";
 import { Table, Form, FormControl, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
 import Pagination from 'react-bootstrap/Pagination';
 import { orderBy } from 'lodash';
+import { Statistic, Space, Card } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
+
+
+
+
+
 export const DriversTable = () => {
 
-  /***************************************************************************** */
 
-
-
+  // State for storing driver data
   const [DriverData, setDriverData] = useState([]);
 
-  useEffect(() => {
-    const getDrivers = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/getDrivers', {
-          withCredentials: true
-        });
 
-        if (response.status === 200) {
-          // Handle successful response
-          setDriverData(response.data.result);
-        } else {
-          // Handle other status codes if needed
-          console.log('Unexpected status code:', response.status);
-          alert('Error getting data from token');
-        }
-      } catch (error) {
-        // Handle network errors or other issues
-        console.error('Error:', error);
-        alert('Network error or other issue occurred');
+
+  // Function to fetch driver data from server
+
+  const getDrivers = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/getDrivers', {
+        withCredentials: true
+      });
+      if (response.status === 200) {
+        setDriverData(response.data.result);           // Handle successful response
+      } else {
+        console.log('Unexpected status code:', response.status);           // Handle other status codes if needed
+        alert('Error getting data from token');
       }
-    };
-
-    // Call the function to fetch drivers
-    getDrivers();
+    } catch (error) {
+      console.error('Error:', error);         // Handle network errors or other issues
+      alert('Network error or other issue occurred');
+    }
+  };
+  useEffect(() => {
+    getDrivers();     // Call the function to fetch drivers
   }, []);
 
 
 
-  // Call the function when component mounts
 
 
-  /*****************************************************************search*/
-
+  // State for search input
   const [search, setsearch] = useState('');
 
+  // Search
   const filteredItems = DriverData.filter((driver) => {
     return search.toLowerCase() === '' ? driver : String(driver.id).toLowerCase().includes(search) ||
       String(driver.CIN).toLowerCase().includes(search) ||
@@ -58,6 +59,7 @@ export const DriversTable = () => {
       String(driver.phone).toLowerCase().includes(search) ||
       driver.email.toLowerCase().includes(search);
   });
+
 
 
   // Reset current page to 1 if the search is successful
@@ -69,19 +71,12 @@ export const DriversTable = () => {
 
 
 
-  /*********************************************///////pagination */
 
+  // Pagination
   const [currentPage, setCurrentPage] = React.useState(1);
-
-
   const data = filteredItems;
   const itemsPerPage = 10;
-  // Pagination state
-
-  // Calculate total number of pages
   const totalPages = Math.ceil(data.length / itemsPerPage);
-
-  // Slice data to display only items for the current page
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentItems = data.slice(startIndex, endIndex);
@@ -91,7 +86,8 @@ export const DriversTable = () => {
     setCurrentPage(page);
   };
 
-  /************************************form completion************************************/
+
+  // State for form data
   const [formData, setFormData] = useState({
     id: '',
     CIN: '',
@@ -101,17 +97,19 @@ export const DriversTable = () => {
     email: ''
   });
 
+
+
+  // Handle form submission to add a new driver
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('formData:', formData); // Log formData before making the request
-
     try {
       const response = await axios.post('http://localhost:5000/addDriver', formData, {
         withCredentials: true // Ensure credentials are included in the request
       });
       console.log('Response:', response.data); // Log the response from the server
-
-      // Rest of the function...
+      handleCloseModal();
+      getDrivers();
     } catch (error) {
       console.error('Error:', error);
       alert('Network error or other issue occurred');
@@ -120,102 +118,188 @@ export const DriversTable = () => {
 
 
 
-  /***************************************************************** driver deletion*/
+  // Delete driver function
   const handleDeletedriver = async (driverId) => {
     try {
-      // Send a DELETE request to the server to delete the driver
-      await axios.delete(`http://localhost:5000/deleteDriver/${driverId}`, {
+      await axios.delete(`http://localhost:5000/deleteDriver/${driverId}`, {        // Send a DELETE request to the server to delete the driver
         withCredentials: true // Ensure credentials are included in the request
       });
-
-      // Remove the deleted driver from the local state
-      setDriverData((prevDriverData) => prevDriverData.filter(driver => driver.id !== driverId));
+      setDriverData((prevDriverData) => prevDriverData.filter(driver => driver.id !== driverId));      // Remove the deleted driver from the local state
     } catch (error) {
       console.error('Error:', error);
       alert('Network error or other issue occurred');
     }
   };
-  /******************************************** Modal logic*/
 
+
+  // State and functions for modal
   const [showModal, setShowModal] = React.useState(false);
-
   const handleCloseModal = () => setShowModal(false);
   const handleShowModal = () => setShowModal(true);
 
+  // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  /********************************************  filter */
 
 
-
+  //Sorting
   const [sort, setSort] = useState(null); // Initialize the sorting property
   const [sortDirection, setSortDirection] = useState('asc'); // Initialize the sorting direction
   const handleSort = (sortBy) => {
-    // Toggle sorting direction if already sorting by the same property
-    if (sortBy === sort) {
+    if (sortBy === sort) {     // Toggle sorting direction if already sorting by the same property
       setSortDirection((prevSortDirection) => (prevSortDirection === 'asc' ? 'desc' : 'asc'));
     } else {
-      // Set the new sorting property and reset sorting direction to ascending
-      setSort(sortBy);
+      setSort(sortBy);      // Set the new sorting property and reset sorting direction to ascending
       setSortDirection('asc');
     }
   };
 
 
+  // Function to get total count of drivers
+  const getTotalDriversCount = () => {
+    return filteredItems.length;
+  };
+
   return (
-    <div className="container-" style={{ marginTop: '200px' }}>
+    <div className="container-" style={{
+      width: "80vw",
+      height: "auto",
+      marginLeft: "14%",
+      marginRight: "auto",
+      marginTop: "190px",
+      boxShadow: "0 .4rem .8rem #0005",
+      borderRadius: ".8rem",
+      overflow: "hidden",
+      padding: "20px"
+    }}>
 
-      <h4 style={{ marginLeft: '290px', marginBottom: '-10px' }}>Drivers</h4>
+      <section
+        className="table__header"
+        style={{
+          width: "100%",
+          height: "10%",
+          backgroundColor: "#fff4",
+          padding: ".8rem 1rem",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center"
+        }}
+      >
+        <h1>Drivers</h1>
+        <Form className="mt-3 mr-3">
+          <div style={{ position: 'relative' }}>
+            <FormControl
+              type="text"
+              placeholder="Search"
+              className="mr-sm-2 search-input"
+              style={{
+                border: '1px solid #ced4da',
+                borderRadius: '25px', // Adding border radius
+                padding: '0.5rem 2rem 0.5rem 1rem', // Adjusting padding for the icon
+                width: '350px',
+                marginRight: '20px'
+              }}
+              value={search}
+              onChange={(e) => setsearch(e.target.value)}
+            />
+            <img
+              src="./img/search.png"
+              alt="Search"
+              style={{
+                position: 'absolute',
+                top: '50%',
+                right: '30px',
+                transform: 'translateY(-50%)',
+                width: '1.5rem', // Adjust icon size as needed
+                height: 'auto'
+              }}
+            />
+          </div>
+        </Form>
+      </section>
+      <div>
 
-      <div className="table-wrapper" style={{ width: '100%', marginLeft: '100px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', height: '60vh' }}>
-        <Table hover style={{ width: '80%', textAlign: "left", padding: '10px', height: '100%', marginTop: '80px' }}>
+        <Space style={{ marginTop: '20px', marginLeft: '20px' }} size={20}>
+          <Card className="custom-card">
+            <Space direction='horizontal'>
+              <UserOutlined style={{ fontSize: '28px', color: 'purple', marginBottom: '10px', backgroundColor: "rgba(255,0, 255, 0.25)", borderRadius: 20, padding: 8 }} />
+              <Statistic title="Total Number of Drivers" value={getTotalDriversCount()} />
+            </Space>
+          </Card>
+        </Space>
+
+
+
+
+
+
+      </div>
+      <div className="table_body" style={{
+        width: "95%",
+        maxHeight: "calc(89% - 1.6rem)",
+        backgroundColor: "#fffb",
+        margin: ".8rem auto",
+        borderRadius: ".6rem",
+        overflow: "auto",
+        overflowY: "overlay"
+      }}>
+        <Table hover>
+
 
 
           <thead>
             <tr>
               <th colSpan="6">
-                <Button onClick={handleShowModal} variant="primary">Add Driver</Button>
+                <Button
+                  onClick={handleShowModal}
 
-                <div className="d-flex align-items-center justify-content-end">
+                  style={{
+                    position: "relative",
+                    padding: "10px 22px",
+                    backgroundColor: "#584cac",
+                    borderRadius: "6px",
+                    color: "#fff",
+                    border: "none",
+                    fontSize: "18px",
+                    fontWeight: "400",
+                    cursor: "pointer",
+                    boxShadow: "0 5px 10px black rgba(0,0,0,0.1)",
 
-                  <Form className="mt-3 mr-3">
-                    <FormControl type="text" placeholder="Search" className="mr-sm-2 search-input" style={{ border: '1px solid #ced4da', borderRadius: '5px', padding: '0.5rem', width: '250px', marginRight: '20px' }}
-                      onChange={(e) => setsearch(e.target.value)} />
-                  </Form>
-                  <Form className="mt-3 mr-3">
-                    <Form.Control as="select" onChange={(e) => setSort(e.target.value)} className="filter-select" style={{ border: '1px solid #ced4da', borderRadius: '5px', padding: '0.5rem', width: '150px', backgroundColor: '#fff' }}>
-                      <option value="asc">asc </option>
-
-                      <option value="desc">desc</option>
-                    </Form.Control>
-                  </Form>
-                </div>
+                  }}
+                >
+                  Add Driver
+                </Button>
               </th>
+              <th></th>
+
+
             </tr>
-            <tr>
-              <th onClick={() => handleSort('id')} style={{ cursor: 'pointer' }}>
+            <tr >
+              <th onClick={() => handleSort('id')} style={{ cursor: 'pointer', top: 0, left: 0, backgroundColor: '#d5d1defe', borderCollapse: 'collapse' }}>
                 ID {sort === 'id' && (sortDirection === 'asc' ? '▲' : '▼')}
-              </th> <th onClick={() => handleSort('CIN')} style={{ cursor: 'pointer' }}>
+              </th>
+              <th onClick={() => handleSort('CIN')} style={{ cursor: 'pointer', top: 0, left: 0, backgroundColor: '#d5d1defe', borderCollapse: 'collapse' }}>
                 CIN {sort === 'CIN' && (sortDirection === 'asc' ? '▲' : '▼')}
               </th>
 
-              <th onClick={() => handleSort('fullName')} style={{ cursor: 'pointer' }}>
+              <th onClick={() => handleSort('fullName')} style={{ cursor: 'pointer', top: 0, left: 0, backgroundColor: '#d5d1defe', borderCollapse: 'collapse' }}>
                 Full Name {sort === 'fullName' && (sortDirection === 'asc' ? '▲' : '▼')}
               </th>
-              <th onClick={() => handleSort('city')} style={{ cursor: 'pointer' }}>
+              <th onClick={() => handleSort('city')} style={{ cursor: 'pointer', top: 0, left: 0, backgroundColor: '#d5d1defe', borderCollapse: 'collapse' }}>
                 City {sort === 'city' && (sortDirection === 'asc' ? '▲' : '▼')}
               </th>
-              <th onClick={() => handleSort('phone')} style={{ cursor: 'pointer' }}>
+              <th onClick={() => handleSort('phone')} style={{ cursor: 'pointer', top: 0, left: 0, backgroundColor: '#d5d1defe', borderCollapse: 'collapse' }}>
                 Phone {sort === 'phone' && (sortDirection === 'asc' ? '▲' : '▼')}
               </th>
-              <th onClick={() => handleSort('email')} style={{ cursor: 'pointer' }}>
+              <th onClick={() => handleSort('email')} style={{ cursor: 'pointer', top: 0, left: 0, backgroundColor: '#d5d1defe', borderCollapse: 'collapse' }}>
                 Email {sort === 'email' && (sortDirection === 'asc' ? '▲' : '▼')}
               </th>
 
-              <th></th>
+              <th style={{ top: 0, left: 0, backgroundColor: '#d5d1defe', borderCollapse: 'collapse' }}></th>
+
             </tr>
           </thead>
           <tbody>
@@ -245,7 +329,7 @@ export const DriversTable = () => {
               [sortDirection]
             ).map((driver) => (
               <tr key={driver.id}>
-                <td>{driver.id}</td>
+                <td >{driver.id}</td>
                 <td>{driver.CIN}</td>
                 <td>{driver.fullName}</td>
                 <td>{driver.city}</td>
@@ -263,6 +347,8 @@ export const DriversTable = () => {
             ))};
           </tbody>
         </Table>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Pagination>
           <Pagination.Prev
             onClick={() => handlePageChange(currentPage - 1)}
@@ -282,11 +368,12 @@ export const DriversTable = () => {
             disabled={currentPage === totalPages}
           />
         </Pagination>
+
       </div>
 
       <Modal show={showModal} onHide={handleCloseModal} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Add Driver</Modal.Title>
+          <Modal.Title style={{ textAlign: 'center' }}>Add Driver</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
@@ -312,13 +399,16 @@ export const DriversTable = () => {
             </Form.Group>
             <Form.Group controlId="email">
               <Form.Label>Email</Form.Label>
-              <Form.Control type="email" name="email" value={formData.email} onChange={handleChange} />
+              <Form.Control type="email" name="email" value={formData.email} onChange={handleChange} style={{ marginBottom: '20px' }} />
             </Form.Group>
-            <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
-            <Button variant="success" type="submit">Save Changes</Button>
+            <div className="d-flex justify-content-between">
+              <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
+              <Button variant="success" type="submit">Save Changes</Button>
+            </div>
           </Form>
         </Modal.Body>
       </Modal>
+
     </div>
   );
 };

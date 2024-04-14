@@ -47,7 +47,7 @@ const checkUser = async (email, password) => {
         return { status: 500, message: 'An error occurred while signing in' };
     }
 };
-/**************************************** */
+/**************************************** Drivers***************************/
 
 const getDrivers = async () => {
     try {
@@ -61,6 +61,49 @@ const getDrivers = async () => {
     }
 }
 /**************************************** */
+
+const addDriver = async ({ id, CIN, fullName, city, phone, email }) => {
+  try {
+    const pool = await sql.connect(config);
+    const query = `
+    INSERT INTO Drivers (CIN, fullName, city, phone, email)
+    VALUES (@CIN, @fullName, @city, @phone, @email)
+          `;
+    const result = await pool.request()
+      .input('CIN', sql.VarChar, CIN)
+      .input('fullName', sql.VarChar, fullName)
+      .input('city', sql.VarChar, city)
+      .input('phone', sql.VarChar, phone)
+      .input('email', sql.VarChar, email)
+      .query(query);
+
+    return result;
+  } catch (error) {
+    console.error('Error adding driver to the database:', error);
+    throw error;
+  }
+};
+
+
+/***************************************** */
+
+
+const Deletedriver = async (driverId) => {
+  try {
+    const pool = await sql.connect(config);
+    const query = `DELETE FROM Drivers WHERE id = @id`;
+    const result = await pool.request()
+      .input('id', sql.Int, driverId)
+      .query(query);
+
+    return result;
+  } catch (error) {
+    console.error('Error deleting driver from the database:', error);
+    throw error;
+  }
+};
+
+/************************************************Customers**************************************************************** */
 
 const getCustomers = async () => {
     try {
@@ -76,48 +119,6 @@ const getCustomers = async () => {
 /**************************************** */
 
 
-const addDriver = async ({ id, CIN, fullName, city, phone, email }) => {
-    try {
-      const pool = await sql.connect(config);
-      const query = `
-      INSERT INTO Drivers (CIN, fullName, city, phone, email)
-      VALUES (@CIN, @fullName, @city, @phone, @email)
-            `;
-      const result = await pool.request()
-        .input('CIN', sql.VarChar, CIN)
-        .input('fullName', sql.VarChar, fullName)
-        .input('city', sql.VarChar, city)
-        .input('phone', sql.VarChar, phone)
-        .input('email', sql.VarChar, email)
-        .query(query);
-  
-      return result;
-    } catch (error) {
-      console.error('Error adding driver to the database:', error);
-      throw error;
-    }
-  };
-
-
-/***************************************** */
-
-
-  const Deletedriver = async (driverId) => {
-    try {
-      const pool = await sql.connect(config);
-      const query = `DELETE FROM Drivers WHERE id = @id`;
-      const result = await pool.request()
-        .input('id', sql.Int, driverId)
-        .query(query);
-  
-      return result;
-    } catch (error) {
-      console.error('Error deleting driver from the database:', error);
-      throw error;
-    }
-  };
-/***************************************** */
-
 const DeleteCustomer = async (CustomerId) => {
     try {
       const pool = await sql.connect(config);
@@ -132,8 +133,30 @@ const DeleteCustomer = async (CustomerId) => {
       throw error;
     }
 };
+/**************************************** */
+const addCustomer = async ({ id, CIN, fullName, city, phone, email }) => {
+  try {
+    const pool = await sql.connect(config);
+    const query = `
+    INSERT INTO Customers (CIN, fullName, city, phone, email)
+    VALUES (@CIN, @fullName, @city, @phone, @email)
+          `;
+    const result = await pool.request()
+      .input('CIN', sql.VarChar, CIN)
+      .input('fullName', sql.VarChar, fullName)
+      .input('city', sql.VarChar, city)
+      .input('phone', sql.VarChar, phone)
+      .input('email', sql.VarChar, email)
+      .query(query);
+
+    return result;
+  } catch (error) {
+    console.error('Error adding Customer to the database:', error);
+    throw error;
+  }
+};
 
 /****************************************** */
         module.exports ={
-            getUser,checkUser,getDrivers,getCustomers,addDriver,Deletedriver,DeleteCustomer
+            getUser,checkUser,getDrivers,getCustomers,addDriver,Deletedriver,DeleteCustomer,addCustomer
         }

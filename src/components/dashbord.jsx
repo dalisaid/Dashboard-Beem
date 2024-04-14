@@ -5,7 +5,7 @@ export const Dashboard = () => {
     <div>
      
 
-      <div style={{ marginLeft: "250px", marginTop: "200px" }}>
+      <div style={{ marginLeft: "250px", marginTop: "200px",  height: "50vh", }}>
         <img
           src="/img/test1.png"
           alt=""
@@ -14,7 +14,7 @@ export const Dashboard = () => {
         <img src="/img/test2.png" alt="" style={{ display: "inline-block" }} />
       </div>
 
-      <div style={{ marginLeft: "250px", marginTop: "50px" }}>
+      <div style={{ marginLeft: "250px"}}>
         <img
           src="/img/test3.png"
           alt=""
