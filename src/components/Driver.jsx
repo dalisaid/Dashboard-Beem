@@ -29,7 +29,8 @@ export const DriversTable = () => {
         withCredentials: true
       });
       if (response.status === 200) {
-        setDriverData(response.data.result);           // Handle successful response
+        setDriverData(response.data.result);
+                 // Handle successful response
       } else {
         console.log('Unexpected status code:', response.status);           // Handle other status codes if needed
         alert('Error getting data from token');
@@ -163,6 +164,7 @@ export const DriversTable = () => {
     return filteredItems.length;
   };
 
+  const role='Drivers';
   return (
     <div className="container-" style={{
       width: "80vw",
@@ -338,7 +340,7 @@ export const DriversTable = () => {
                 <td className="fit">
                   <span className="actions" style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
                     <BsFillTrashFill className="delete-btn" style={{ color: '#e10d05', marginRight: '5mm' }} onClick={() => handleDeletedriver(driver.id)} />
-                    <Link to="/profil" style={{ textDecoration: 'none', color: 'black', marginRight: '1mm' }}>
+                    <Link to={`/profil/${role}/${driver.id}`} style={{ textDecoration: 'none', color: 'black', marginRight: '1mm' }}>
                       <BsFillPencilFill className="edit-btn" />
                     </Link>
                   </span>

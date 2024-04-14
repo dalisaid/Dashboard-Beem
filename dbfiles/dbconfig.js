@@ -2,7 +2,7 @@ const config ={
     user:'DIGID',
 
     password:'03digital21identity2024',
-    server:'DESKTOP-8EOEC9E',
+    server:'DESKTOP-1D7M871',
     database:'SQLTEST',
     options: {
         trustServerCertificate: true,

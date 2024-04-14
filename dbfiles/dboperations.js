@@ -2,18 +2,28 @@ const config =require('./dbconfig'),
       sql =  require('mssql');
 
 /*****************************************************************************self explanatory check the query */
-      const getUser= async() => {
-        try {
-        let pool= await sql.connect(config);
-        let users = pool.request().query("SELECT * from dashboarduser")
-        console.log(users);
-        return users;
-        }
-        catch (error)
-        {
-            console.log(error);
-        }
-        }
+const getuserbyid = async (role,id) => {
+  
+  try {
+    let pool = await sql.connect(config);
+    let user = await pool.request()
+      .input('role', sql.VarChar, role)
+      .input('id', sql.Int, id)
+      .query(`SELECT * from  ${role} where id=@id`);
+      
+   const result=user.recordset
+    if (result) {
+      
+      return result; // Return the user record
+    } else {
+      console.log('User not found',id);
+      return null; // Return null when user not found
+    }
+  } catch (error) {
+    console.log(error);
+    throw error; // Throw the error to handle it outside this function
+  }
+};
 
 /********************************************sends sql query to database and check if user exists  */
 
@@ -44,7 +54,7 @@ const checkUser = async (email, password) => {
         }
     } catch (error) {
         console.error('Error signing in:', error);
-        return { status: 500, message: 'An error occurred while signing in' };
+        
     }
 };
 /**************************************** Drivers***************************/
@@ -156,7 +166,47 @@ const addCustomer = async ({ id, CIN, fullName, city, phone, email }) => {
   }
 };
 
+const updateUser = async ({ id, CIN, fullName, city, phone, email,role }) => {
+  try {
+    const pool = await sql.connect(config);
+    const query = `
+      UPDATE ${role} 
+      SET fullName = @fullName, 
+          CIN = @CIN, 
+          city = @city, 
+          phone = @phone, 
+          email = @email 
+      WHERE id = @id
+    `;
+    const result = await pool.request()
+    .input('role', sql.VarChar, role)
+
+      .input('id', sql.Int, id) 
+      .input('CIN', sql.VarChar, CIN)
+      .input('fullName', sql.VarChar, fullName)
+      .input('city', sql.VarChar, city)
+      .input('phone', sql.VarChar, phone)
+      .input('email', sql.VarChar, email)
+      .query(query);
+
+    // Close the connection after executing the query
+    pool.close();
+
+    // Check if any rows were affected
+    if (result.rowsAffected.length === 0) {
+      // No rows were updated, probably because the user with the given id doesn't exist
+      return { status: 404, message: 'User not found' };
+    }
+
+    return { status: 200, message: 'User updated successfully' };
+  } catch (error) {
+    console.error('Error updating user:', error);
+    throw error;
+  }
+};
+
+
 /****************************************** */
         module.exports ={
-            getUser,checkUser,getDrivers,getCustomers,addDriver,Deletedriver,DeleteCustomer,addCustomer
+           updateUser, getuserbyid,checkUser,getDrivers,getCustomers,addDriver,Deletedriver,DeleteCustomer,addCustomer
         }

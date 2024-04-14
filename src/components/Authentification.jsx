@@ -6,12 +6,12 @@ import axios from 'axios';
 
 const authenticateUser = async ({ email, password, navigate }) => {
 
-  const msg ='blabla';
+  
   try {
     const response = await axios.post('http://localhost:5000/login', {
   email,
-  password,
-  msg
+  password
+
 }, {
   withCredentials: true
 });
