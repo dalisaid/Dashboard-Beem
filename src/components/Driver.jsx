@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BsFillTrashFill, BsFillPencilFill } from "react-icons/bs";
-import { Table, Form, FormControl, Button } from 'react-bootstrap';
+import {  Form, FormControl, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
-import Pagination from 'react-bootstrap/Pagination';
-import { orderBy } from 'lodash';
+
 import { Statistic, Space, Card } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
+import Box from '@mui/material/Box';
+import { DataGrid,GridToolbar } from '@mui/x-data-grid';
+
+
 
 
 
@@ -63,31 +66,7 @@ export const DriversTable = () => {
 
 
 
-  // Reset current page to 1 if the search is successful
-  useEffect(() => {
-    if (search && filteredItems.length > 0) {
-      setCurrentPage(1);
-    }
-  }, [search, filteredItems]);
-
-
-
-
-  // Pagination
-  const [currentPage, setCurrentPage] = React.useState(1);
-  const data = filteredItems;
-  const itemsPerPage = 10;
-  const totalPages = Math.ceil(data.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentItems = data.slice(startIndex, endIndex);
-
-  // Handle page change
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
-
-
+  
   // State for form data
   const [formData, setFormData] = useState({
     id: '',
@@ -146,20 +125,75 @@ export const DriversTable = () => {
 
 
 
-  //Sorting
-  const [sort, setSort] = useState(null); // Initialize the sorting property
-  const [sortDirection, setSortDirection] = useState('asc'); // Initialize the sorting direction
-  const handleSort = (sortBy) => {
-    if (sortBy === sort) {     // Toggle sorting direction if already sorting by the same property
-      setSortDirection((prevSortDirection) => (prevSortDirection === 'asc' ? 'desc' : 'asc'));
-    } else {
-      setSort(sortBy);      // Set the new sorting property and reset sorting direction to ascending
-      setSortDirection('asc');
-    }
-  };
-
 
   // Function to get total count of drivers
+
+
+ const columns = [
+  { field: 'id', headerName: 'ID', width: 90 },
+  {
+    field: 'CIN',
+    headerName: 'CIN',
+    width: 150,
+    
+  },
+  {
+    field: 'fullName',
+    headerName: 'Full name',
+    width: 150,
+    
+  },
+  {
+    field: 'city',
+    headerName: 'City',
+    width: 150,
+    
+  },
+  {
+    field: 'phone',
+    headerName: 'Phone',
+    type: 'number',
+    width: 110,
+    
+  },
+  {
+    field: 'email',
+    headerName: 'Email',
+     
+    width: 160,
+    
+  },
+  {
+    field: 'delete',
+    headerName: 'Delete',
+    width: 100,
+    disableColumnMenu: true,
+    sortable: false,
+    renderCell: (params) => (
+      
+      <BsFillTrashFill className="delete" style={{ color: '#e10d05', marginRight: '5mm' }} onClick={() => handleDeletedriver(params.row.id)} />
+    ),
+  },
+  {
+    field: 'update',
+    headerName: 'Update',
+    width: 100, 
+    disableColumnMenu: true,
+    sortable: false,
+    renderCell: (params) => (
+      
+      <Link to={`/profil/${role}/${params.row.id}`} style={{ textDecoration: 'none', color: 'black', marginRight: '1mm' }}>
+      <BsFillPencilFill className="edit-btn" />
+    </Link>
+    ),
+  },
+
+
+];
+
+
+
+
   const getTotalDriversCount = () => {
     return filteredItems.length;
   };
@@ -249,14 +283,7 @@ export const DriversTable = () => {
          overflow: "auto",
          overflowY: "overlay"
       }}>
-        <Table hover>
-
-
-
-          <thead>
-            <tr>
-              <th colSpan="6">
-                <Button
+        <Button
                   onClick={handleShowModal}
 
                   style={{
@@ -275,102 +302,28 @@ export const DriversTable = () => {
                 >
                   Add Driver
                 </Button>
-              </th>
-              <th></th>
 
-            </tr>
-            <tr >
-              <th onClick={() => handleSort('id')} style={{ cursor: 'pointer', top: 0, left: 0, backgroundColor: '#d5d1defe', borderCollapse: 'collapse' }}>
-                ID {sort === 'id' && (sortDirection === 'asc' ? '▲' : '▼')}
-              </th>
-              <th onClick={() => handleSort('CIN')} style={{ cursor: 'pointer', top: 0, left: 0, backgroundColor: '#d5d1defe', borderCollapse: 'collapse' }}>
-                CIN {sort === 'CIN' && (sortDirection === 'asc' ? '▲' : '▼')}
-              </th>
-              <th onClick={() => handleSort('fullName')} style={{ cursor: 'pointer', top: 0, left: 0, backgroundColor: '#d5d1defe', borderCollapse: 'collapse' }}>
-                Full Name {sort === 'fullName' && (sortDirection === 'asc' ? '▲' : '▼')}
-              </th>
-              <th onClick={() => handleSort('city')} style={{ cursor: 'pointer', top: 0, left: 0, backgroundColor: '#d5d1defe', borderCollapse: 'collapse' }}>
-                City {sort === 'city' && (sortDirection === 'asc' ? '▲' : '▼')}
-              </th>
-              <th onClick={() => handleSort('phone')} style={{ cursor: 'pointer', top: 0, left: 0, backgroundColor: '#d5d1defe', borderCollapse: 'collapse' }}>
-                Phone {sort === 'phone' && (sortDirection === 'asc' ? '▲' : '▼')}
-              </th>
-              <th onClick={() => handleSort('email')} style={{ cursor: 'pointer', top: 0, left: 0, backgroundColor: '#d5d1defe', borderCollapse: 'collapse' }}>
-                Email {sort === 'email' && (sortDirection === 'asc' ? '▲' : '▼')}
-              </th>
-
-              <th style={{ top: 0, left: 0, backgroundColor: '#d5d1defe', borderCollapse: 'collapse' }}></th>
-
-            </tr>
-          </thead>
-          <tbody>
-            {orderBy(
-              currentItems,
-              [
-                (driver) => {
-                  switch (sort) {
-                    case 'id':
-                      return String(driver.id);
-                    case 'CIN':
-                      return String(driver.CIN);
-                    case 'fullName':
-                      return driver.fullName.toLowerCase();
-                    case 'city':
-                      return driver.city.toLowerCase();
-                    case 'phone':
-                      return String(driver.phone);
-                    case 'email':
-                      return driver.email.toLowerCase();
-                    default:
-                      return driver.id; // Default to sorting by ID
-                  }
-                }
-              ],
-              [sortDirection]
-            ).map((driver) => (
-              <tr key={driver.id}>
-                <td >{driver.id}</td>
-                <td>{driver.CIN}</td>
-                <td>{driver.fullName}</td>
-                <td>{driver.city}</td>
-                <td>{driver.phone}</td>
-                <td>{driver.email}</td>
-                <td className="fit">
-                  <span className="actions" style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-                    <BsFillTrashFill className="delete-btn" style={{ color: '#e10d05', marginRight: '5mm' }} onClick={() => handleDeletedriver(driver.id)} />
-                    <Link to={`/profil/${role}/${driver.id}`} style={{ textDecoration: 'none', color: 'black', marginRight: '1mm' }}>
-                      <BsFillPencilFill className="edit-btn" />
-                    </Link>
-                  </span>
-                </td>
-              </tr>
-            ))};
-          </tbody>
-        </Table>
+<Box sx={{ height: 400, width: '100%' }}>
+  
+      <DataGrid 
+        rows={filteredItems}
+        columns={columns}
+        
+        initialState={{
+          pagination: {
+            paginationModel: {
+              pageSize: 10,
+            },
+          },
+        }}
+        pageSizeOptions={[5]}
+        checkboxSelection
+        disableRowSelectionOnClick
+        slots={{ toolbar: GridToolbar }}/>
+    </Box>
+   
       </div>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Pagination>
-          <Pagination.Prev
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-          />
-          {[...Array(totalPages).keys()].map((page) => (
-            <Pagination.Item
-              key={page}
-              active={page + 1 === currentPage}
-              onClick={() => handlePageChange(page + 1)}
-            >
-              {page + 1}
-            </Pagination.Item>
-          ))}
-          <Pagination.Next
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-          />
-        </Pagination>
-
-      </div>
-
+        
       <Modal show={showModal} onHide={handleCloseModal} centered>
         <Modal.Header closeButton>
           <Modal.Title style={{ textAlign: 'center' }}>Add Driver</Modal.Title>

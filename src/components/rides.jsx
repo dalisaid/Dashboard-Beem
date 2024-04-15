@@ -1,7 +1,24 @@
 import React, { useState } from 'react';
-import { Table, Button, Form} from 'react-bootstrap';
+import { Table, Button, Form } from 'react-bootstrap';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import { BsGeoFill } from 'react-icons/bs';
+
+import "leaflet/dist/leaflet.css";
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { icon } from 'leaflet';
+
+
+// Define a custom icon using Leaflet's icon function
+const defaultIcon = icon({
+    iconUrl: 'https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon.png', // Replace with your desired icon URL
+    iconSize: [25, 41], // Size of the icon
+    iconAnchor: [12.5, 41], // Point of the icon that corresponds to the marker's location
+    popupAnchor: [1, -34] // Offset of the popup from the marker
+});
+
+const position = [36.79539375064748, 10.180530919318038]; // Initial center on start location
+const destination = [36.786980585955796, 10.174600889315332];
+
 
 export const Rides = () => {
 
@@ -9,6 +26,7 @@ export const Rides = () => {
     const handleViewChange = (option) => {
         setView(option);
     };
+
 
     return (
 
@@ -59,10 +77,24 @@ export const Rides = () => {
                     <thead>
 
 
+
                     </thead>
                     <tbody>
 
-
+                        <div style={{ width: '100%', height: '500px' }}>
+                            <MapContainer center={position} zoom={15} style={{ width: '100%', height: '100%' }}>
+                                <TileLayer
+                                    attribution='&copy; OpenStreetMap France | &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                    url='https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png'
+                                />
+                                <Marker position={position} icon={defaultIcon}>
+                                    <Popup>Start Location</Popup>
+                                </Marker>
+                                <Marker position={destination} icon={defaultIcon}>
+                                    <Popup>Destination</Popup>
+                                </Marker>
+                            </MapContainer>
+                        </div>
 
 
 
@@ -257,9 +289,9 @@ export const Rides = () => {
 
 
 
-
                     </tbody>
                 </Table>
+
             </div>
 
         </div>
