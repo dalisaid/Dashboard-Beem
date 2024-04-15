@@ -166,8 +166,9 @@ export const DriversTable = () => {
 
   const role='Drivers';
   return (
+
     <div className="container-" style={{
-      width: "80vw",
+      width: "80%",
       height: "auto",
       marginLeft: "14%",
       marginRight: "auto",
@@ -175,7 +176,7 @@ export const DriversTable = () => {
       boxShadow: "0 .4rem .8rem #0005",
       borderRadius: ".8rem",
       overflow: "hidden",
-      padding: "20px"
+      padding: "20px"   
     }}>
 
       <section
@@ -240,13 +241,13 @@ export const DriversTable = () => {
 
       </div>
       <div className="table_body" style={{
-        width: "95%",
-        maxHeight: "calc(89% - 1.6rem)",
-        backgroundColor: "#fffb",
-        margin: ".8rem auto",
-        borderRadius: ".6rem",
-        overflow: "auto",
-        overflowY: "overlay"
+         width: "95%",
+         maxHeight: "calc(89% - 1.6rem)",
+         backgroundColor: "#fffb",
+         margin: ".8rem auto",
+         borderRadius: ".6rem",
+         overflow: "auto",
+         overflowY: "overlay"
       }}>
         <Table hover>
 
@@ -277,7 +278,6 @@ export const DriversTable = () => {
               </th>
               <th></th>
 
-
             </tr>
             <tr >
               <th onClick={() => handleSort('id')} style={{ cursor: 'pointer', top: 0, left: 0, backgroundColor: '#d5d1defe', borderCollapse: 'collapse' }}>
@@ -286,7 +286,6 @@ export const DriversTable = () => {
               <th onClick={() => handleSort('CIN')} style={{ cursor: 'pointer', top: 0, left: 0, backgroundColor: '#d5d1defe', borderCollapse: 'collapse' }}>
                 CIN {sort === 'CIN' && (sortDirection === 'asc' ? '▲' : '▼')}
               </th>
-
               <th onClick={() => handleSort('fullName')} style={{ cursor: 'pointer', top: 0, left: 0, backgroundColor: '#d5d1defe', borderCollapse: 'collapse' }}>
                 Full Name {sort === 'fullName' && (sortDirection === 'asc' ? '▲' : '▼')}
               </th>
@@ -322,7 +321,6 @@ export const DriversTable = () => {
                       return String(driver.phone);
                     case 'email':
                       return driver.email.toLowerCase();
-
                     default:
                       return driver.id; // Default to sorting by ID
                   }
@@ -412,5 +410,6 @@ export const DriversTable = () => {
       </Modal>
 
     </div>
+   
   );
 };

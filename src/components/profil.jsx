@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import {  Form,  Button } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
-
-
 import axios from 'axios';
 
 import {
@@ -28,13 +26,14 @@ export const ProfilDetails = () => { // Remove 'export' from here
 
   const [user, setUser] = useState([]); // Changed from [] to {} since it seems you're expecting an object
 
-  const { role, driverid } = useParams();
+  const { role, userid } = useParams();
+
 
   useEffect(() => {
     const getUser = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/getuserbyid/${role}/${driverid}`, // Changed from single quotes to backticks for template literal
+          `http://localhost:5000/getuserbyid/${role}/${userid}`, // Changed from single quotes to backticks for template literal
           { withCredentials: true }
         );
         if (response.status === 200) {
@@ -54,7 +53,7 @@ export const ProfilDetails = () => { // Remove 'export' from here
     getUser();
 
     // Call the function to fetch drivers
-  }, [driverid, role]);
+  }, [userid, role]);
 
 
   
@@ -62,7 +61,7 @@ export const ProfilDetails = () => { // Remove 'export' from here
 
   const [formData, setFormData] = useState({
     role:role,
-    id: driverid,
+    id: userid,
     CIN: '',
     fullName: '',
     city: '',
@@ -118,6 +117,7 @@ const handleSubmit = async (e) => {
                     style={{ width: '150px' }}
                     fluid
                   />
+                  
                   <p className="text-muted mb-1">{user.fullName}</p>
                   <p className="text-muted mb-4">{user.city}</p>
                   <div className="d-flex justify-content-center mb-2">

@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { SignIn, SignUp } from './components/Authentification';
 import { QueryClient, QueryClientProvider } from 'react-query';
-
+import './css/App.css';
 import { Sidebar } from './components/Sidebar';
 import { DriversTable } from './components/Driver';
 import { ClientsTable } from './components/Client';
@@ -21,7 +21,7 @@ const App = () => {
 
   return (
     
-    <div style={{backgroundColor: '#eee' }}>
+    <div style={{ }}>
    <QueryClientProvider client={queryClient}>
    <Router>
      <Routes>
@@ -34,12 +34,13 @@ const App = () => {
            <div style={{ display: 'flex' }}>
              
              <Sidebar />
-             <div style={{ flex: 1  }}>
+             <div style={{ flex: 1 }}>
              <NavBar />
                <Routes>
+               
                  <Route path="/drivers" element={<DriversTable  />} />
                  <Route path="/Clients" element={<ClientsTable />} />
-                 <Route path="/profil/:role/:driverid" element={<ProfilDetails />} />
+                 <Route path="/profil/:role/:userid" element={<ProfilDetails />} />
                  <Route path="/dashboard" element={<Dashboard />} />
                  <Route path="/transaction" element={<Transaction />} />
                  <Route path="/rides" element={<Rides />} />

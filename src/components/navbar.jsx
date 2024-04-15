@@ -67,7 +67,7 @@ export const NavBar = () => {
     <Navbar.Toggle aria-controls="basic-navbar-nav" />
     <Navbar.Collapse id="basic-navbar-nav">
       <Nav className="me-auto" style={{ display: 'flex', alignItems: 'center' }}>
-        <NavDropdown title={<span><FontAwesomeIcon icon={faUser} style={{ marginRight: '5px', color: 'black' }} /> {email}</span>} id="basic-nav-dropdown" style={{ backgroundColor: 'white', marginRight: '10px', marginTop: '10px', marginBottom: '20px', borderRadius: '8px' }}>
+        <NavDropdown title={<span><FontAwesomeIcon icon={faUser} style={{ marginRight: '5px', color: '1F384C' }} /> {email}</span>} id="basic-nav-dropdown" style={{ backgroundColor: 'white', marginRight: '10px', marginTop: '10px', marginBottom: '20px', borderRadius: '8px' }}>
           <NavDropdown.Item href="#action/3.1" style={{ color: 'black' }}>Profile</NavDropdown.Item>
           <NavDropdown.Item href="#action/3.3" style={{ color: 'black' }}>Settings</NavDropdown.Item>
           <NavDropdown.Divider />

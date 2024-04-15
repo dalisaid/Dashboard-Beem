@@ -160,13 +160,14 @@ export const ClientsTable = () => {
   };
 
 
+  const role='Customers';
 
   return (
 
 
 
     <div className="container-" style={{
-      width: "80vw",
+      width: "80%",
       height: "auto",
       marginLeft: "14%",
       marginRight: "auto",
@@ -328,10 +329,10 @@ export const ClientsTable = () => {
                 <td className="fit">
                   <span className="actions" style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
                     <BsFillTrashFill className="delete-btn" style={{ color: '#e10d05', marginRight: '5mm' }} onClick={() => handleDeleteCustomer(Customer.id)} />
-                    <Link to="/profil" style={{ textDecoration: 'none', color: 'black', marginRight: '1mm' }}>
+                    <Link to={`/profil/${role}/${Customer.id}`} style={{ textDecoration: 'none', color: 'black', marginRight: '1mm' }}>
                       <BsFillPencilFill className="edit-btn" />
-                    </Link>
-                  </span>
+                    </Link>                  
+                    </span>
                 </td>
               </tr>
             ))}
