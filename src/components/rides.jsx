@@ -1,26 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, Button, Form } from 'react-bootstrap';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import { BsGeoFill } from 'react-icons/bs';
-
+import axios from 'axios';
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { icon } from 'leaflet';
+import Box from '@mui/material/Box';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 
+
+
+export const Rides = () => {
+
+const [RidesData, setRidesData] = useState([]);
+    
+const getRides = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/getRides', {
+        withCredentials: true
+      });
+      if (response.status === 200) {
+        setRidesData(response.data.result);
+        // Handle successful response
+       
+      } else {
+        console.log('Unexpected status code:', response.status);           // Handle other status codes if needed
+        alert('Error getting data from token');
+      }
+    } catch (error) {
+      console.error('Error:', error);         // Handle network errors or other issues
+      alert('Network error or other issue occurred');
+    }
+  };
+  useEffect(() => {
+    getRides();     // Call the function to fetch drivers
+  }, []);
+
+console.log('rides',RidesData)
 
 // Define a custom icon using Leaflet's icon function
 const defaultIcon = icon({
     iconUrl: 'https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon.png', // Replace with your desired icon URL
     iconSize: [25, 41], // Size of the icon
     iconAnchor: [12.5, 41], // Point of the icon that corresponds to the marker's location
-    popupAnchor: [1, -34] // Offset of the popup from the marker
+    popupAnchor: [1, -34],// Offset of the popup from the marker
 });
+const [StartLatitude, setStartLatitude] = useState(36.79539375064748);
+const [StartLongitude, setStartLongitude] = useState( 10.180530919318038);
+const [DestinationLatitude, setDestinationLatitude] = useState(36.786980585955796);
+const [DestinationLongitude, setDestinationLongitude] = useState( 10.174600889315332);
 
-const position = [36.79539375064748, 10.180530919318038]; // Initial center on start location
-const destination = [36.786980585955796, 10.174600889315332];
+
+//const position = []; // Initial center on start location
+//const destination = [];
 
 
-export const Rides = () => {
 
     const [view, setView] = useState('all');
     const handleViewChange = (option) => {
@@ -28,32 +63,97 @@ export const Rides = () => {
     };
 
 
+
+    const handleMapChange = async (StartLatitude,StartLongitude,DestinationLatitude,DestinationLongitude) => {
+        setStartLatitude(parseFloat(StartLatitude));
+        setStartLongitude(parseFloat(StartLongitude));
+        setDestinationLatitude(parseFloat(DestinationLatitude));
+        setDestinationLongitude(parseFloat(DestinationLongitude));
+        
+
+    }
+
+
+
+
+    const columns = [
+        { field: 'id', headerName: 'ID', width: 90 },
+        {
+          field: 'DriverID',
+          headerName: 'DriverID',
+          width: 150,
+    
+        },
+        {
+          field: 'CustomerID',
+          headerName: 'CustomerID',
+          width: 150,
+          flex: 1
+    
+        },
+        {
+          field: 'StartLatitude',
+          headerName: 'StartLatitude',
+          width: 150,
+    
+        },
+        {
+          field: 'StartLongitude',
+          headerName: 'Startlongitude',
+          width: 150,
+    
+        },
+        {
+          field: 'DestinationLatitude',
+          headerName: 'DestinationLatitude',
+          type: 'Decimal',
+          width: 110,
+          headerAlign: 'left',
+          align: 'left',
+          flex: 1
+    
+        },
+        {
+          field: 'DestinationLongitude',
+          headerName: 'DestinationLongitude',
+          headerAlign: 'left',
+          align: 'left',
+          width: 160,
+          flex: 1
+    
+        },
+         {
+          field: 'DateRides',
+          headerName: 'DateRides',
+          headerAlign: 'left',
+          align: 'left',
+          width: 160,
+          flex: 1
+    
+        },
+        {
+            field: 'Location',
+            headerName: 'Location',
+            width: 100,
+            disableColumnMenu: true,
+            sortable: false,
+            renderCell: (params) => (
+      
+              <Button className="location" style={{ color: '#e10d05', marginRight: '5mm' }} onClick={() => handleMapChange(params.row.StartLatitude,params.row.StartLongitude,params.row.DestinationLatitude,params.row.DestinationLongitude)} />
+            ),
+          },
+    
+      ];
+    
+
+
     return (
+        <div style={{ marginLeft: '250px', marginTop: "6px" }}>
 
-
-        <div className="container-" style={{
-            width: "70vw",
-            height: "70vh",
-            backgroundColor: "#fff5",
-            marginLeft: "270px",
-            marginTop: "190px",
-            backdropFilter: "blur(7px)",
-            boxShadow: "0 .4rem .8rem #0005",
-            borderRadius: ".8rem",
-            overflow: "hidden"
-        }} >
+        <Box sx={{ height: 100, width: '95%', marginTop: "20px" }}>
 
             <section
-                className="table__header"
-                style={{
-                    width: "100%",
-                    height: "10%",
-                    backgroundColor: "#fff4",
-                    padding: ".8rem 1rem",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center"
-                }}
+            
             >
                 <h1>Rides</h1>
                 <Form className="mt-3 mr-3">
@@ -63,15 +163,7 @@ export const Rides = () => {
                     </div>
                 </Form>
             </section>
-            <div className="table_body" style={{
-                width: "95%",
-                maxHeight: "calc(89% - 1.6rem)",
-                backgroundColor: "#fffb",
-                margin: ".8rem auto",
-                borderRadius: ".6rem",
-                overflow: "auto",
-                overflowY: "overlay"
-            }}>
+            <div >
 
                 <Table >
                     <thead>
@@ -82,21 +174,61 @@ export const Rides = () => {
                     <tbody>
 
                         <div style={{ width: '100%', height: '500px' }}>
-                            <MapContainer center={position} zoom={15} style={{ width: '100%', height: '100%' }}>
+                            <MapContainer center={[StartLatitude,StartLongitude]} zoom={15} style={{ width: '100%', height: '100%' }}>
                                 <TileLayer
                                     attribution='&copy; OpenStreetMap France | &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                                     url='https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png'
                                 />
-                                <Marker position={position} icon={defaultIcon}>
+                                <Marker position={[StartLatitude,StartLongitude]} icon={defaultIcon}>
                                     <Popup>Start Location</Popup>
                                 </Marker>
-                                <Marker position={destination} icon={defaultIcon}>
+                                <Marker position={[DestinationLatitude,DestinationLongitude]} icon={defaultIcon}>
                                     <Popup>Destination</Popup>
                                 </Marker>
                             </MapContainer>
                         </div>
+                        </tbody>
+
+                        </Table>
+
+                        
 
 
+
+                        <Box sx={{ height: 750, width: '100%', marginTop: '10px' }}>
+          <DataGrid
+            rows={RidesData}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 11,
+                },
+              },
+            }}
+            pageSizeOptions={[5]}
+            checkboxSelection
+            disableRowSelectionOnClick
+            slots={{ toolbar: GridToolbar }} />
+        </Box>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{/***************************************************
 
 
                         <Table striped bordered hover>
@@ -281,7 +413,7 @@ export const Rides = () => {
                                     </tr>
                                 )}
                             </tbody>
-                        </Table>
+                       
 
 
 
@@ -289,10 +421,17 @@ export const Rides = () => {
 
 
 
-                    </tbody>
                 </Table>
 
-            </div>
+
+
+ */}
+
+</div>
+
+
+
+            </Box>
 
         </div>
 

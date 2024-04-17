@@ -205,8 +205,21 @@ const updateUser = async ({ id, CIN, fullName, city, phone, email,role }) => {
   }
 };
 
+/********************************************Rides */
 
+
+const getRides = async () => {
+  try {
+      let pool = await sql.connect(config);
+      let Rides = await pool.request().query("SELECT * from Rides");
+      const result = Rides.recordset;
+      
+      return result;
+  } catch (error) {
+      console.log(error);
+  }
+}
 /****************************************** */
         module.exports ={
-           updateUser, getuserbyid,checkUser,getDrivers,getCustomers,addDriver,Deletedriver,DeleteCustomer,addCustomer
+           updateUser, getuserbyid,checkUser,getDrivers,getCustomers,addDriver,Deletedriver,DeleteCustomer,addCustomer,getRides
         }

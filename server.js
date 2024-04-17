@@ -222,17 +222,42 @@ app.post('/updateUser', async (req, res) => {
     const token = req.cookies.authToken; // Get the JWT token from the request cookies
 
     if (!token) {
-      return res.status(401).json({ message: 'Unauthorized: Missing token' });          // If no token is found, respond with a 401 Unauthorized error
+      return res.status(401).json({ message: 'Unauthorized: Missing token' }); // If no token is found, respond with a 401 Unauthorized error
     }
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);         // Verify the JWT token to ensure authentication
-    const { id, CIN, fullName, city, phone, email,role } = req.body;       // Extract driver details from request body
-    const result = await dboperations.updateUser({ id, CIN, fullName, city, phone, email,role });       // Call the addDriver function to add the driver to the database
-    res.status(200).json({ message: 'Driver updated', result });       // Respond with a success message
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify the JWT token to ensure authentication
+    const { id, CIN, fullName, city, phone, email, role } = req.body; // Extract driver details from request body
+
+    if (role === 'Customers' || role === 'Drivers') {
+      const result = await dboperations.updateUser({ id, CIN, fullName, city, phone, email, role }); // Call the updateUser function to update the user in the database
+      res.status(200).json({ message: 'User updated', result }); // Respond with a success message
+    } else {
+      return res.status(400).json({ message: 'Invalid role' }); // Respond with a 400 Bad Request error if the role is not valid
+    }
   } catch (error) {
-    console.error('Invalid token:', error.message);      // If decoding the token fails or if the token is invalid, respond with a 401 Unauthorized error
-    return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+    console.error('Invalid token:', error.message); // If decoding the token fails or if the token is invalid, log the error
+    return res.status(401).json({ message: 'Unauthorized: Invalid token' }); // Respond with a 401 Unauthorized error
   }
 });
+
+
+app.get('/getRides', async (req, res) => {
+  try {
+    const token = req.cookies.authToken;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decoded) {
+      console.log('Generated token:', token);
+      return res.status(401).json({ message: 'Unauthorized: No token provided or invalid token' });
+    } else {
+      const result = await dboperations.getRides();         // If the token is valid, proceed with fetching data
+      res.status(200).json({ result });
+    }
+  } catch (error) {
+    console.error('Invalid token:', error.message);
+    return res.status(401).json({ message: 'Unauthorized: Invalid token' });       // If decoding fails due to an invalid token, handle the error appropriately
+  }
+});
+
 
 
 app.listen(API_PORT, () => {

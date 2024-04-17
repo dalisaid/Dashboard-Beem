@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faUser,faBell } from '@fortawesome/free-solid-svg-icons';
 import { Navbar, Container, Nav, NavDropdown} from 'react-bootstrap';
+import { faUser, faBell, faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
 
 
 export const NavBar = () => {
@@ -57,28 +57,36 @@ export const NavBar = () => {
     }
   };
 
+  
+  const [darkMode, setDarkMode] = useState(false);
 
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    // Implement logic to toggle dark mode
+  };
 
   return (
     <Navbar style={{ marginBottom: '-50px', display: 'flex', justifyContent: 'space-between', marginTop: '10px', marginLeft: '200px' }}>
-    <Container>
-    </Container>
+      <Container>
+      </Container>
 
-    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-    <Navbar.Collapse id="basic-navbar-nav">
-      <Nav className="me-auto" style={{ display: 'flex', alignItems: 'center' }}>
-        <NavDropdown title={<span><FontAwesomeIcon icon={faUser} style={{ marginRight: '5px', color: '1F384C' }} /> {email}</span>} id="basic-nav-dropdown" style={{ backgroundColor: 'white', marginRight: '10px', marginTop: '10px', marginBottom: '20px', borderRadius: '8px' }}>
-          <NavDropdown.Item href="#action/3.1" style={{ color: 'black' }}>Profile</NavDropdown.Item>
-          <NavDropdown.Item href="#action/3.3" style={{ color: 'black' }}>Settings</NavDropdown.Item>
-          <NavDropdown.Divider />
-          <NavDropdown.Item onClick={disconnect} style={{ color: 'black' }}>Log Out</NavDropdown.Item>
-        </NavDropdown>
-        <Nav.Link href="#link" style={{ marginTop: '10px', display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
-          {/* Notification icon */}
-          <FontAwesomeIcon icon={faBell} style={{ marginRight: '5px', color: 'black' }} />
-        </Nav.Link>
-      </Nav>
-    </Navbar.Collapse>
-  </Navbar>
+      <Navbar.Toggle aria-controls="basic-navbar-nav" />
+      <Navbar.Collapse id="basic-navbar-nav">
+        <Nav className="me-auto" style={{ display: 'flex', alignItems: 'center' }}>
+          <NavDropdown title={<span><FontAwesomeIcon icon={faUser} style={{ marginRight: '5px', color: '1F384C' }} /> {email}</span>} id="basic-nav-dropdown" style={{ backgroundColor: 'white', marginRight: '10px', marginTop: '10px', marginBottom: '20px', borderRadius: '8px' }}>
+            <NavDropdown.Item href="#action/3.1" style={{ color: 'black' }}>Profile</NavDropdown.Item>
+            <NavDropdown.Item href="#action/3.3" style={{ color: 'black' }}>Settings</NavDropdown.Item>
+            <NavDropdown.Divider />
+            <NavDropdown.Item onClick={disconnect} style={{ color: 'black' }}>Log Out</NavDropdown.Item>
+          </NavDropdown>
+          <Nav.Link href="#link" style={{ marginTop: '10px', display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+            {/* Notification icon */}
+            <FontAwesomeIcon icon={faBell} style={{ marginRight: '10px', color: 'black' }} />
+            {/* Dark/Light mode icon */}
+            <FontAwesomeIcon icon={darkMode ? faMoon : faSun} style={{ color: darkMode ? 'black' : 'black' }} onClick={toggleDarkMode} />
+          </Nav.Link>
+        </Nav>
+      </Navbar.Collapse>
+    </Navbar>
   );
 }
