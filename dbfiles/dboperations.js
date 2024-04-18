@@ -220,6 +220,21 @@ const getRides = async () => {
   }
 }
 /****************************************** */
+const DriverActivity = async () => {
+  try {
+      let pool = await sql.connect(config);
+      let Rides = await pool.request().query(`SELECT 
+      DATEPART(month, DateRides) AS Month,  -- Extract month from DateRides column
+      COUNT(*) AS ridescompleted
+    FROM rides
+    GROUP BY DATEPART(month, DateRides);`);
+      const result = Rides.recordset;
+      
+      return result;
+  } catch (error) {
+      console.log(error);
+  }
+}
         module.exports ={
-           updateUser, getuserbyid,checkUser,getDrivers,getCustomers,addDriver,Deletedriver,DeleteCustomer,addCustomer,getRides
+           updateUser, getuserbyid,checkUser,getDrivers,getCustomers,addDriver,Deletedriver,DeleteCustomer,addCustomer,getRides,DriverActivity
         }

@@ -13,7 +13,6 @@ import { Dashboard } from './components/dashbord';
 import { NavBar } from './components/navbar';
 import { Transaction } from './components/transaction';
 import { Rides } from './components/rides';
-import {DarkMode} from './darkmode/DarkMode.jsx'
 
 
 
