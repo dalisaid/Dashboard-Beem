@@ -223,11 +223,12 @@ const getRides = async () => {
 const DriverActivity = async () => {
   try {
       let pool = await sql.connect(config);
-      let Rides = await pool.request().query(`SELECT 
-      DATEPART(month, DateRides) AS Month,  -- Extract month from DateRides column
+      let Rides = await pool.request().query(` SELECT 
+      DATEPART(month, DateRides) AS Month, 
       COUNT(*) AS ridescompleted
-    FROM rides
-    GROUP BY DATEPART(month, DateRides);`);
+  FROM Rides
+  WHERE YEAR(DateRides) = YEAR(GETDATE()) 
+  GROUP BY DATEPART(month, DateRides);`);
       const result = Rides.recordset;
       
       return result;
@@ -235,6 +236,21 @@ const DriverActivity = async () => {
       console.log(error);
   }
 }
+/****************************************** */
+
+const getTransaction = async () => {
+  try {
+      let pool = await sql.connect(config);
+      let Transaction = await pool.request().query("SELECT * from [Transaction]");
+      const result = Transaction.recordset;
+      
+      return result;
+  } catch (error) {
+      console.log(error);
+  }
+}
+
+
         module.exports ={
-           updateUser, getuserbyid,checkUser,getDrivers,getCustomers,addDriver,Deletedriver,DeleteCustomer,addCustomer,getRides,DriverActivity
+           updateUser, getuserbyid,checkUser,getDrivers,getCustomers,addDriver,Deletedriver,DeleteCustomer,addCustomer,getRides,DriverActivity,getTransaction
         }

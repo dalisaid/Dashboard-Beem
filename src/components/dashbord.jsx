@@ -31,9 +31,8 @@ export const Dashboard = () => {
     getDriverActivity();
   }, []);
  
-
   const chartData = {
-    labels: driverActivity.map((driver) => `Month ${driver.Month}`),
+    labels: driverActivity.map((driver) => new Date(2021, driver.Month - 1, 1).toLocaleString('default', { month: 'long' })),
     datasets: [
       {
         label: 'Rides Completed',
@@ -44,7 +43,7 @@ export const Dashboard = () => {
       },
     ],
   };
-
+  
   const chartOptions = {
     scales: {
       yAxes: [
@@ -59,7 +58,7 @@ export const Dashboard = () => {
 
 
   return (
-    <div style={{ marginLeft: '250px', marginTop: "10px" }}>
+    <div style={{ marginLeft: '250px', marginTop: "40px" }}>
       <div style={{height:'100vh', width:'100vh'}}>
       <h2>Driver Activity</h2>
       {driverActivity.length > 0 && <Bar data={chartData} options={chartOptions} />} 

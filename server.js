@@ -281,7 +281,49 @@ app.get('/driver-activity', async (req, res) => {
 
 
 
+
+app.get('/getplace', async (req, res) => {
+  try {
+    const token = req.cookies.authToken;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decoded) {
+      console.log('Generated token:', token);
+      return res.status(401).json({ message: 'Unauthorized: No token provided or invalid token' });
+    }else {
+      res.status(200).json({ result });
+      
+    
+  }
+} catch (err) {
+    console.error(err);
+    res.status(500).send('Error fetching data');
+  } 
+    
+  
+});
+
+
+
+app.get('/getTransaction', async (req, res) => {
+  try {
+    const token = req.cookies.authToken;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decoded) {
+      console.log('Generated token:', token);
+      return res.status(401).json({ message: 'Unauthorized: No token provided or invalid token' });
+    } else {
+      const result = await dboperations.getTransaction();         // If the token is valid, proceed with fetching data
+      res.status(200).json({ result });
+    }
+  } catch (error) {
+    console.error('Invalid token:', error.message);
+    return res.status(401).json({ message: 'Unauthorized: Invalid token' });       // If decoding fails due to an invalid token, handle the error appropriately
+  }
+});
+
 app.listen(API_PORT, () => {
   console.log(`Server is listening on port ${API_PORT}`);
 });
+
+
 
