@@ -281,7 +281,7 @@ app.get('/driver-activity', async (req, res) => {
 
 
 
-
+/*******************chniya hethi ??? */
 app.get('/getplace', async (req, res) => {
   try {
     const token = req.cookies.authToken;
@@ -321,6 +321,25 @@ app.get('/getTransaction', async (req, res) => {
   }
 });
 
+
+
+
+app.get('/getusercount', async (req, res) => {
+  try {
+    const token = req.cookies.authToken;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decoded) {
+      console.log('Generated token:', token);
+      return res.status(401).json({ message: 'Unauthorized: No token provided or invalid token' });
+    } else {
+      const result = await dboperations.getusercount(); // Call getusercount function to fetch data
+      res.status(200).json({ result });
+    }
+  } catch (error) {
+    console.error('Invalid token:', error.message);
+    return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+  }
+});
 app.listen(API_PORT, () => {
   console.log(`Server is listening on port ${API_PORT}`);
 });

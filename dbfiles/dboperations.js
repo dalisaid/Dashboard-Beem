@@ -249,8 +249,24 @@ const getTransaction = async () => {
       console.log(error);
   }
 }
-
+/********************************** */
+const getusercount = async () => {
+  try {
+    let pool = await sql.connect(config);
+    let driverCountResult = await pool.request().query("SELECT COUNT(*) AS total_drivers FROM drivers");
+    let customerCountResult = await pool.request().query("SELECT COUNT(*) AS total_customers FROM customers");
+    
+    // Extract counts from the query results
+    const driverCount = driverCountResult.recordset[0].total_drivers;
+    const customerCount = customerCountResult.recordset[0].total_customers;
+    
+    return { drivers: driverCount, customers: customerCount };
+  } catch (error) {
+    console.log(error);
+    throw error; // Rethrow the error to handle it in the calling function
+  }
+}
 
         module.exports ={
-           updateUser, getuserbyid,checkUser,getDrivers,getCustomers,addDriver,Deletedriver,DeleteCustomer,addCustomer,getRides,DriverActivity,getTransaction
+          getusercount,updateUser, getuserbyid,checkUser,getDrivers,getCustomers,addDriver,Deletedriver,DeleteCustomer,addCustomer,getRides,DriverActivity,getTransaction
         }
