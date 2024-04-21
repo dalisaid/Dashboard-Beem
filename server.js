@@ -340,6 +340,55 @@ app.get('/getusercount', async (req, res) => {
     return res.status(401).json({ message: 'Unauthorized: Invalid token' });
   }
 });
+
+
+
+app.get('/TransactionActivity', async (req, res) => {
+  try {
+    const token = req.cookies.authToken;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decoded) {
+      console.log('Generated token:', token);
+      return res.status(401).json({ message: 'Unauthorized: No token provided or invalid token' });
+    }else {
+      const result = await dboperations.TransactionActivity();         // If the token is valid, proceed with fetching data
+      res.status(200).json({ result });
+      
+    
+  }
+} catch (err) {
+    console.error(err);
+    res.status(500).send('Error fetching data');
+  } 
+    
+  
+});
+
+
+
+
+app.get('/Last10Transaction', async (req, res) => {
+  try {
+    const token = req.cookies.authToken;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decoded) {
+      console.log('Generated token:', token);
+      return res.status(401).json({ message: 'Unauthorized: No token provided or invalid token' });
+    }else {
+      const result = await dboperations.GetLast10Transaction();         // If the token is valid, proceed with fetching data
+      res.status(200).json({ result });
+      
+    
+  }
+} catch (err) {
+    console.error(err);
+    res.status(500).send('Error fetching data');
+  } 
+    
+  
+});
+
+
 app.listen(API_PORT, () => {
   console.log(`Server is listening on port ${API_PORT}`);
 });

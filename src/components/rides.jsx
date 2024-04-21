@@ -114,7 +114,7 @@ export const Rides = () => {
 
 
     const columns = [
-        { field: 'id', headerName: 'ID', width: 90 },
+        { field: 'id', headerName: 'RideID', width: 90 },
         {
             field: 'DriverID',
             headerName: 'DriverID',
@@ -124,6 +124,20 @@ export const Rides = () => {
         {
             field: 'CustomerID',
             headerName: 'CustomerID',
+            width: 150,
+            flex: 1
+
+        },
+        {
+            field: 'DriverFullName',
+            headerName: 'DriverFullName',
+            width: 150,
+            flex: 1
+
+        },
+        {
+            field: 'CustomerFullName',
+            headerName: 'CustomerFullName',
             width: 150,
             flex: 1
 

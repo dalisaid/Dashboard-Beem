@@ -42,12 +42,19 @@ export const Transaction = () => {
 
   const columns = [
     {
-      field: 'id', headerName: 'ID', width: 90, flex: 1
+      field: 'id', headerName: 'TransactionID', width: 90, flex: 1
     },
 
     {
       field: 'DriverID',
       headerName: 'DriverID',
+      width: 150,
+     
+
+    },
+    {
+      field: 'DriverFullName',
+      headerName: 'DriverFullName',
       width: 150,
       flex: 1
 
@@ -67,8 +74,7 @@ export const Transaction = () => {
       align: 'left',
       width: 160,
       flex: 1
-
-    },
+    }
 
 
 

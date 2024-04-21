@@ -1,22 +1,22 @@
-const config =require('./dbconfig'),
-      sql =  require('mssql');
+const config = require('./dbconfig'),
+  sql = require('mssql');
 
 /*****************************************************************************self explanatory check the query */
-const getuserbyid = async (role,id) => {
-  
+const getuserbyid = async (role, id) => {
+
   try {
     let pool = await sql.connect(config);
     let user = await pool.request()
       .input('role', sql.VarChar, role)
       .input('id', sql.Int, id)
       .query(`SELECT * from  ${role} where id=@id`);
-      
-   const result=user.recordset
+
+    const result = user.recordset
     if (result) {
-      
+
       return result; // Return the user record
     } else {
-      console.log('User not found',id);
+      console.log('User not found', id);
       return null; // Return null when user not found
     }
   } catch (error) {
@@ -28,47 +28,47 @@ const getuserbyid = async (role,id) => {
 /********************************************sends sql query to database and check if user exists  */
 
 const checkUser = async (email, password) => {
-    try {
-        // Connect to the SQL Server
-        const pool = await sql.connect(config);
+  try {
+    // Connect to the SQL Server
+    const pool = await sql.connect(config);
 
-        // Execute a parameterized query to retrieve user data
-        const result = await pool.request()
-            .input('email', sql.VarChar, email)
-            .input('password', sql.VarChar, password)
-            .query(`
+    // Execute a parameterized query to retrieve user data
+    const result = await pool.request()
+      .input('email', sql.VarChar, email)
+      .input('password', sql.VarChar, password)
+      .query(`
                 SELECT *
                 FROM dashboarduser 
                 WHERE email = @email AND pass = @password
             `);
 
-        // Check if the user exists
-        if (result.recordset.length > 0) {
-            
-            console.log('User authenticated successfully');
-            
-            return { status: 200  };
-        } else {
-            console.log('Invalid email or password');
-            return { status: 401 };
-        }
-    } catch (error) {
-        console.error('Error signing in:', error);
-        
+    // Check if the user exists
+    if (result.recordset.length > 0) {
+
+      console.log('User authenticated successfully');
+
+      return { status: 200 };
+    } else {
+      console.log('Invalid email or password');
+      return { status: 401 };
     }
+  } catch (error) {
+    console.error('Error signing in:', error);
+
+  }
 };
 /**************************************** Drivers***************************/
 
 const getDrivers = async () => {
-    try {
-        let pool = await sql.connect(config);
-        let Drivers = await pool.request().query("SELECT * from Drivers");
-        const result = Drivers.recordset;
-        
-        return result;
-    } catch (error) {
-        console.log(error);
-    }
+  try {
+    let pool = await sql.connect(config);
+    let Drivers = await pool.request().query("SELECT * from Drivers");
+    const result = Drivers.recordset;
+
+    return result;
+  } catch (error) {
+    console.log(error);
+  }
 }
 /**************************************** */
 
@@ -116,32 +116,32 @@ const Deletedriver = async (driverId) => {
 /************************************************Customers**************************************************************** */
 
 const getCustomers = async () => {
-    try {
-        let pool = await sql.connect(config);
-        let Customers = await pool.request().query("SELECT * from Customers");
-        const result = Customers.recordset;
-        
-        return result;
-    } catch (error) {
-        console.log(error);
-    }
+  try {
+    let pool = await sql.connect(config);
+    let Customers = await pool.request().query("SELECT * from Customers");
+    const result = Customers.recordset;
+
+    return result;
+  } catch (error) {
+    console.log(error);
+  }
 }
 /**************************************** */
 
 
 const DeleteCustomer = async (CustomerId) => {
-    try {
-      const pool = await sql.connect(config);
-      const query = `DELETE FROM Customers WHERE id = @id`;
-      const result = await pool.request()
-        .input('id', sql.Int, CustomerId)
-        .query(query);
-  
-      return result;
-    } catch (error) {
-      console.error('Error deleting Customer from the database:', error);
-      throw error;
-    }
+  try {
+    const pool = await sql.connect(config);
+    const query = `DELETE FROM Customers WHERE id = @id`;
+    const result = await pool.request()
+      .input('id', sql.Int, CustomerId)
+      .query(query);
+
+    return result;
+  } catch (error) {
+    console.error('Error deleting Customer from the database:', error);
+    throw error;
+  }
 };
 /**************************************** */
 const addCustomer = async ({ id, CIN, fullName, city, phone, email }) => {
@@ -166,7 +166,7 @@ const addCustomer = async ({ id, CIN, fullName, city, phone, email }) => {
   }
 };
 
-const updateUser = async ({ id, CIN, fullName, city, phone, email,role }) => {
+const updateUser = async ({ id, CIN, fullName, city, phone, email, role }) => {
   try {
     const pool = await sql.connect(config);
     const query = `
@@ -179,9 +179,9 @@ const updateUser = async ({ id, CIN, fullName, city, phone, email,role }) => {
       WHERE id = @id
     `;
     const result = await pool.request()
-    .input('role', sql.VarChar, role)
+      .input('role', sql.VarChar, role)
 
-      .input('id', sql.Int, id) 
+      .input('id', sql.Int, id)
       .input('CIN', sql.VarChar, CIN)
       .input('fullName', sql.VarChar, fullName)
       .input('city', sql.VarChar, city)
@@ -210,43 +210,69 @@ const updateUser = async ({ id, CIN, fullName, city, phone, email,role }) => {
 
 const getRides = async () => {
   try {
-      let pool = await sql.connect(config);
-      let Rides = await pool.request().query("SELECT * from Rides");
-      const result = Rides.recordset;
-      
-      return result;
+    let pool = await sql.connect(config);
+    let Rides = await pool.request().query(`SELECT 
+    r.id ,
+    r.DriverID,
+    r.CustomerID,
+    d.fullName AS DriverFullName,
+    c.fullName AS CustomerFullName,
+    r.StartLatitude,
+    r.StartLongitude,
+    r.DestinationLatitude,
+    r.DestinationLongitude,
+    r.DateRides
+FROM 
+    rides r
+JOIN 
+    Drivers d ON r.DriverID = d.id
+JOIN
+    Customers c ON r.CustomerID = c.id;`);
+    const result = Rides.recordset;
+
+    return result;
   } catch (error) {
-      console.log(error);
+    console.log(error);
   }
 }
 /****************************************** */
 const DriverActivity = async () => {
   try {
-      let pool = await sql.connect(config);
-      let Rides = await pool.request().query(` SELECT 
+    let pool = await sql.connect(config);
+    let Rides = await pool.request().query(` SELECT 
       DATEPART(month, DateRides) AS Month, 
       COUNT(*) AS ridescompleted
   FROM Rides
   WHERE YEAR(DateRides) = YEAR(GETDATE()) 
   GROUP BY DATEPART(month, DateRides);`);
-      const result = Rides.recordset;
-      
-      return result;
+    const result = Rides.recordset;
+
+    return result;
   } catch (error) {
-      console.log(error);
+    console.log(error);
   }
 }
 /****************************************** */
 
 const getTransaction = async () => {
   try {
-      let pool = await sql.connect(config);
-      let Transaction = await pool.request().query("SELECT * from [Transaction]");
-      const result = Transaction.recordset;
-      
-      return result;
+    let pool = await sql.connect(config);
+    let Transaction = await pool.request().query(`SELECT 
+    t.id,
+    t.DriverID,
+    d.FullName AS DriverFullName,
+    t.Amount,
+    t.TransactionDate
+
+FROM 
+    [Transaction] t
+JOIN 
+    Drivers d ON t.DriverID = d.id;`);
+    const result = Transaction.recordset;
+
+    return result;
   } catch (error) {
-      console.log(error);
+    console.log(error);
   }
 }
 /********************************** */
@@ -255,11 +281,11 @@ const getusercount = async () => {
     let pool = await sql.connect(config);
     let driverCountResult = await pool.request().query("SELECT COUNT(*) AS total_drivers FROM drivers");
     let customerCountResult = await pool.request().query("SELECT COUNT(*) AS total_customers FROM customers");
-    
+
     // Extract counts from the query results
     const driverCount = driverCountResult.recordset[0].total_drivers;
     const customerCount = customerCountResult.recordset[0].total_customers;
-    
+
     return { drivers: driverCount, customers: customerCount };
   } catch (error) {
     console.log(error);
@@ -267,6 +293,50 @@ const getusercount = async () => {
   }
 }
 
-        module.exports ={
-          getusercount,updateUser, getuserbyid,checkUser,getDrivers,getCustomers,addDriver,Deletedriver,DeleteCustomer,addCustomer,getRides,DriverActivity,getTransaction
-        }
+
+
+/******************************************/
+
+const TransactionActivity = async () => {
+  try {
+    let pool = await sql.connect(config);
+    let Transaction = await pool.request().query(` SELECT DATEPART(month, TransactionDate) AS Month, 
+      SUM(Amount) as Amount from [Transaction]
+        WHERE YEAR(TransactionDate) = YEAR(GETDATE()) 
+        GROUP BY DATEPART(month, TransactionDate);`);
+    const result = Transaction.recordset;
+
+    return result;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+const GetLast10Transaction = async () => {
+  try {
+    let pool = await sql.connect(config);
+    let Transaction = await pool.request().query(` SELECT TOP 5
+      t.id,
+      d.fullName AS FullName,
+      t.[TransactionDate] AS [Date],
+    t.Amount
+  FROM 
+      [Transaction] t
+  JOIN 
+      Drivers d ON t.DriverID = d.id
+  ORDER BY 
+      t.[TransactionDate] DESC;
+  ;`);
+    const result = Transaction.recordset;
+
+    return result;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+module.exports = {
+  getusercount, updateUser, getuserbyid, checkUser, getDrivers, getCustomers, addDriver, Deletedriver, DeleteCustomer, addCustomer,
+  getRides, DriverActivity, getTransaction, TransactionActivity,GetLast10Transaction
+}
