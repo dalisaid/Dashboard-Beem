@@ -116,8 +116,8 @@ app.post('/addDriver', async (req, res) => {
       return res.status(401).json({ message: 'Unauthorized: Missing token' });          // If no token is found, respond with a 401 Unauthorized error
     }
     const decoded = jwt.verify(token, process.env.JWT_SECRET);         // Verify the JWT token to ensure authentication
-    const { id, CIN, fullName, city, phone, email } = req.body;       // Extract driver details from request body
-    const result = await dboperations.addDriver({ id, CIN, fullName, city, phone, email });       // Call the addDriver function to add the driver to the database
+    const { CIN, fullName,gender, city, phone, email,password } = req.body;       // Extract driver details from request body
+    const result = await dboperations.addDriver({ CIN, fullName,gender, city, phone, email,password });       // Call the addDriver function to add the driver to the database
     res.status(200).json({ message: 'Driver added successfully', result });       // Respond with a success message
   } catch (error) {
     console.error('Invalid token:', error.message);      // If decoding the token fails or if the token is invalid, respond with a 401 Unauthorized error
@@ -182,8 +182,8 @@ app.post('/addCustomer', async (req, res) => {
       return res.status(401).json({ message: 'Unauthorized: Missing token' });    // If no token is found, respond with a 401 Unauthorized error
     }
     const decoded = jwt.verify(token, process.env.JWT_SECRET);     // Verify the JWT token to ensure authentication
-    const { id, CIN, fullName, city, phone, email } = req.body;     // Extract driver details from request body
-    const result = await dboperations.addCustomer({ id, CIN, fullName, city, phone, email });     // Call the addDriver function to add the driver to the database
+    const { CIN, fullName,gender, city, phone, email,password } = req.body;       // Extract driver details from request body
+    const result = await dboperations.addCustomer({ CIN, fullName,gender, city, phone, email,password });     // Call the addDriver function to add the driver to the database
     res.status(200).json({ message: 'Customer added successfully', result });   // Respond with a success message
   } catch (error) {
     console.error('Invalid token or operation failed:', error.message);     // If decoding the token fails or if the token is invalid, respond with a 401 Unauthorized error

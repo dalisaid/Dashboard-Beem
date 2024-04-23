@@ -108,7 +108,7 @@ export const Dashboard = () => {
 
   const totalusers = ratioData.drivers + ratioData.customers
 
-  const chartData = {
+  const BarchartData = {
     labels: driverActivity.map((driver) => new Date(2021, driver.Month - 1, 1).toLocaleString('default', { month: 'long' })),
     datasets: [
       {
@@ -121,7 +121,7 @@ export const Dashboard = () => {
     ],
   };
 
-  const chartOptions = {
+  const BarchartOptions = {
     scales: {
       yAxes: [
         {
@@ -173,7 +173,8 @@ export const Dashboard = () => {
     },
   };
 
-  const totalAmount = TransactionActivity.reduce((total, transaction) => total + transaction.Amount, 0);
+const totalAmount = parseFloat(TransactionActivity.reduce((total, transaction) => total + transaction.Amount, 0)).toFixed(3);
+
 
 
   const columns = [
@@ -204,9 +205,12 @@ export const Dashboard = () => {
       width: 150,
       sortable: false,
       disableColumnMenu: true,
-
+      renderCell: (params) => (
+        <button  style={{ backgroundColor: '#36A2EB', color: 'white', border: 'none', borderRadius: '5px', padding: '5px 10px', cursor: 'pointer', width:'10vh'}}disabled>
+          {params.value} TND
+        </button>
+      ),
     },
-
   ]
 
 
@@ -214,53 +218,43 @@ export const Dashboard = () => {
 
   return (
 
-    <div style={{ marginLeft: '250px', marginTop: "40px" }}>
+    <div style={{ marginLeft: '250px', }}>
+      <h2>DASHBOARD</h2>
+      <h5>Welcome to your dashboard</h5>
       <div style={{ display: 'flex', height: '65vh' }}>
-
-        <div style={{ height: '100vh', width: '100vh' }}>
-          <h4>Revenue Generated </h4>
-          <h1 style={{ color: 'green' }}>{totalAmount} TND </h1>
-
+        <div style={{ height: '65vh', width: '100vh', border: '1px solid #ddd', borderRadius: '5px', padding: '20px', marginRight: '20px', boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.1)' }}>
+          <h4>Revenue Generated</h4>
+          <h1 style={{ color: 'green' }}>{totalAmount} TND</h1>
           {TransactionActivity.length > 0 && <Line data={LinechartData} options={LinechartOptions} />}
         </div>
-
-       <div>
-          <h3 style={{marginTop:'15px'}}>Last Transactions</h3>
-       
+        <div style={{ border: '1px solid #ddd', borderRadius: '5px', padding: '20px', boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.1)' }}>
+          <h3>Last Transactions</h3>
           <DataGrid
-            style={{ height: '40vh', marginTop: '95px',width:'60vh' }}
+            style={{ height: '50vh', marginTop: '70px', width: '60vh' }}
             rows={LastTransaction}
             columns={columns}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 5,
-                },
-              },
-            }}
+            hideFooterPagination
             pageSizeOptions={[5]}
           />
-     </div>
-
-
-
-
+        </div>
       </div>
-
-      <div style={{ display: 'flex', height: '65vh' }}>
-
-        <div style={{ height: '100vh', width: '100vh' }}>
+      <div style={{ display: 'flex', height: '60vh', marginTop: '20px' }}>
+        <div style={{ height: '60vh', width: '100vh', border: '1px solid #ddd', borderRadius: '5px', padding: '20px', marginRight: '20px', boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.1)' }}>
           <h4>Driver Activity</h4>
           {driverActivity.length > 0 ? (
-            <Bar data={chartData} options={chartOptions} />
+            <Bar data={BarchartData} options={BarchartOptions} />
           ) : (
             <div>Loading...</div>
-          )}      </div>
-        <div style={{ height: '40vh', width: '40vh' }}>
-          <h4>User Distribution</h4>
-          <Doughnut data={pieChartData} />
+          )}
+        </div>
+        <div style={{ height: '60vh', width: '65vh', border: '1px solid #ddd', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.1)' }}>
+          <div>
+            <h4>User Distribution</h4>
+            <Doughnut data={pieChartData} />
+          </div>
         </div>
       </div>
     </div>
+
   );
 };

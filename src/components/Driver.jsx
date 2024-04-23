@@ -9,7 +9,8 @@ import { Statistic, Space, Card } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import Box from '@mui/material/Box';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { style } from '@mui/system';
+
+
 
 
 
@@ -22,7 +23,8 @@ export const DriversTable = () => {
 
   // State for storing driver data
   const [DriverData, setDriverData] = useState([]);
-
+  let today = new Date();
+  
 
 
   // Function to fetch driver data from server
@@ -45,7 +47,8 @@ export const DriversTable = () => {
     }
   };
   useEffect(() => {
-    getDrivers();     // Call the function to fetch drivers
+    getDrivers();
+    today = new Date(); // Call the function to fetch drivers
   }, []);
 
 
@@ -70,12 +73,14 @@ export const DriversTable = () => {
 
   // State for form data
   const [formData, setFormData] = useState({
-    id: '',
+    
     CIN: '',
     fullName: '',
+    gender:'',
     city: '',
     phone: '',
-    email: ''
+    email: '',
+    password:''
   });
 
 
@@ -272,11 +277,11 @@ export const DriversTable = () => {
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 10,
+                  pageSize: 12,
                 },
               },
             }}
-            pageSizeOptions={[5]}
+            
             checkboxSelection
             disableRowSelectionOnClick
             slots={{ toolbar: GridToolbar  }} />
@@ -287,29 +292,63 @@ export const DriversTable = () => {
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleSubmit}>
+            <Form.Group controlId="id">
+              <Form.Label>CreationDate</Form.Label>
+              <Form.Control type="text" name="date" value={today} readOnly />
+            </Form.Group>
               <Form.Group controlId="CIN">
                 <Form.Label>CIN</Form.Label>
-                <Form.Control type="text" name="CIN" value={formData.CIN} onChange={handleChange} />
+                <Form.Control type="text" name="CIN" value={formData.CIN} onChange={handleChange} required/>
               </Form.Group>
               <Form.Group controlId="fullName">
                 <Form.Label>Full Name</Form.Label>
-                <Form.Control type="text" name="fullName" value={formData.fullName} onChange={handleChange} />
+                <Form.Control type="text" name="fullName" value={formData.fullName} onChange={handleChange} required/>
               </Form.Group>
+              <Form.Group controlId="gender">
+  <Form.Label>Gender</Form.Label>
+  <div>
+    <Form.Check
+      inline
+      type="radio"
+      label="Male"
+      name="gender"
+      value="Male"
+      checked={formData.gender === "Male"}
+      onChange={handleChange}
+      required
+    />
+    <Form.Check
+      inline
+      type="radio"
+      label="Female"
+      name="gender"
+      value="Female"
+      checked={formData.gender === "Female"}
+      onChange={handleChange}
+      required
+    />
+ 
+  </div>
+</Form.Group>
               <Form.Group controlId="city">
                 <Form.Label>City</Form.Label>
-                <Form.Control type="text" name="city" value={formData.city} onChange={handleChange} />
+                <Form.Control type="text" name="city" value={formData.city} onChange={handleChange} required />
               </Form.Group>
               <Form.Group controlId="phone">
                 <Form.Label>Phone</Form.Label>
-                <Form.Control type="text" name="phone" value={formData.phone} onChange={handleChange} />
+                <Form.Control type="text" name="phone" value={formData.phone} onChange={handleChange}required />
               </Form.Group>
               <Form.Group controlId="email">
                 <Form.Label>Email</Form.Label>
-                <Form.Control type="email" name="email" value={formData.email} onChange={handleChange} style={{ marginBottom: '20px' }} />
+                <Form.Control type="email" name="email" value={formData.email} onChange={handleChange} style={{ marginBottom: '20px' }} required/>
+              </Form.Group>
+              <Form.Group controlId="password">
+                <Form.Label>Password</Form.Label>
+                <Form.Control type="password" name="password" value={formData.password} onChange={handleChange} style={{ marginBottom: '20px' }}required />
               </Form.Group>
               <div className="d-flex justify-content-between">
                 <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
-                <Button variant="success" type="submit">Save Changes</Button>
+                <Button variant="success" type="submit">Add driver</Button>
               </div>
             </Form>
           </Modal.Body>

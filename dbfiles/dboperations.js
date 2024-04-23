@@ -72,19 +72,21 @@ const getDrivers = async () => {
 }
 /**************************************** */
 
-const addDriver = async ({ id, CIN, fullName, city, phone, email }) => {
+const addDriver = async ({ CIN, fullName,gender, city, phone, email,password }) => {
   try {
     const pool = await sql.connect(config);
     const query = `
-    INSERT INTO Drivers (CIN, fullName, city, phone, email)
-    VALUES (@CIN, @fullName, @city, @phone, @email)
+    INSERT INTO Drivers (CIN, fullName, gender, city, phone, email, password, CreationDate)
+    VALUES (@CIN, @fullName, @gender, @city, @phone, @email, @password, GETDATE());
           `;
     const result = await pool.request()
       .input('CIN', sql.VarChar, CIN)
       .input('fullName', sql.VarChar, fullName)
+      .input('gender', sql.VarChar, gender)
       .input('city', sql.VarChar, city)
       .input('phone', sql.VarChar, phone)
       .input('email', sql.VarChar, email)
+      .input('password', sql.VarChar, password)
       .query(query);
 
     return result;
@@ -144,19 +146,21 @@ const DeleteCustomer = async (CustomerId) => {
   }
 };
 /**************************************** */
-const addCustomer = async ({ id, CIN, fullName, city, phone, email }) => {
+const addCustomer = async ({ CIN, fullName,gender, city, phone, email,password }) => {
   try {
     const pool = await sql.connect(config);
     const query = `
-    INSERT INTO Customers (CIN, fullName, city, phone, email)
-    VALUES (@CIN, @fullName, @city, @phone, @email)
+    INSERT INTO Customers (CIN, fullName, gender, city, phone, email, password, CreationDate)
+    VALUES (@CIN, @fullName, @gender, @city, @phone, @email, @password, GETDATE());
           `;
     const result = await pool.request()
       .input('CIN', sql.VarChar, CIN)
       .input('fullName', sql.VarChar, fullName)
+      .input('gender', sql.VarChar, gender)
       .input('city', sql.VarChar, city)
       .input('phone', sql.VarChar, phone)
       .input('email', sql.VarChar, email)
+      .input('password', sql.VarChar, password)
       .query(query);
 
     return result;
@@ -316,7 +320,7 @@ const TransactionActivity = async () => {
 const GetLast10Transaction = async () => {
   try {
     let pool = await sql.connect(config);
-    let Transaction = await pool.request().query(` SELECT TOP 5
+    let Transaction = await pool.request().query(` SELECT TOP 10
       t.id,
       d.fullName AS FullName,
       t.[TransactionDate] AS [Date],

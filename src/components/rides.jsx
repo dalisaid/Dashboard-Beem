@@ -81,9 +81,17 @@ export const Rides = () => {
 
 
     // Define a custom icon using Leaflet's icon function
-    const defaultIcon = icon({
-        iconUrl: 'https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon.png', // Replace with your desired icon URL
-        iconSize: [25, 41], // Size of the icon
+    const StartIcon = icon({
+        //iconUrl: 'https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon.png',
+        iconUrl: '/img/start.png', // Corrected icon URL with file extension and full path
+        iconSize: [35, 35], // Size of the icon
+        iconAnchor: [12.5, 41], // Point of the icon that corresponds to the marker's location
+        popupAnchor: [1, -34],// Offset of the popup from the marker
+    });
+    const DestinationIcon = icon({
+        //iconUrl: 'https://unpkg.com/leaflet@1.9.3/dist/images/marker-icon.png',
+        iconUrl: '/img/destination.png', // Corrected icon URL with file extension and full path
+        iconSize: [35, 35], // Size of the icon
         iconAnchor: [12.5, 41], // Point of the icon that corresponds to the marker's location
         popupAnchor: [1, -34],// Offset of the popup from the marker
     });
@@ -190,7 +198,7 @@ export const Rides = () => {
             sortable: false,
             renderCell: (params) => (
 
-                <Button className="location" style={{ color: '#e10d05', marginRight: '5mm' }} onClick={() => handleMapChange(params.row.StartLatitude, params.row.StartLongitude, params.row.DestinationLatitude, params.row.DestinationLongitude)} />
+                <FaMapMarkerAlt className="location" style={{ color: '#e10d05', marginRight: '5mm' }} onClick={() => handleMapChange(params.row.StartLatitude, params.row.StartLongitude, params.row.DestinationLatitude, params.row.DestinationLongitude)} />
             ),
         },
 
@@ -231,43 +239,43 @@ export const Rides = () => {
                         <tbody>
 
                             <div style={{ width: '100%', height: '500px' }}>
-                                <MapContainer center={[StartLatitude, StartLongitude]} zoom={15} style={{ width: '100%', height: '100%' }}>
+                                <MapContainer center={[StartLatitude, StartLongitude]} zoom={3} style={{ width: '100%', height: '100%' }}>
                                     <TileLayer
                                         attribution='&copy; OpenStreetMap France | &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                                         url='https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png'
                                     />
-                                    <Marker position={[StartLatitude, StartLongitude]} icon={defaultIcon}><Popup>{startLocationName}</Popup></Marker>
-                                    <Marker position={[DestinationLatitude, DestinationLongitude]} icon={defaultIcon}><Popup>{destinationLocationName}</Popup>
-                                </Marker>
-                            </MapContainer>
-                        </div>
-                    </tbody>
+                                    <Marker position={[StartLatitude, StartLongitude]} icon={StartIcon}><Popup>START LOCATION:{startLocationName}</Popup></Marker>
+                                    <Marker position={[DestinationLatitude, DestinationLongitude]} icon={DestinationIcon}><Popup>DESTINATION:{destinationLocationName}</Popup>
+                                    </Marker>
+                                </MapContainer>
+                            </div>
+                        </tbody>
 
-                </Table>
-
-
+                    </Table>
 
 
 
-                <Box sx={{ height: 750, width: '100%', marginTop: '10px' }}>
-                    <DataGrid
-                        rows={RidesData}
-                        columns={columns}
-                        loading={loading}
 
-                        loadingOverlay={loadingOverlay}
-                        initialState={{
-                            pagination: {
-                                paginationModel: {
-                                    pageSize: 11,
+
+                    <Box sx={{ height: 750, width: '100%', marginTop: '10px' }}>
+                        <DataGrid
+                            rows={RidesData}
+                            columns={columns}
+                            loading={loading}
+
+                            loadingOverlay={loadingOverlay}
+                            initialState={{
+                                pagination: {
+                                    paginationModel: {
+                                        pageSize: 11,
+                                    },
                                 },
-                            },
-                        }}
-                        pageSizeOptions={[5]}
-                        checkboxSelection
-                        disableRowSelectionOnClick
-                        slots={{ toolbar: GridToolbar }} />
-                </Box>
+                            }}
+                            pageSizeOptions={[5]}
+                            checkboxSelection
+                            disableRowSelectionOnClick
+                            slots={{ toolbar: GridToolbar }} />
+                    </Box>
 
 
 
@@ -285,7 +293,7 @@ export const Rides = () => {
 
 
 
-                {/***************************************************
+                    {/***************************************************
 
 
                         <Table striped bordered hover>
@@ -484,7 +492,7 @@ export const Rides = () => {
 
  */}
 
-        </div>
+                </div>
 
 
 

@@ -23,15 +23,17 @@ export const ClientsTable = () => {
   const handleCloseModal = () => setShowModal(false);
   const handleShowModal = () => setShowModal(true);
 
+  let today = new Date();
 
   // Form data state
   const [formData, setFormData] = useState({
-    id: '',
     CIN: '',
     fullName: '',
+    gender:'',
     city: '',
     phone: '',
-    email: ''
+    email: '',
+    password:''
   });
 
 
@@ -274,11 +276,11 @@ export const ClientsTable = () => {
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 10,
+                  pageSize: 12,
                 },
               },
             }}
-            pageSizeOptions={[5]}
+            
             checkboxSelection
             disableRowSelectionOnClick
             slots={{ toolbar: GridToolbar }} />
@@ -289,29 +291,63 @@ export const ClientsTable = () => {
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleSubmit}>
+            <Form.Group controlId="id">
+              <Form.Label>CreationDate</Form.Label>
+              <Form.Control type="text" name="date" value={today} readOnly />
+            </Form.Group>
               <Form.Group controlId="CIN">
                 <Form.Label>CIN</Form.Label>
-                <Form.Control type="text" name="CIN" value={formData.CIN} onChange={handleChange} />
+                <Form.Control type="text" name="CIN" value={formData.CIN} onChange={handleChange} required/>
               </Form.Group>
               <Form.Group controlId="fullName">
                 <Form.Label>Full Name</Form.Label>
-                <Form.Control type="text" name="fullName" value={formData.fullName} onChange={handleChange} />
+                <Form.Control type="text" name="fullName" value={formData.fullName} onChange={handleChange} required/>
               </Form.Group>
+              <Form.Group controlId="gender">
+  <Form.Label>Gender</Form.Label>
+  <div>
+    <Form.Check
+      inline
+      type="radio"
+      label="Male"
+      name="gender"
+      value="Male"
+      checked={formData.gender === "Male"}
+      onChange={handleChange}
+      required
+    />
+    <Form.Check
+      inline
+      type="radio"
+      label="Female"
+      name="gender"
+      value="Female"
+      checked={formData.gender === "Female"}
+      onChange={handleChange}
+      required
+    />
+ 
+  </div>
+</Form.Group>
               <Form.Group controlId="city">
                 <Form.Label>City</Form.Label>
-                <Form.Control type="text" name="city" value={formData.city} onChange={handleChange} />
+                <Form.Control type="text" name="city" value={formData.city} onChange={handleChange} required />
               </Form.Group>
               <Form.Group controlId="phone">
                 <Form.Label>Phone</Form.Label>
-                <Form.Control type="text" name="phone" value={formData.phone} onChange={handleChange} />
+                <Form.Control type="text" name="phone" value={formData.phone} onChange={handleChange}required />
               </Form.Group>
               <Form.Group controlId="email">
                 <Form.Label>Email</Form.Label>
-                <Form.Control type="email" name="email" value={formData.email} onChange={handleChange} style={{ marginBottom: '20px' }} />
+                <Form.Control type="email" name="email" value={formData.email} onChange={handleChange} style={{ marginBottom: '20px' }} required/>
+              </Form.Group>
+              <Form.Group controlId="password">
+                <Form.Label>Password</Form.Label>
+                <Form.Control type="password" name="password" value={formData.password} onChange={handleChange} style={{ marginBottom: '20px' }}required />
               </Form.Group>
               <div className="d-flex justify-content-between">
                 <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
-                <Button variant="success" type="submit">Save Changes</Button>
+                <Button variant="success" type="submit">Add customer</Button>
               </div>
             </Form>
           </Modal.Body>

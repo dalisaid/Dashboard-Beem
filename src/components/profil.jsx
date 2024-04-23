@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import {  Form,  Button } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
 
@@ -56,11 +56,11 @@ export const ProfilDetails = () => { // Remove 'export' from here
   }, [userid, role]);
 
 
-  
+
 
 
   const [formData, setFormData] = useState({
-    role:role,
+    role: role,
     id: userid,
     CIN: '',
     fullName: '',
@@ -70,24 +70,24 @@ export const ProfilDetails = () => { // Remove 'export' from here
   });
 
 
-/*******************************************the modal needs to be put in a component of its own */
+  /*******************************************the modal needs to be put in a component of its own */
 
-// Handle form submission to add a new driver
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  console.log('formData:', formData); // Log formData before making the request
-  try {
-    const response = await axios.post('http://localhost:5000/updateUser', formData, {
-      withCredentials: true // Ensure credentials are included in the request
-    });
-    console.log('Response:', response.data); // Log the response from the server
-    handleCloseModal();
-   window.location.reload();
+  // Handle form submission to add a new driver
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log('formData:', formData); // Log formData before making the request
+    try {
+      const response = await axios.post('http://localhost:5000/updateUser', formData, {
+        withCredentials: true // Ensure credentials are included in the request
+      });
+      console.log('Response:', response.data); // Log the response from the server
+      handleCloseModal();
+      window.location.reload();
     } catch (error) {
-    console.error('Error:', error);
-    alert('Network error or other issue occurred');
-  }
-};
+      console.error('Error:', error);
+      alert('Network error or other issue occurred');
+    }
+  };
 
 
   // State and functions for modal
@@ -101,7 +101,7 @@ const handleSubmit = async (e) => {
     setFormData({ ...formData, [name]: value });
   };
 
-/************************************************** */
+  /************************************************** */
   return (
     <div style={{ marginTop: '150px' }}>
       <section>
@@ -110,14 +110,27 @@ const handleSubmit = async (e) => {
             <MDBCol lg="4">
               <MDBCard className="mb-4">
                 <MDBCardBody className="text-center">
-                  <MDBCardImage
+                {
+  user.gender === 'Female' ? (
+    <MDBCardImage
+                    src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2.webp"
+                    alt="avatar"
+                    className="rounded-circle"
+                    style={{ width: '150px' }}
+                    fluid
+                  />
+  ) : (
+    <MDBCardImage
                     src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
                     alt="avatar"
                     className="rounded-circle"
                     style={{ width: '150px' }}
                     fluid
                   />
-                  
+  )
+}
+                 
+
                   <p className="text-muted mb-1">{user.fullName}</p>
                   <p className="text-muted mb-4">{user.city}</p>
                   <div className="d-flex justify-content-center mb-2">
@@ -149,7 +162,7 @@ const handleSubmit = async (e) => {
             </MDBCol>
             <MDBCol lg="8">
               <MDBCard className="mb-4">
-              <Button
+                <Button
                   onClick={handleShowModal}
 
                   style={{
@@ -166,16 +179,19 @@ const handleSubmit = async (e) => {
 
                   }}
                 >
-                 update account information
+                  update account information
                 </Button>
                 <MDBCardBody>
                   {[
-                    { label: "ID", value: user.id, edit: true },
-                    { label: "CIN", value: user.CIN, edit: true },
-                    { label: "fullName", value: user.fullName, edit: true },
-                    { label: "city", value: user.city, edit: true },
-                    { label: "phone", value: user.phone, edit: true },
-                    { label: "email", value: user.email, edit: true },
+                    { label: "ID", value: user.id },
+                    { label: "CIN", value: user.CIN },
+                    { label: "fullName", value: user.fullName },
+                    { label: "gender", value: user.gender },
+                    { label: "city", value: user.city },
+                    { label: "phone", value: user.phone },
+                    { label: "email", value: user.email },
+                    { label: "password", value: user.password },
+                    { label: "CreationDate", value: user.CreationDate }
 
                   ].map(({ label, value, edit }) => (
                     <React.Fragment key={label}>
@@ -246,42 +262,72 @@ const handleSubmit = async (e) => {
 
 
         <Modal show={showModal} onHide={handleCloseModal} centered>
-        <Modal.Header closeButton>
-          <Modal.Title style={{ textAlign: 'center' }}>Add Driver</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={handleSubmit}>
-            <Form.Group controlId="id">
-              <Form.Label>ID</Form.Label>
-              <Form.Control type="text" name="id" value={user.id} readOnly />
-            </Form.Group>
-            <Form.Group controlId="CIN">
-              <Form.Label>CIN</Form.Label>
-              <Form.Control type="text" name="CIN" value={formData.CIN} onChange={handleChange} />
-            </Form.Group>
-            <Form.Group controlId="fullName">
-              <Form.Label>Full Name</Form.Label>
-              <Form.Control type="text" name="fullName" value={formData.fullName} onChange={handleChange} />
-            </Form.Group>
-            <Form.Group controlId="city">
-              <Form.Label>City</Form.Label>
-              <Form.Control type="text" name="city" value={formData.city} onChange={handleChange} />
-            </Form.Group>
-            <Form.Group controlId="phone">
-              <Form.Label>Phone</Form.Label>
-              <Form.Control type="text" name="phone" value={formData.phone} onChange={handleChange} />
-            </Form.Group>
-            <Form.Group controlId="email">
-              <Form.Label>Email</Form.Label>
-              <Form.Control type="email" name="email" value={formData.email} onChange={handleChange} style={{ marginBottom: '20px' }} />
-            </Form.Group>
-            <div className="d-flex justify-content-between">
-              <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
-              <Button variant="success" type="submit">Save Changes</Button>
-            </div>
-          </Form>
-        </Modal.Body>
-      </Modal>
+          <Modal.Header closeButton>
+            <Modal.Title style={{ textAlign: 'center' }}>Add Driver</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form onSubmit={handleSubmit}>
+              <Form.Group controlId="id">
+                <Form.Label>ID</Form.Label>
+                <Form.Control type="text" name="id" value={user.id} readOnly />
+              </Form.Group>
+              <Form.Group controlId="CIN">
+                <Form.Label>CIN</Form.Label>
+                <Form.Control type="text" name="CIN" value={formData.CIN} onChange={handleChange} required />
+              </Form.Group>
+              <Form.Group controlId="fullName">
+                <Form.Label>Full Name</Form.Label>
+                <Form.Control type="text" name="fullName" value={formData.fullName} onChange={handleChange} required />
+              </Form.Group>
+              <Form.Group controlId="gender">
+                <Form.Label>Gender</Form.Label>
+                <div>
+                  <Form.Check
+                    inline
+                    type="radio"
+                    label="Male"
+                    name="gender"
+                    value="Male"
+                    checked={formData.gender === "Male"}
+                    onChange={handleChange}
+                    required
+                  />
+                  <Form.Check
+                    inline
+                    type="radio"
+                    label="Female"
+                    name="gender"
+                    value="Female"
+                    checked={formData.gender === "Female"}
+                    onChange={handleChange}
+                    required
+                  />
+
+                </div>
+              </Form.Group>
+              <Form.Group controlId="city">
+                <Form.Label>City</Form.Label>
+                <Form.Control type="text" name="city" value={formData.city} onChange={handleChange} required />
+              </Form.Group>
+              <Form.Group controlId="phone">
+                <Form.Label>Phone</Form.Label>
+                <Form.Control type="text" name="phone" value={formData.phone} onChange={handleChange} required />
+              </Form.Group>
+              <Form.Group controlId="email">
+                <Form.Label>Email</Form.Label>
+                <Form.Control type="email" name="email" value={formData.email} onChange={handleChange} style={{ marginBottom: '20px' }} required />
+              </Form.Group>
+              <Form.Group controlId="password">
+                <Form.Label>password</Form.Label>
+                <Form.Control type="password" name="password" value={formData.password} onChange={handleChange} style={{ marginBottom: '20px' }} required />
+              </Form.Group>
+              <div className="d-flex justify-content-between">
+                <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
+                <Button variant="success" type="submit">Save Changes</Button>
+              </div>
+            </Form>
+          </Modal.Body>
+        </Modal>
       </section>
 
     </div>

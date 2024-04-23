@@ -13,6 +13,7 @@ import { Dashboard } from './components/dashbord';
 import { NavBar } from './components/navbar';
 import { Transaction } from './components/transaction';
 import { Rides } from './components/rides';
+import zIndex from '@mui/material/styles/zIndex';
 
 
 
@@ -34,7 +35,7 @@ const App = () => {
          element={
            <div style={{ display: 'flex' }}>
              
-             <Sidebar />
+             <Sidebar  />
              <div style={{ flex: 1 }}>
              <NavBar />
              
