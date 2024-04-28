@@ -10,6 +10,8 @@ import { Statistic, Space, Card } from 'antd'; // Import Typography and Space fr
 import { UserOutlined } from '@ant-design/icons'; // Import UserOutlined from Ant Design
 import Box from '@mui/material/Box';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { Doughnut } from 'react-chartjs-2';
+
 
 
 
@@ -29,11 +31,11 @@ export const ClientsTable = () => {
   const [formData, setFormData] = useState({
     CIN: '',
     fullName: '',
-    gender:'',
+    gender: '',
     city: '',
     phone: '',
     email: '',
-    password:''
+    password: ''
   });
 
 
@@ -69,6 +71,7 @@ export const ClientsTable = () => {
 
   // State for storing customer data
   const [CustomerData, setCustomerData] = useState([]);
+  const [Customergender, setgenderCustomers] = useState([]);
 
 
 
@@ -91,10 +94,11 @@ export const ClientsTable = () => {
       alert('Network error or other issue occurred');
     }
   };
-  useEffect(() => {
-    getCustomers();     // Call the function when component mounts
-  }, []);
 
+
+  useEffect(() => {
+    getCustomers();
+  }, []);
 
 
   // Delete a customer
@@ -123,7 +127,38 @@ export const ClientsTable = () => {
       Customer.email.toLowerCase().includes(search);
   });
 
+  useEffect(() => {
+  const genderCustomers = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/gendercustomer', {
+        withCredentials: true
+      });
+      if (response.status === 200) {
+        setgenderCustomers(response.data.result);
+        console.log('customer gender', response.data.result)
+      } else {
+        console.log('Unexpected status code:', response.status);           // Handle other status codes if needed
+        alert('Error getting data from token');
+      }
+    } catch (error) {
+      console.error('Error:', error);         // Handle network errors or other issues
+      alert('Network error or other issue occurred');
+    }
+  };
 
+  genderCustomers();    // Call the function when component mounts
+
+}, []);
+  console.log('Gender', Customergender)
+
+  const maleCount = Customergender.find(customer => customer.gender === 'Male')?.TotalCustomers || 0;
+  const femaleCount = Customergender.find(customer => customer.gender === 'Female')?.TotalCustomers || 0;
+    
+console.log('male:',maleCount)
+console.log('female:',femaleCount)
+
+
+  
 
 
   const columns = [
@@ -172,7 +207,7 @@ export const ClientsTable = () => {
       flex: 1
 
     },
-     {
+    {
       field: 'CreationDate',
       headerName: 'CreationDate',
       headerAlign: 'left',
@@ -182,7 +217,7 @@ export const ClientsTable = () => {
 
     },
 
-    
+
     {
       field: 'delete',
       headerName: 'Delete',
@@ -210,12 +245,43 @@ export const ClientsTable = () => {
 
 
   ];
-
-
+  const pieChartData = {
+    labels: ['Male', 'Female'],
+    datasets: [
+      {
+        label: 'Customers',
+        data: [maleCount, femaleCount], // Pass the counts of male and female customers
+        backgroundColor: ['#FF6384', '#36A2EB'],
+        hoverBackgroundColor: ['#FF6384', '#36A2EB']
+      },
+    ],
+  };
+  
   // Get total number of customers
   const getTotalCustomersCount = () => {
     return CustomerData.length;
   };
+  
+  const options = {
+    plugins: {
+      doughnutlabel: {
+        labels: [
+          {
+            text: 'Total Customers: ' + getTotalCustomersCount(),
+            font: {
+              size: '20'
+            },
+            color: '#000',
+            formatter: (value, context) => {
+              return value;
+            }
+          }
+        ]
+      }
+    }
+  };
+
+
 
 
   const role = 'Customers';
@@ -241,16 +307,22 @@ export const ClientsTable = () => {
       </Form>
       <Box sx={{ height: 100, width: '95%', marginTop: "20px" }}>
         <h1>Customers</h1>
-        <div>
-          <Space size={20}>
-            <Card className="custom-card">
-              <Space direction='horizontal'>
-                <UserOutlined style={{ fontSize: '28px', color: 'purple', marginBottom: '10px', backgroundColor: "rgba(255,0, 255, 0.25)", borderRadius: 20, padding: 8 }} />
-                <Statistic title="Total Number of Customers" value={getTotalCustomersCount()} />
-              </Space>
-            </Card>
-          </Space>
-        </div>
+        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start' }}>
+  <Space size={20}>
+    <Card className="custom-card">
+      <Space direction='horizontal'>
+        <UserOutlined style={{ fontSize: '28px', color: 'purple', marginBottom: '10px', backgroundColor: "rgba(255,0, 255, 0.25)", borderRadius: 20, padding: 8 }} />
+        <Statistic title="Total Number of Customers" value={getTotalCustomersCount()} />
+      </Space>
+    </Card>
+  </Space>
+  <div style={{ height: '20vh', width: '20vh',  display: 'flex'}}>
+    <div>
+      <Doughnut data={pieChartData} options={options}  />
+    </div>
+  </div>
+</div>
+      
         <Button
           onClick={handleShowModal}
           style={{
@@ -280,7 +352,7 @@ export const ClientsTable = () => {
                 },
               },
             }}
-            
+
             checkboxSelection
             disableRowSelectionOnClick
             slots={{ toolbar: GridToolbar }} />
@@ -291,59 +363,59 @@ export const ClientsTable = () => {
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleSubmit}>
-            <Form.Group controlId="id">
-              <Form.Label>CreationDate</Form.Label>
-              <Form.Control type="text" name="date" value={today} readOnly />
-            </Form.Group>
+              <Form.Group controlId="id">
+                <Form.Label>CreationDate</Form.Label>
+                <Form.Control type="text" name="date" value={today} readOnly />
+              </Form.Group>
               <Form.Group controlId="CIN">
                 <Form.Label>CIN</Form.Label>
-                <Form.Control type="text" name="CIN" value={formData.CIN} onChange={handleChange} required/>
+                <Form.Control type="text" name="CIN" value={formData.CIN} onChange={handleChange} required />
               </Form.Group>
               <Form.Group controlId="fullName">
                 <Form.Label>Full Name</Form.Label>
-                <Form.Control type="text" name="fullName" value={formData.fullName} onChange={handleChange} required/>
+                <Form.Control type="text" name="fullName" value={formData.fullName} onChange={handleChange} required />
               </Form.Group>
               <Form.Group controlId="gender">
-  <Form.Label>Gender</Form.Label>
-  <div>
-    <Form.Check
-      inline
-      type="radio"
-      label="Male"
-      name="gender"
-      value="Male"
-      checked={formData.gender === "Male"}
-      onChange={handleChange}
-      required
-    />
-    <Form.Check
-      inline
-      type="radio"
-      label="Female"
-      name="gender"
-      value="Female"
-      checked={formData.gender === "Female"}
-      onChange={handleChange}
-      required
-    />
- 
-  </div>
-</Form.Group>
+                <Form.Label>Gender</Form.Label>
+                <div>
+                  <Form.Check
+                    inline
+                    type="radio"
+                    label="Male"
+                    name="gender"
+                    value="Male"
+                    checked={formData.gender === "Male"}
+                    onChange={handleChange}
+                    required
+                  />
+                  <Form.Check
+                    inline
+                    type="radio"
+                    label="Female"
+                    name="gender"
+                    value="Female"
+                    checked={formData.gender === "Female"}
+                    onChange={handleChange}
+                    required
+                  />
+
+                </div>
+              </Form.Group>
               <Form.Group controlId="city">
                 <Form.Label>City</Form.Label>
                 <Form.Control type="text" name="city" value={formData.city} onChange={handleChange} required />
               </Form.Group>
               <Form.Group controlId="phone">
                 <Form.Label>Phone</Form.Label>
-                <Form.Control type="text" name="phone" value={formData.phone} onChange={handleChange}required />
+                <Form.Control type="text" name="phone" value={formData.phone} onChange={handleChange} required />
               </Form.Group>
               <Form.Group controlId="email">
                 <Form.Label>Email</Form.Label>
-                <Form.Control type="email" name="email" value={formData.email} onChange={handleChange} style={{ marginBottom: '20px' }} required/>
+                <Form.Control type="email" name="email" value={formData.email} onChange={handleChange} style={{ marginBottom: '20px' }} required />
               </Form.Group>
               <Form.Group controlId="password">
                 <Form.Label>Password</Form.Label>
-                <Form.Control type="password" name="password" value={formData.password} onChange={handleChange} style={{ marginBottom: '20px' }}required />
+                <Form.Control type="password" name="password" value={formData.password} onChange={handleChange} style={{ marginBottom: '20px' }} required />
               </Form.Group>
               <div className="d-flex justify-content-between">
                 <Button variant="secondary" onClick={handleCloseModal}>Close</Button>

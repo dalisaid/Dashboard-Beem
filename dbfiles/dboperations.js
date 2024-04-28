@@ -340,7 +340,30 @@ const GetLast10Transaction = async () => {
   }
 }
 
+
+const genderCustomers = async () => {
+  try {
+    let pool = await sql.connect(config);
+    let Transaction = await pool.request().query(`SELECT 
+    gender,
+    COUNT(id) AS TotalCustomers
+FROM 
+    Customers
+GROUP BY 
+    gender;`);
+    const result = Transaction.recordset;
+
+    return result;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+
+
+
 module.exports = {
   getusercount, updateUser, getuserbyid, checkUser, getDrivers, getCustomers, addDriver, Deletedriver, DeleteCustomer, addCustomer,
-  getRides, DriverActivity, getTransaction, TransactionActivity,GetLast10Transaction
+  getRides, DriverActivity, getTransaction, TransactionActivity,GetLast10Transaction,genderCustomers
 }

@@ -114,13 +114,21 @@ export const Dashboard = () => {
       {
         label: 'Rides Completed',
         data: driverActivity.map((driver) => driver.ridescompleted),
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: [
+          'rgba(68, 24, 121, 0.2)', // Color for the first bar
+          'rgba(225, 70, 8, 0.2)',     // Color for the second bar
+          'rgba(226, 44, 106, 0.2)',  // Color for the third bar
+        ],
+        borderColor: [
+          'rgba(68, 24, 121, 1)', // Border color for the first bar
+          'rgba(225, 70, 8, 1)',  // Border color for the second bar
+          'rgba(226, 44, 106, 1)',// Border color for the third bar
+        ],
         borderWidth: 1,
       },
     ],
   };
-
+  
   const BarchartOptions = {
     scales: {
       yAxes: [
@@ -140,8 +148,13 @@ export const Dashboard = () => {
       {
         label: 'Users',
         data: [ratioData.customers, ratioData.drivers],
-        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-        hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+        backgroundColor: [
+          'rgba(68, 24, 121, 0.4)', 
+          'rgba(225, 70, 8, 0.4)',    
+        ],       
+         hoverBackgroundColor: [ 
+        'rgba(68, 24, 121, 0.8)', 
+        'rgba(225, 70, 8, 0.8)']
       },
     ],
   };
@@ -154,9 +167,9 @@ export const Dashboard = () => {
       {
         label: 'Revenue',
         data: TransactionActivity.map((Transaction) => Transaction.Amount),
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderColor: 'rgba(75, 192, 192, 1)',
-        borderWidth: 1,
+        backgroundColor: 'rgba(68, 24, 121, 0.2)', // Updated color
+        borderColor: 'rgba(68, 24, 121, 1)', // Updated color
+          borderWidth: 1,
       },
     ],
   };
@@ -206,7 +219,7 @@ const totalAmount = parseFloat(TransactionActivity.reduce((total, transaction) =
       sortable: false,
       disableColumnMenu: true,
       renderCell: (params) => (
-        <button  style={{ backgroundColor: '#36A2EB', color: 'white', border: 'none', borderRadius: '5px', padding: '5px 10px', cursor: 'pointer', width:'10vh'}}disabled>
+        <button  style={{ backgroundColor: '#441879', color: 'white', border: 'none', borderRadius: '5px', padding: '5px 10px', cursor: 'pointer', width:'10vh'}}disabled>
           {params.value} TND
         </button>
       ),
