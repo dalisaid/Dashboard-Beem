@@ -16,90 +16,30 @@ export const Dashboard = () => {
 
 
 
-  const getUserRatios = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/getusercount', {
-        withCredentials: true // Include cookies in the request
-      });
-      if (response.status === 200) {
-        setRatioData(response.data.result);
-        console.log('ratios', response.data.result)
-      } else {
-        console.log('Error:', response.statusText);
-        alert('Error fetching user data');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('failed fetching ratios');
+
+const getChartData = async () => {
+  try {
+    const response = await axios.get('http://localhost:5000/ChartData', {
+      withCredentials: true
+    });
+    if (response.status === 200) {
+      // Handle successful response
+      setTransactionActivity(response.data.revenue);
+      setDriverActivity(response.data.drivact)
+      setRatioData(response.data.userdist)
+      setLastTransaction(response.data.lasttrans)
+    } else {
+      console.log('Unexpected status code:', response.status);
+      alert('Error getting data from token');
     }
-  };
-
-
-
-  const getDriverActivity = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/driver-activity', {
-        withCredentials: true
-      });
-      if (response.status === 200) {
-        // Handle successful response
-        setDriverActivity(response.data.result);
-        console.log('activity', response.data.result)
-      } else {
-        console.log('Unexpected status code:', response.status);
-        alert('Error getting data from token');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Network error or other issue occurred');
-    }
-  };
-
-
-
-
-  const getTransactionActivity = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/TransactionActivity', {
-        withCredentials: true
-      });
-      if (response.status === 200) {
-        // Handle successful response
-        setTransactionActivity(response.data.result);
-        console.log('Transaction', response.data.result)
-      } else {
-        console.log('Unexpected status code:', response.status);
-        alert('Error getting data from token');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Network error or other issue occurred');
-    }
-  };
-
-  const GetLast10Transaction = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/Last10Transaction', {
-        withCredentials: true
-      });
-      if (response.status === 200) {
-        setLastTransaction(response.data.result);
-        console.log('last 10 transaction', response.data.result)
-      } else {
-        console.log('Unexpected status code:', response.status);           // Handle other status codes if needed
-        alert('Error getting data from token');
-      }
-    } catch (error) {
-      console.error('Error:', error);         // Handle network errors or other issues
-      alert('Network error or other issue occurred');
-    }
-  };
-
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Network error or other issue occurred');
+  }
+};
   useEffect(() => {
-    getDriverActivity();
-    getUserRatios();
-    getTransactionActivity();
-    GetLast10Transaction();
+   
+   getChartData();
   }, []);
 
 
@@ -254,15 +194,13 @@ const totalAmount = parseFloat(TransactionActivity.reduce((total, transaction) =
       <div style={{ display: 'flex', height: '60vh', marginTop: '20px' }}>
         <div style={{ height: '60vh', width: '100vh', border: '1px solid #ddd', borderRadius: '5px', padding: '20px', marginRight: '20px', boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.1)' }}>
           <h4>Driver Activity</h4>
-          {driverActivity.length > 0 ? (
+          
             <Bar data={BarchartData} options={BarchartOptions} />
-          ) : (
-            <div>Loading...</div>
-          )}
+         
         </div>
         <div style={{ height: '60vh', width: '65vh', border: '1px solid #ddd', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.1)' }}>
           <div>
-            <h4>User Distribution</h4>
+          <h4>User Distribution</h4> 
             <Doughnut data={pieChartData} />
           </div>
         </div>

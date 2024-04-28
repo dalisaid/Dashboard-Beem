@@ -23,7 +23,7 @@ export const Rides = () => {
     const [DestinationLongitude, setDestinationLongitude] = useState(10.174600889315332);
     const [startLocationName, setStartLocationName] = useState('');
     const [destinationLocationName, setDestinationLocationName] = useState('');
-
+    const [mapKey, setMapKey] = useState(0);
 
     const getRides = async () => {
         try {
@@ -65,6 +65,10 @@ export const Rides = () => {
     useEffect(() => {
         getRides();     // Call the function to fetch drivers
     }, []);
+    useEffect(() => {
+        // Whenever StartLatitude or StartLongitude changes, update the map by changing the key
+        setMapKey(prevKey => prevKey + 1);
+    }, [StartLatitude, StartLongitude]);
 
 
 
@@ -239,7 +243,7 @@ export const Rides = () => {
                         <tbody>
 
                             <div style={{ width: '100%', height: '500px' }}>
-                                <MapContainer center={[StartLatitude, StartLongitude]} zoom={3} style={{ width: '100%', height: '100%' }}>
+                                <MapContainer key={mapKey} center={[StartLatitude, StartLongitude]} zoom={10} style={{ width: '100%', height: '100%' }}>
                                     <TileLayer
                                         attribution='&copy; OpenStreetMap France | &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                                         url='https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png'

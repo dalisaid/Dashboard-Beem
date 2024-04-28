@@ -258,49 +258,11 @@ app.get('/getRides', async (req, res) => {
   }
 });
 
-app.get('/driver-activity', async (req, res) => {
-  try {
-    const token = req.cookies.authToken;
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (!decoded) {
-      console.log('Generated token:', token);
-      return res.status(401).json({ message: 'Unauthorized: No token provided or invalid token' });
-    }else {
-      const result = await dboperations.DriverActivity();         // If the token is valid, proceed with fetching data
-      res.status(200).json({ result });
-      
-    
-  }
-} catch (err) {
-    console.error(err);
-    res.status(500).send('Error fetching data');
-  } 
-    
-  
-});
 
 
 
-/*******************chniya hethi ??? */
-app.get('/getplace', async (req, res) => {
-  try {
-    const token = req.cookies.authToken;
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (!decoded) {
-      console.log('Generated token:', token);
-      return res.status(401).json({ message: 'Unauthorized: No token provided or invalid token' });
-    }else {
-      res.status(200).json({ result });
-      
-    
-  }
-} catch (err) {
-    console.error(err);
-    res.status(500).send('Error fetching data');
-  } 
-    
-  
-});
+
+
 
 
 
@@ -324,71 +286,9 @@ app.get('/getTransaction', async (req, res) => {
 
 
 
-app.get('/getusercount', async (req, res) => {
-  try {
-    const token = req.cookies.authToken;
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (!decoded) {
-      console.log('Generated token:', token);
-      return res.status(401).json({ message: 'Unauthorized: No token provided or invalid token' });
-    } else {
-      const result = await dboperations.getusercount(); // Call getusercount function to fetch data
-      res.status(200).json({ result });
-    }
-  } catch (error) {
-    console.error('Invalid token:', error.message);
-    return res.status(401).json({ message: 'Unauthorized: Invalid token' });
-  }
-});
 
 
-
-app.get('/TransactionActivity', async (req, res) => {
-  try {
-    const token = req.cookies.authToken;
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (!decoded) {
-      console.log('Generated token:', token);
-      return res.status(401).json({ message: 'Unauthorized: No token provided or invalid token' });
-    }else {
-      const result = await dboperations.TransactionActivity();         // If the token is valid, proceed with fetching data
-      res.status(200).json({ result });
-      
-    
-  }
-} catch (err) {
-    console.error(err);
-    res.status(500).send('Error fetching data');
-  } 
-    
-  
-});
-
-
-
-
-app.get('/Last10Transaction', async (req, res) => {
-  try {
-    const token = req.cookies.authToken;
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (!decoded) {
-      console.log('Generated token:', token);
-      return res.status(401).json({ message: 'Unauthorized: No token provided or invalid token' });
-    }else {
-      const result = await dboperations.GetLast10Transaction();         // If the token is valid, proceed with fetching data
-      res.status(200).json({ result });
-      
-    
-  }
-} catch (err) {
-    console.error(err);
-    res.status(500).send('Error fetching data');
-  } 
-    
-  
-});
-
-
+/****************************************************to delete */
 app.get('/gendercustomer', async (req, res) => {
   try {
     const token = req.cookies.authToken;
@@ -407,9 +307,38 @@ app.get('/gendercustomer', async (req, res) => {
     res.status(500).send('Error fetching data');
   } 
     
-  
+   
 });
 
+/**************************************************** */
+app.get('/ChartData', async (req, res) => {
+  try {
+    const token = req.cookies.authToken;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decoded) {
+      console.log('Generated token:', token);
+      return res.status(401).json({ message: 'Unauthorized: No token provided or invalid token' });
+    }else {
+
+
+
+
+      const revenue = await dboperations.TransactionActivity();
+      const lasttrans = await dboperations.GetLast10Transaction();
+      const drivact = await dboperations.DriverActivity();
+      const userdist = await dboperations.getusercount();         
+
+      res.status(200).json({ revenue,lasttrans,drivact,userdist });
+      
+    
+  }
+} catch (err) {
+    console.error(err);
+    res.status(500).send('Error fetching data');
+  } 
+    
+  
+});
 
 
 
