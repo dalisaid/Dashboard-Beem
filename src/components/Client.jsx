@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { BsFillTrashFill, BsFillPencilFill } from "react-icons/bs";
+import { BsFillTrashFill, BsFillPencilFill ,BsFillEyeFill, BsFillCartFill, BsFillChatDotsFill, BsFillCash } from "react-icons/bs";
 import { Table, Form, FormControl, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import Pagination from 'react-bootstrap/Pagination';
-import { orderBy } from 'lodash';
+
+import '../css/App.css';
+
 import Modal from 'react-bootstrap/Modal';
 import { Statistic, Space, Card } from 'antd'; // Import Typography and Space from Ant Design
 import { UserOutlined } from '@ant-design/icons'; // Import UserOutlined from Ant Design
 import Box from '@mui/material/Box';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { Doughnut } from 'react-chartjs-2';
+import { Statistique } from './statistic';
 
 
 
@@ -72,6 +74,7 @@ export const ClientsTable = () => {
   // State for storing customer data
   const [CustomerData, setCustomerData] = useState([]);
   const [Customergender, setgenderCustomers] = useState([]);
+  const [totalCustomersThisMonth, setTotalCustomersThisMonth] = useState(0);
 
 
 
@@ -81,20 +84,35 @@ export const ClientsTable = () => {
       const response = await axios.get('http://localhost:5000/getCustomers', {
         withCredentials: true
       });
-
-      if (response.status === 200) {                   // Handle successful response
-        setCustomerData(response.data.result);
-
+      if (response.status === 200) {                   
+        const allCustomers = response.data.result;
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth();
+        const currentYear = currentDate.getFullYear();
+  
+        // Filter customers added this month
+        const customersThisMonth = allCustomers.filter(customer => {
+          const creationDate = new Date(customer.CreationDate);
+          return creationDate.getMonth() === currentMonth && creationDate.getFullYear() === currentYear;
+        });
+        // Log total customers added this month
+        console.log('Total customers added this month:', customersThisMonth.length);
+  
+        // Set the customers data
+        setCustomerData(allCustomers);
+  
+        // Set the total customers added this month for future use
+        setTotalCustomersThisMonth(customersThisMonth.length);
+  
       } else {
-        console.log('Unexpected status code:', response.status);            // Handle other status codes if needed
+        console.log('Unexpected status code:', response.status);
         alert('error getting data from token');
       }
     } catch (error) {
-      console.error('Error:', error);          // Handle network errors or other issues
+      console.error('Error:', error);
       alert('Network error or other issue occurred');
     }
   };
-
 
   useEffect(() => {
     getCustomers();
@@ -128,37 +146,37 @@ export const ClientsTable = () => {
   });
 
   useEffect(() => {
-  const genderCustomers = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/gendercustomer', {
-        withCredentials: true
-      });
-      if (response.status === 200) {
-        setgenderCustomers(response.data.result);
-        console.log('customer gender', response.data.result)
-      } else {
-        console.log('Unexpected status code:', response.status);           // Handle other status codes if needed
-        alert('Error getting data from token');
+    const genderCustomers = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/gendercustomer', {
+          withCredentials: true
+        });
+        if (response.status === 200) {
+          setgenderCustomers(response.data.result);
+          console.log('customer gender', response.data.result)
+        } else {
+          console.log('Unexpected status code:', response.status);           // Handle other status codes if needed
+          alert('Error getting data from token');
+        }
+      } catch (error) {
+        console.error('Error:', error);         // Handle network errors or other issues
+        alert('Network error or other issue occurred');
       }
-    } catch (error) {
-      console.error('Error:', error);         // Handle network errors or other issues
-      alert('Network error or other issue occurred');
-    }
-  };
+    };
 
-  genderCustomers();    // Call the function when component mounts
+    genderCustomers();    // Call the function when component mounts
 
-}, []);
+  }, []);
   console.log('Gender', Customergender)
 
   const maleCount = Customergender.find(customer => customer.gender === 'Male')?.TotalCustomers || 0;
   const femaleCount = Customergender.find(customer => customer.gender === 'Female')?.TotalCustomers || 0;
-    
-console.log('male:',maleCount)
-console.log('female:',femaleCount)
+
+  console.log('male:', maleCount)
+  console.log('female:', femaleCount)
 
 
-  
+
 
 
   const columns = [
@@ -256,12 +274,12 @@ console.log('female:',femaleCount)
       },
     ],
   };
-  
+
   // Get total number of customers
   const getTotalCustomersCount = () => {
     return CustomerData.length;
   };
-  
+
   const options = {
     plugins: {
       doughnutlabel: {
@@ -290,39 +308,18 @@ console.log('female:',femaleCount)
 
 
 
-    <div style={{ marginLeft: '250px', marginTop: "6px" }}>
-      <Form className="mt-3 mr-3">
-        <div style={{ position: 'relative' }}>
-          <FormControl
-            type="text"
-            placeholder="Search"
-            style={{
-              borderRadius: '20px',
-              width: '350px',
-            }}
-            value={search}
-            onChange={(e) => setsearch(e.target.value)}
-          />
-        </div>
-      </Form>
+    <div style={{ marginLeft: '250px', marginTop: "40px" }}>
+    <Statistique/>
+
+
+
+
+
       <Box sx={{ height: 100, width: '95%', marginTop: "20px" }}>
         <h1>Customers</h1>
-        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start' }}>
-  <Space size={20}>
-    <Card className="custom-card">
-      <Space direction='horizontal'>
-        <UserOutlined style={{ fontSize: '28px', color: 'purple', marginBottom: '10px', backgroundColor: "rgba(255,0, 255, 0.25)", borderRadius: 20, padding: 8 }} />
-        <Statistic title="Total Number of Customers" value={getTotalCustomersCount()} />
-      </Space>
-    </Card>
-  </Space>
-  <div style={{ height: '20vh', width: '20vh',  display: 'flex'}}>
-    <div>
-      <Doughnut data={pieChartData} options={options}  />
-    </div>
-  </div>
-</div>
-      
+        
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+
         <Button
           onClick={handleShowModal}
           style={{
@@ -341,6 +338,21 @@ console.log('female:',femaleCount)
         >
           Add Customer
         </Button>
+        <Form className="mt-3 mr-3">
+        <div style={{ position: 'relative' }}>
+          <FormControl
+            type="text"
+            placeholder="Search"
+            style={{
+              borderRadius: '20px',
+              width: '350px',
+            }}
+            value={search}
+            onChange={(e) => setsearch(e.target.value)}
+          />
+        </div>
+      </Form>
+      </div>
         <Box sx={{ height: 750, width: '100%', marginTop: '10px' }}>
           <DataGrid
             rows={filteredItems}

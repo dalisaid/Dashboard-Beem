@@ -4,6 +4,7 @@ import { Bar, Doughnut, Line } from 'react-chartjs-2';
 import { Chart, registerables } from 'chart.js';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
+import { Statistique } from './statistic';
 
 Chart.register(...registerables);
 
@@ -82,6 +83,7 @@ const getChartData = async () => {
   };
 
 
+
   const pieChartData = {
     labels: ['Customers', 'Drivers'],
     datasets: [
@@ -108,7 +110,7 @@ const getChartData = async () => {
         label: 'Revenue',
         data: TransactionActivity.map((Transaction) => Transaction.Amount),
         backgroundColor: 'rgba(68, 24, 121, 0.2)', // Updated color
-        borderColor: 'rgba(68, 24, 121, 1)', // Updated color
+        borderColor: 'var(--blue)', // Updated color
           borderWidth: 1,
       },
     ],
@@ -159,7 +161,7 @@ const totalAmount = parseFloat(TransactionActivity.reduce((total, transaction) =
       sortable: false,
       disableColumnMenu: true,
       renderCell: (params) => (
-        <button  style={{ backgroundColor: '#441879', color: 'white', border: 'none', borderRadius: '5px', padding: '5px 10px', cursor: 'pointer', width:'10vh'}}disabled>
+        <button  style={{ backgroundColor: 'var(--blue)', color: 'white', border: 'none', borderRadius: '5px', padding: '5px 10px', cursor: 'pointer', width:'10vh'}}disabled>
           {params.value} TND
         </button>
       ),
@@ -174,6 +176,8 @@ const totalAmount = parseFloat(TransactionActivity.reduce((total, transaction) =
     <div style={{ marginLeft: '250px', }}>
       <h2>DASHBOARD</h2>
       <h5>Welcome to your dashboard</h5>
+      <Statistique/>
+
       <div style={{ display: 'flex', height: '65vh' }}>
         <div style={{ height: '65vh', width: '100vh', border: '1px solid #ddd', borderRadius: '5px', padding: '20px', marginRight: '20px', boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.1)' }}>
           <h4>Revenue Generated</h4>

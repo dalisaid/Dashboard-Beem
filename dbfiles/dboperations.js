@@ -361,9 +361,76 @@ GROUP BY
 
 
 
+const gettotalcustomers = async () => {
+  try {
+    let pool = await sql.connect(config);
+    let CustomerTotalResult = await pool.request().query("SELECT COUNT(*) AS total FROM customers");
+    let CustomerThisMonth = await pool.request().query(`SELECT 
+    COUNT(id) AS TotalCustomers,
+    (SELECT COUNT(id) 
+     FROM [SQLTEST].[dbo].[Customers]
+     WHERE MONTH(CreationDate) = MONTH(GETDATE()) 
+       AND YEAR(CreationDate) = YEAR(GETDATE())) AS NewCustomersThisMonth
+FROM 
+    [SQLTEST].[dbo].[Customers];
+`)
+    
+    // Extract counts from the query results
+    const customerTotal = CustomerTotalResult.recordset[0].total;
+    const customerTotalThismonth = CustomerThisMonth.recordset[0].NewCustomersThisMonth;
+
+    return { totalCustomers: customerTotal, newCustomersThisMonth: customerTotalThismonth };
+  } catch (error) {
+    console.log(error);
+    throw error; // Rethrow the error to handle it in the calling function
+  }
+}
+
+
+const gettotaldrivers = async () => {
+  try {
+    let pool = await sql.connect(config);
+    let DriverTotalResult = await pool.request().query("SELECT COUNT(*) AS total FROM drivers");
+    let DriverThisMonth = await pool.request().query(`SELECT 
+    COUNT(id) AS Total_Drivers,
+    (SELECT COUNT(id) 
+     FROM [SQLTEST].[dbo].[Drivers]
+     WHERE MONTH(CreationDate) = MONTH(GETDATE()) 
+       AND YEAR(CreationDate) = YEAR(GETDATE())) AS NewDriversThisMonth
+FROM 
+    [SQLTEST].[dbo].[Drivers];
+`)
+    
+    // Extract counts from the query results
+    const DriverTotal = DriverTotalResult.recordset[0].total;
+    const DriverTotalThismonth = DriverThisMonth.recordset[0].NewDriversThisMonth;
+
+    return { TotalDrivers: DriverTotal, newDriversThisMonth: DriverTotalThismonth };
+  } catch (error) {
+    console.log(error);
+    throw error; // Rethrow the error to handle it in the calling function
+  }
+}
+
+
+const getEarning = async () => {
+  try {
+    let pool = await sql.connect(config);
+    let result = await pool.request().query(`
+      SELECT SUM([Amount]) AS TotalAmount
+      FROM [SQLTEST].[dbo].[Transaction]
+    `);
+    const totalAmount = result.recordset[0].TotalAmount;
+
+    return totalAmount;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
 
 
 module.exports = {
   getusercount, updateUser, getuserbyid, checkUser, getDrivers, getCustomers, addDriver, Deletedriver, DeleteCustomer, addCustomer,
-  getRides, DriverActivity, getTransaction, TransactionActivity,GetLast10Transaction,genderCustomers
+  getRides, DriverActivity, getTransaction, TransactionActivity,GetLast10Transaction,genderCustomers,gettotalcustomers,gettotaldrivers,getEarning
 }

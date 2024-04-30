@@ -14,6 +14,7 @@ import { NavBar } from './components/navbar';
 import { Transaction } from './components/transaction';
 import { Rides } from './components/rides';
 import zIndex from '@mui/material/styles/zIndex';
+import { Statistic } from './components/statistic';
 
 
 
@@ -22,13 +23,18 @@ const queryClient = new QueryClient();
 const App = () => {
 
   return (
-    
+
     <div style={{ }}>
+
+   
    <QueryClientProvider client={queryClient}>
    <Router>
      <Routes>
        <Route path="/" element={<SignIn />} />
        <Route path="/SignUp" element={<SignUp />} />
+
+ 
+
 
        <Route
          path="/*"
@@ -52,10 +58,11 @@ const App = () => {
            </div>
          }
        />
+         
      </Routes>
    </Router>
  </QueryClientProvider>
-
+      
  </div>
   
   );

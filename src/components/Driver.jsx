@@ -4,7 +4,7 @@ import { BsFillTrashFill, BsFillPencilFill } from "react-icons/bs";
 import { Form, FormControl, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
-
+import { Statistique } from './statistic';
 import { Statistic, Space, Card } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import Box from '@mui/material/Box';
@@ -225,51 +225,47 @@ export const DriversTable = () => {
   const role = 'Drivers';
   return (
 
-    <div style={{ marginLeft: '250px', marginTop: "6px" }}>
-      <Form className="mt-3 mr-3">
-        <div style={{ position: 'relative' }}>
-          <FormControl
-            type="text"
-            placeholder="Search"
-            style={{
-              borderRadius: '20px',
-              width: '350px',
-            }}
-            value={search}
-            onChange={(e) => setsearch(e.target.value)}
-          />
-        </div>
-      </Form>
+
+    <div style={{ marginLeft: '250px', marginTop: "40px" }}>
+<Statistique/>
+
+     
       <Box sx={{ height: 100, width: '95%', marginTop: "20px" }}>
         <h1>Drivers</h1>
-        <div>
-          <Space  size={20}>
-            <Card className="custom-card">
-              <Space direction='horizontal'>
-                <UserOutlined style={{ fontSize: '28px', color: 'purple', marginBottom: '10px', backgroundColor: "rgba(255,0, 255, 0.25)", borderRadius: 20, padding: 8 }} />
-                <Statistic title="Total Number of Drivers" value={getTotalDriversCount()} />
-              </Space>
-            </Card>
-          </Space>
-        </div>
-        <Button
-          onClick={handleShowModal}
-          style={{
-            position: "relative",
-            padding: "10px 22px",
-            backgroundColor: "#584cac",
-            borderRadius: "6px",
-            color: "#fff",
-            border: "none",
-            fontSize: "18px",
-            fontWeight: "400",
-            cursor: "pointer",
-            boxShadow: "0 5px 10px black rgba(0,0,0,0.1)",
-            marginTop: '10px'
-          }}
-        >
-          Add Driver
-        </Button>
+       
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+  <Button
+    onClick={handleShowModal}
+    style={{
+      padding: "10px 22px",
+      backgroundColor: "#584cac",
+      borderRadius: "6px",
+      color: "#fff",
+      border: "none",
+      fontSize: "18px",
+      fontWeight: "400",
+      cursor: "pointer",
+      boxShadow: "0 5px 10px black rgba(0,0,0,0.1)",
+      marginTop: '10px'
+    }}
+  >
+    Add Driver
+  </Button>
+  <Form className="mt-3 mr-3">
+    <div style={{ position: 'relative' }}>
+      <FormControl
+        type="text"
+        placeholder="Search"
+        style={{
+          borderRadius: '20px',
+          width: '350px',
+        }}
+        value={search}
+        onChange={(e) => setsearch(e.target.value)}
+      />
+    </div>
+  </Form>
+</div>
         <Box sx={{ height: 750, width: '100%', marginTop: '10px' }}>
           <DataGrid
             rows={filteredItems}

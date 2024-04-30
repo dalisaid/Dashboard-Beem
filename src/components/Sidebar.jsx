@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartBar, faUser, faCar, faMoneyCheckAlt, faCog, faUserCircle, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { Button } from 'react-bootstrap'; 
+import { Button } from 'react-bootstrap';
 
 
 
@@ -11,29 +11,37 @@ import { Button } from 'react-bootstrap';
 
 export const Sidebar = () => {
     const [expanded, setExpanded] = useState(true);
-    
+
     const handleToggle = () => {
         setExpanded(prevExpanded => !prevExpanded);
     };
 
-   /* const [selectedComponent, setSelectedComponent] = useState('');
-
-
-
-    const handleComponentSelect = (componentName) => {
-        setSelectedComponent(componentName);
-    };
-*/
+    /* const [selectedComponent, setSelectedComponent] = useState('');
+ 
+ 
+ 
+     const handleComponentSelect = (componentName) => {
+         setSelectedComponent(componentName);
+     };
+ */
     const sidebarStyle = {
-        width: expanded ? '280px' : '100px', 
+        width: expanded ? '280px' : '100px',
         height: '100%',
         position: 'fixed',
         top: '0',
         left: '0',
         backgroundColor: '#441879',
-        color: '#F74B00', 
-        transition: 'width 0.3s ease' 
+        color: '#F74B00',
+        transition: 'width 0.3s ease'
     };
+
+    const [hovered1, setHovered1] = useState(false);
+    const [hovered2, setHovered2] = useState(false);
+    const [hovered3, setHovered3] = useState(false);
+    const [hovered4, setHovered4] = useState(false);
+    const [hovered5, setHovered5] = useState(false);
+    const [hovered6, setHovered6] = useState(false);
+    const [hovered7, setHovered7] = useState(false);
 
     const buttonStyle = {
         fontSize: expanded ? '30px' : '20px',
@@ -41,47 +49,43 @@ export const Sidebar = () => {
         transition: 'font-size 0.2s ease, margin-left 0.1s ease'
     };
 
-    const linkstyle = {
+    const linkstyle =(hovered)=>( {
+        background: hovered ? '#584cac' : 'transparent',
         display: 'flex',
         alignItems: 'center',
-        padding: '10px 10px 10px 53px',
+        padding: expanded ? '25px 20px 10px 55px' : '40px 20px 10px 53px', // Adjust padding when sidebar is expanded
         marginBottom: '30px', // Adjust this value to increase or decrease space between links
         color: 'white',
-        textDecoration: 'none',
         borderRadius: '5px',
         marginRight: '10px',
         marginLeft: '10px',
         position: 'relative',
         transition: 'background 0.2s ease',
         fontSize: '18px',
-        
-    };
+        marginTop: expanded ? '20px' : '50px'
+    });
+
+
     const iconstyle = {
         position: 'absolute', // Position the icon absolutely within its parent link
         left: expanded ? '20px' : '5px', // Adjust this value to position the icon as needed
-        top: '50%', // Position the icon vertically centered
+        top: expanded ? '60%' : '50%', // Adjust top position when sidebar is expanded
         transform: 'translateY(-50%)',
+        padding: '30px',
         padding: expanded ? '0px' : '20px', // Add padding when expanded
         borderRadius: '10%' // Add border radius to make the icon round
-
     };
 
-    const hoverEffects = {
-        onMouseEnter: (e) => {
-            e.target.style.backgroundColor = '#584cac';
-        },
-        onMouseLeave: (e) => {
-            e.target.style.backgroundColor = 'transparent';
-        }
-    };
+    
+
 
     const mainContentStyle = {
-        width:'100%',
+        width: '100%',
         marginLeft: expanded ? '50px' : '-80px',
         transition: 'margin-left 0.3s ease'
     };
 
-  
+
     return (
         <div style={{ display: 'flex' }}>
             <div className="sidebar-container" style={sidebarStyle}>
@@ -95,7 +99,7 @@ export const Sidebar = () => {
                         )}
                         <div style={buttonStyle}>
                             <Button onClick={handleToggle} variant="outline-light">
-                                {expanded ? <FontAwesomeIcon icon={faChevronLeft} /> : <FontAwesomeIcon icon={faChevronRight} />}
+                                {expanded ? <FontAwesomeIcon icon={faChevronLeft} /> : <FontAwesomeIcon icon={faChevronRight} /> }
                             </Button>
                         </div>
                     </div>
@@ -118,7 +122,13 @@ export const Sidebar = () => {
 
                         <div className='links'>
                             <Link to={`/dashboard`} style={{ textDecoration: 'none' }} >
-                                <div className="dashboard-link" style={linkstyle} {...hoverEffects}>
+                                <div
+                                    className="dashboard-link"
+                                    style={{ ...linkstyle(hovered1) }}
+                                    onMouseEnter={() => setHovered1(true)}
+                                    onMouseLeave={() => setHovered1(false)}
+                                                                    
+                                >
                                     <span className="icon" style={iconstyle}>
                                         <FontAwesomeIcon icon={faChartBar} />
                                     </span>
@@ -130,8 +140,11 @@ export const Sidebar = () => {
 
                             {/* Drivers */}
                             <Link to={`/Drivers`} style={{ textDecoration: 'none' }} >
-                                <div className="dashboard-link" style={linkstyle}
-                                    {...hoverEffects}
+                                <div
+                                    className="dashboard-link"
+                                    style={{ ...linkstyle(hovered2) }}
+                                    onMouseEnter={() => setHovered2(true)}
+                                    onMouseLeave={() => setHovered2(false)}
                                 >
                                     <span className="icon" style={iconstyle}>
                                         <FontAwesomeIcon icon={faUser} />
@@ -143,11 +156,12 @@ export const Sidebar = () => {
                             </Link>
 
                             {/* Clients */}
-
-                            <Link to={`/Clients`} style={{ textDecoration: 'none' }} > 
-                                <div className="dashboard-link" style={linkstyle}
-                                    {...hoverEffects}
-                                >
+                            <Link to={`/Clients`} style={{ textDecoration: 'none' }} >
+                                <div
+                                    className="dashboard-link"
+                                    style={{ ...linkstyle(hovered3) }}
+                                    onMouseEnter={() => setHovered3(true)}
+                                    onMouseLeave={() => setHovered3(false)}                                >
                                     <span className="icon" style={iconstyle}>
                                         <FontAwesomeIcon icon={faUsers} />
                                     </span>
@@ -159,9 +173,11 @@ export const Sidebar = () => {
 
                             {/* Rides */}
                             <Link to={`/rides`} style={{ textDecoration: 'none' }}>
-                                <div className="dashboard-link" style={linkstyle}
-                                    {...hoverEffects}
-                                >
+                                <div
+                                    className="dashboard-link"
+                                    style={{ ...linkstyle(hovered4)}}
+                                    onMouseEnter={() => setHovered4(true)}
+                                    onMouseLeave={() => setHovered4(false)}                                >
                                     <span className="icon" style={iconstyle}>
                                         <FontAwesomeIcon icon={faCar} />
                                     </span>
@@ -173,8 +189,11 @@ export const Sidebar = () => {
 
                             {/* Transaction */}
                             <Link to={`/transaction`} style={{ textDecoration: 'none' }}>
-                                <div className="dashboard-link" style={linkstyle}
-                                    {...hoverEffects}
+                                <div
+                                    className="dashboard-link"
+                                    style={{ ...linkstyle(hovered5) }}
+                                    onMouseEnter={() => setHovered5(true)}
+                                    onMouseLeave={() => setHovered5(false)}
                                 >
                                     <span className="icon" style={iconstyle}>
                                         <FontAwesomeIcon icon={faMoneyCheckAlt} />
@@ -185,9 +204,11 @@ export const Sidebar = () => {
 
                             {/* Settings */}
                             <Link to={`/settings`} style={{ textDecoration: 'none' }}>
-                                <div className="dashboard-link" style={linkstyle}
-                                    {...hoverEffects}
-                                >
+                                <div
+                                    className="dashboard-link"
+                                    style={{ ...linkstyle(hovered6) }}
+                                    onMouseEnter={() => setHovered6(true)}
+                                    onMouseLeave={() => setHovered6(false)}                                >
                                     <span className="icon" style={iconstyle}>
                                         <FontAwesomeIcon icon={faCog} />
                                     </span>
@@ -197,21 +218,29 @@ export const Sidebar = () => {
 
                             {/* Accounts */}
                             <Link to={`/accounts`} style={{ textDecoration: 'none' }}>
-                                <div className="dashboard-link" style={linkstyle} {...hoverEffects}>
+                                <div
+                                    className="dashboard-link"
+                                    style={{ ...linkstyle(hovered7) }}
+                                    onMouseEnter={() => setHovered7(true)}
+                                    onMouseLeave={() => setHovered7(false)}                                >
                                     <span className="icon" style={iconstyle}>
                                         <FontAwesomeIcon icon={faUserCircle} />
                                     </span>
                                     {expanded && (<span>Accounts</span>)}
                                 </div>
                             </Link>
-                        </div>
-                    </div>
+                        </div>                   
+                        
+                        
+                        
+                        
+                         </div>
                 </div>
             </div>
             <div style={mainContentStyle}>
 
-</div>
-           
+            </div>
+
         </div>
 
     );
