@@ -1,9 +1,11 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Navbar, Container, Nav, NavDropdown} from 'react-bootstrap';
 import { faUser, faBell, faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
+
 
 
 export const NavBar = () => {
@@ -12,7 +14,8 @@ export const NavBar = () => {
   const [email, setEmail] = useState(null);
 
 
-  
+  const navigateRef = useRef();//i just wanted to use navigate man why did u have to make it so difficult -.-
+  navigateRef.current = useNavigate();
 
   // Function to check connected user
   useEffect(() => {
@@ -21,23 +24,23 @@ export const NavBar = () => {
         const response = await axios.get('http://localhost:5000/connecteduser', {
           withCredentials: true
         });
-        if (response.status === 200) {           // Handle successful response
+        if (response.status === 200) {
+          // Handle successful response
           setEmail(response.data.email);
           console.log('Connected user:', response.data.email);
-
-        } else {
-          console.log('Unexpected status code:', response.status);         
-          alert('error getting data from token');
+        } 
         }
-      } catch (error) {
+       catch (error) {
+        // Network error or other issues
         console.error('Error:', error);
+        alert('Error getting data from token. Redirecting to login page.');
+       // window.location.href = '/';
+       navigateRef.current('/');
+       //window.location.assign('/');
       }
     };
-    checkConnectedUser(); // Call the function when component mounts
- // Optionally, you can add dependencies if needed
-    // For example: [email]
+    checkConnectedUser();
   }, []);
-
 
 
 
@@ -66,7 +69,7 @@ export const NavBar = () => {
   };
 
   return (
-    <Navbar style={{ marginBottom: '-50px', display: 'flex', justifyContent: 'space-between', marginTop: '10px', marginLeft: '200px' }}>
+    <Navbar style={{ marginBottom: '-50px', display: 'flex', justifyContent: 'space-between',  marginLeft: '250px' }}>
       <Container>
       </Container>
 

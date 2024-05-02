@@ -2,29 +2,46 @@ const config = require('./dbconfig'),
   sql = require('mssql');
 
 /*****************************************************************************self explanatory check the query */
-const getuserbyid = async (role, id) => {
-
+const getuserdata = async (role, id) => {
   try {
     let pool = await sql.connect(config);
-    let user = await pool.request()
-      .input('role', sql.VarChar, role)
-      .input('id', sql.Int, id)
-      .query(`SELECT * from  ${role} where id=@id`);
+    if(role === 'Drivers'){
+      let user = await pool.request()
+        .input('id', sql.Int, id)
+        .query(`SELECT * from  ${role} where id=@id`);
+      
+      let rev = await pool.request()
+        .input('id', sql.Int, id)
+        .query(`select SUM(amount) as revenue from [Transaction] where DriverID=@id;`);
+      
+      let rides = await pool.request()
+        .input('id', sql.Int, id)
+        .query(`select count(*) as ridescompleted from rides where DriverID=@id;`);
 
-    const result = user.recordset
-    if (result) {
+      const userinfo = user.recordset;
+      const revenue = rev.recordset[0].revenue;
+      const ridesdone = rides.recordset[0].ridescompleted;
 
-      return result; // Return the user record
-    } else {
-      console.log('User not found', id);
-      return null; // Return null when user not found
+      return { userinfo, revenue, ridesdone };
+    } else if (role === 'Customers') {
+      let user = await pool.request()
+        .input('id', sql.Int, id)
+        .query(`SELECT * from  ${role} where id=@id`);
+      
+      let rides = await pool.request()
+        .input('id', sql.Int, id)
+        .query(`select count(*) as ridescompleted from rides where CustomerID=@id;`);
+
+      const userinfo = user.recordset;
+      const ridesdone = rides.recordset[0].ridescompleted;
+
+      return { userinfo, ridesdone };
     }
   } catch (error) {
     console.log(error);
     throw error; // Throw the error to handle it outside this function
   }
 };
-
 /********************************************sends sql query to database and check if user exists  */
 
 const checkUser = async (email, password) => {
@@ -431,6 +448,6 @@ const getEarning = async () => {
 
 
 module.exports = {
-  getusercount, updateUser, getuserbyid, checkUser, getDrivers, getCustomers, addDriver, Deletedriver, DeleteCustomer, addCustomer,
+  getusercount, updateUser, getuserdata, checkUser, getDrivers, getCustomers, addDriver, Deletedriver, DeleteCustomer, addCustomer,
   getRides, DriverActivity, getTransaction, TransactionActivity,GetLast10Transaction,genderCustomers,gettotalcustomers,gettotaldrivers,getEarning
 }

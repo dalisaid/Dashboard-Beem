@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../css/App.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faUsers, faMoneyBill, faChatBubble, faCash } from '@fortawesome/free-solid-svg-icons';
+import {  faUsers, faMoneyBill} from '@fortawesome/free-solid-svg-icons';
 
 
 
@@ -18,16 +18,19 @@ export const Statistique = () => {
     const [hovered2, setHovered2] = useState(false);
     const [hovered3, setHovered3] = useState(false);
     const [hovered4, setHovered4] = useState(false);
+   
 
-    const getTotalCustomers = async () => {
+    const getStats = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/gettotalcustomers', {
+            const response = await axios.get('http://localhost:5000/Stats', {
                 withCredentials: true
             });
             if (response.status === 200) {
-                setcustomercount(response.data.result);
-                console.log("Total Customers:", response.data.result.totalCustomers);
-                console.log("New Customers This Month:", response.data.result.newCustomersThisMonth);
+                setcustomercount(response.data.customerstats);
+                setdrivercount(response.data.driverstats);
+                setAmount(response.data.earningstats);
+
+              
             } else {
                 console.log('Unexpected status code:', response.status); // Handle other status codes if needed
                 alert('Error getting data from token');
@@ -40,63 +43,21 @@ export const Statistique = () => {
 
 
 
-    const getTotalDrivers = async () => {
-        try {
-            const response = await axios.get('http://localhost:5000/gettotaldrivers', {
-                withCredentials: true
-            });
-            if (response.status === 200) {
-                setdrivercount(response.data.result);
-                console.log("Total Drivers:", response.data.result.TotalDrivers);
-                console.log("New Drivers This Month:", response.data.result.newDriversThisMonth);
-            } else {
-                console.log('Unexpected status code:', response.status); // Handle other status codes if needed
-                alert('Error getting data from token');
-            }
-        } catch (error) {
-            console.error('Error:', error); // Handle network errors or other issues
-            alert('Network error or other issue occurred');
-        }
-    };
-
-
-
-
-
-    const getEarning = async () => {
-        try {
-            const response = await axios.get('http://localhost:5000/getEarning', {
-                withCredentials: true
-            });
-            if (response.status === 200) {
-                setAmount(response.data.result);
-                console.log("Total Amount:", response.data.result);
-            } else {
-                console.log('Unexpected status code:', response.status); // Handle other status codes if needed
-                alert('Error getting data from token');
-            }
-        } catch (error) {
-            console.error('Error:', error); // Handle network errors or other issues
-            alert('Network error or other issue occurred');
-        }
-    };
-
-    
     useEffect(() => {
-        getTotalCustomers();
-        getTotalDrivers();
-        getEarning();
+        getStats();
+      
+      
+     
     }, []);
 
 
 
 
-
-
     const totalusers = customercount.totalCustomers + drivercount.TotalDrivers;
-    const totalnewusers = customercount.newCustomersThisMonth + drivercount.newDriversThisMonth;
-    console.log("Total users", totalusers);
-    console.log("new users ", totalnewusers);
+   const totalnewusers = customercount.newCustomersThisMonth + drivercount.newDriversThisMonth;
+
+ 
+    
 
     const getCardStyle = (hovered) => ({
         position: "relative",
@@ -212,7 +173,7 @@ export const Statistique = () => {
                             {amount} TND
                         </div>
                         <div className="cardName" style={getCardNameStyle(hovered4)}>
-                            Earning
+                            Earnings
                         </div>
                     </div>
                     <div className="iconBx" style={getIconBxStyle(hovered4)}>

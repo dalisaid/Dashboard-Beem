@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCab, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 
 import {
   MDBCol,
@@ -28,18 +30,24 @@ export const ProfilDetails = () => { // Remove 'export' from here
 
   const { role, userid } = useParams();
 
+  const [revenuegenerated, setRevenueGenerated] = useState();
+  const [ridescompleted, setRidesCompleted] = useState();
+
+
+
 
   useEffect(() => {
     const getUser = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/getuserbyid/${role}/${userid}`, // Changed from single quotes to backticks for template literal
+          `http://localhost:5000/userdata/${role}/${userid}`, // Changed from single quotes to backticks for template literal
           { withCredentials: true }
         );
         if (response.status === 200) {
 
-          setUser(response.data.result[0]);
-
+          setUser(response.data.result.userinfo[0]);
+          setRevenueGenerated(response.data.result.revenue)
+          setRidesCompleted(response.data.result.ridesdone)
 
         } else {
           console.log('Unexpected status code:', response.status);
@@ -104,35 +112,45 @@ export const ProfilDetails = () => { // Remove 'export' from here
   /************************************************** */
   return (
     <div style={{ marginTop: '150px' }}>
+
       <section>
+
         <MDBContainer className="py-5">
           <MDBRow>
             <MDBCol lg="4">
               <MDBCard className="mb-4">
                 <MDBCardBody className="text-center">
-                {
-  user.gender === 'Female' ? (
-    <MDBCardImage
-                    src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2.webp"
-                    alt="avatar"
-                    className="rounded-circle"
-                    style={{ width: '150px' }}
-                    fluid
-                  />
-  ) : (
-    <MDBCardImage
-                    src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
-                    alt="avatar"
-                    className="rounded-circle"
-                    style={{ width: '150px' }}
-                    fluid
-                  />
-  )
-}
-                 
+                  {
+                    user.gender === 'Female' ? (
+                      <MDBCardImage
+                        src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2.webp"
+                        alt="avatar"
+                        className="rounded-circle"
+                        style={{ width: '150px' }}
+                        fluid
+                      />
+                    ) : (
+                      <MDBCardImage
+                        src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+                        alt="avatar"
+                        className="rounded-circle"
+                        style={{ width: '150px' }}
+                        fluid
+                      />
+                    )
+                  }
+                  {role === 'Drivers' ? (
+                    <p className="text-muted mb-1" style={{ fontWeight: 'bolder' }}>Driver</p>
+                  ) : role === 'Customers' ? (
+                    <p className="text-muted mb-1" style={{ fontWeight: 'bolder' }}>Customer</p>
+                  ) : (
+                    <p className="text-muted mb-1" style={{ fontWeight: 'bolder' }}>?????</p> // 
+                  )}
+
 
                   <p className="text-muted mb-1">{user.fullName}</p>
                   <p className="text-muted mb-4">{user.city}</p>
+
                   <div className="d-flex justify-content-center mb-2">
                     <MDBBtn>Follow</MDBBtn>
                     <MDBBtn outline className="ms-1">Message</MDBBtn>
@@ -211,46 +229,35 @@ export const ProfilDetails = () => { // Remove 'export' from here
               </MDBCard>
 
               <MDBRow>
-                <MDBCol md="6">
-                  <MDBCard className="mb-4">
-                    <MDBCardBody>
-                      <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">Revenue</span> Project Status</MDBCardText>
-                      {[
-                        { label: "Project Status", width: 80 },
-                        { label: "Website Markup", width: 72 },
-                        { label: "One Page", width: 89 },
-                        { label: "Mobile Template", width: 55 },
-                        { label: "Backend API", width: 66 }
-                      ].map(({ label, width }) => (
-                        <React.Fragment key={label}>
-                          <MDBCardText className="mb-1" style={{ fontSize: '.77rem' }}>{label}</MDBCardText>
-                          <MDBProgress className="rounded">
-                            <MDBProgressBar width={width} valuemin={0} valuemax={100} />
-                          </MDBProgress>
-                        </React.Fragment>
-                      ))}
-                    </MDBCardBody>
-                  </MDBCard>
-                </MDBCol>
+                {role === 'Drivers' && (
+                  <MDBCol md="6">
+                    <MDBCard className="mb-4">
+                      <MDBCardBody>
+                        <MDBCardText className="text-center mb-4">
+                          <span className="text-primary font-italic">Revenue generated</span><br />
+                          <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
+                            {revenuegenerated} TND
+                            
 
+                          </h3>
+                          <FontAwesomeIcon icon={faMoneyBill} />
+                        </MDBCardText>
+                      </MDBCardBody>
+                    </MDBCard>
+                  </MDBCol>
+                )}
                 <MDBCol md="6">
                   <MDBCard className="mb-4">
                     <MDBCardBody>
-                      <MDBCardText className="mb-4"><span className="text-primary font-italic me-1">Assignment</span> Project Status</MDBCardText>
-                      {[
-                        { label: "Project Status", width: 80 },
-                        { label: "Website Markup", width: 72 },
-                        { label: "One Page", width: 89 },
-                        { label: "Mobile Template", width: 55 },
-                        { label: "Backend API", width: 66 }
-                      ].map(({ label, width }) => (
-                        <React.Fragment key={label}>
-                          <MDBCardText className="mb-1" style={{ fontSize: '.77rem' }}>{label}</MDBCardText>
-                          <MDBProgress className="rounded">
-                            <MDBProgressBar width={width} valuemin={0} valuemax={100} />
-                          </MDBProgress>
-                        </React.Fragment>
-                      ))}
+                      <MDBCardText className="text-center mb-4">
+                        <span className="text-primary font-italic">Rides completed</span><br />
+                        <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
+                          {ridescompleted}
+                          
+
+                        </h3>
+                        <FontAwesomeIcon icon={faCab} />
+                      </MDBCardText>
                     </MDBCardBody>
                   </MDBCard>
                 </MDBCol>

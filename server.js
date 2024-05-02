@@ -70,21 +70,21 @@ app.get('/logout', (req, res) => {
   res.send('Logged out successfully.');     // Send response indicating successful logout
 });
 app.get('/connecteduser', (req, res) => {
-
-
   const token = req.cookies.authToken;
-
-  if (!token) {
-    console.log('Generated token:', token);
-    return res.status(401).json({ message: 'Unauthorized: No token provided' });
-  } else {
+  try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const { email } = decoded; // Extracting email from decoded token
-
-    res.status(200).json({ email });
+    if (!decoded) {
+      console.log('Generated token:', token);
+      return res.status(401).json({ message: 'Unauthorized: No token provided' });
+    } else {
+      const { email } = decoded; // Extracting email from decoded token
+      res.status(200).json({ email });
+    }
+  } catch (error) {
+    console.error('Invalid token:', error.message);
+    return res.status(401).json({ message: 'Unauthorized: Invalid token' });
   }
-}
-);
+});
 
 /*********************************Driver*************************** */
 
@@ -111,11 +111,11 @@ app.get('/getDrivers', async (req, res) => {    /****************/
 app.post('/addDriver', async (req, res) => {
   try {
     const token = req.cookies.authToken; // Get the JWT token from the request cookies
-
-    if (!token) {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decoded) {
       return res.status(401).json({ message: 'Unauthorized: Missing token' });          // If no token is found, respond with a 401 Unauthorized error
     }
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);         // Verify the JWT token to ensure authentication
+             // Verify the JWT token to ensure authentication
     const { CIN, fullName,gender, city, phone, email,password } = req.body;       // Extract driver details from request body
     const result = await dboperations.addDriver({ CIN, fullName,gender, city, phone, email,password });       // Call the addDriver function to add the driver to the database
     res.status(200).json({ message: 'Driver added successfully', result });       // Respond with a success message
@@ -129,9 +129,15 @@ app.post('/addDriver', async (req, res) => {
 
 app.delete('/deleteDriver/:id', async (req, res) => {
   try {
+    const token = req.cookies.authToken;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decoded) {
+      return res.status(401).json({ message: 'Unauthorized: Missing token' });          // If no token is found, respond with a 401 Unauthorized error
+    }else {
     const driverId = req.params.id;
     await dboperations.Deletedriver(driverId);       // Call the deleteDriver function to delete the driver from the database
-    res.status(200).json({ message: 'Driver deleted successfully' });   // Respond with a success message
+    res.status(200).json({ message: 'Driver deleted successfully' });
+  }   // Respond with a success message
   } catch (error) {
     console.error('Error deleting driver:', error);
     res.status(500).json({ message: 'Internal server error' });
@@ -194,19 +200,19 @@ app.post('/addCustomer', async (req, res) => {
 
 /********************************** */
 
-app.get('/getuserbyid/:role/:driverid', async (req, res) => {
+app.get('/userdata/:role/:driverid', async (req, res) => {
   try {
     const token = req.cookies.authToken; // Get the JWT token from the request cookies
-
-    if (!token) {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET); 
+    if (!decoded) {
       return res.status(401).json({ message: 'Unauthorized: Missing token' });    // If no token is found, respond with a 401 Unauthorized error
     }
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);     // Verify the JWT token to ensure authentication
+        // Verify the JWT token to ensure authentication
 
     const  driverid  = req.params.driverid;
     const role = req.params.role;
     
-    const result = await dboperations.getuserbyid(role,driverid);
+    const result = await dboperations.getuserdata(role,driverid);
 
     return res.status(200).json({ result });
   } catch (error) {
@@ -345,7 +351,7 @@ app.get('/ChartData', async (req, res) => {
 
 
 
-app.get('/gettotalcustomers', async (req, res) => {
+app.get('/Stats', async (req, res) => {
   const token = req.cookies.authToken;
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -353,8 +359,11 @@ app.get('/gettotalcustomers', async (req, res) => {
       console.log('Generated token:', token);
       return res.status(401).json({ message: 'Unauthorized: No token provided or invalid token' });
     } else {
-      const result = await dboperations.gettotalcustomers();         // If the token is valid, proceed with fetching data
-      res.status(200).json({ result });
+      const customerstats = await dboperations.gettotalcustomers(); 
+      const driverstats = await dboperations.gettotaldrivers();
+      const earningstats = await dboperations.getEarning();        // If the token is valid, proceed with fetching data
+
+      res.status(200).json({ customerstats,driverstats,earningstats});
     }
   } catch (error) {
     console.error('Invalid token:', error.message);
@@ -363,40 +372,6 @@ app.get('/gettotalcustomers', async (req, res) => {
 });
 
 
-app.get('/gettotaldrivers', async (req, res) => {
-  const token = req.cookies.authToken;
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (!decoded) {
-      console.log('Generated token:', token);
-      return res.status(401).json({ message: 'Unauthorized: No token provided or invalid token' });
-    } else {
-      const result = await dboperations.gettotaldrivers();         // If the token is valid, proceed with fetching data
-      res.status(200).json({ result });
-    }
-  } catch (error) {
-    console.error('Invalid token:', error.message);
-    return res.status(401).json({ message: 'Unauthorized: Invalid token' });       // If decoding fails due to an invalid token, handle the error appropriately
-  }
-});
-
-
-app.get('/getEarning', async (req, res) => {
-  try {
-    const token = req.cookies.authToken;
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (!decoded) {
-      console.log('Generated token:', token);
-      return res.status(401).json({ message: 'Unauthorized: No token provided or invalid token' });
-    } else {
-      const result = await dboperations.getEarning();         // If the token is valid, proceed with fetching data
-      res.status(200).json({ result });
-    }
-  } catch (error) {
-    console.error('Invalid token:', error.message);
-    return res.status(401).json({ message: 'Unauthorized: Invalid token' });       // If decoding fails due to an invalid token, handle the error appropriately
-  }
-});
 
 
 
