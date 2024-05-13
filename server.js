@@ -1,5 +1,7 @@
 const express = require('express');
 const dboperations = require('./dbfiles/dboperations');
+const dboperationsClient = require('./dbfiles/dboperationsClient');
+
 const cors = require('cors');
 const sql = require('mssql');
 const bodyParser = require('body-parser');
@@ -17,7 +19,6 @@ app.use(cors({
 }));
 app.use(bodyParser.json());
 app.use(cookieParser(process.env.JWT_SECRET));
-
 
 
 /****************************Token */
@@ -266,12 +267,6 @@ app.get('/getRides', async (req, res) => {
 
 
 
-
-
-
-
-
-
 app.get('/getTransaction', async (req, res) => {
   try {
     const token = req.cookies.authToken;
@@ -374,10 +369,72 @@ app.get('/Stats', async (req, res) => {
 
 
 
+app.get('/admin', async (req, res) => {
+  try {
+    const token = req.cookies.authToken;
+    if (!token) {
+      return res.status(401).json({ message: 'Unauthorized: No token provided' });
+    }
+    
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decoded) {
+      console.log('Generated token:', token);
+      return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+    } else {
+      const result = await dboperations.getadmindata();
+      res.status(200).json({ result });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error fetching data');
+  }
+});
+
+
+  app.post('/updateadmin', async (req, res) => {
+    try {
+      const token = req.cookies.authToken;
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      if (!decoded) {
+        console.log('Generated token:', token);
+        return res.status(401).json({ message: 'Unauthorized: No token provided or invalid token' });
+      } else {
+        const { userid, firstName, lastName, email, phone, password } = req.body;
+        const result = await dboperations.updateadmindata({ userid, firstName, lastName, email, phone, password });
+        res.status(result.status).json({ message: result.message });
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Error updating admin data');
+    }
+  });
+  
+
+/**************************************************************client*/
+
+
+  app.get('/getridesCustomer', async (req, res) => {
+    const token = req.cookies.authToken;
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      if (!decoded) {
+        console.log('Generated token:', token);
+        return res.status(401).json({ message: 'Unauthorized: No token provided or invalid token' });
+      } else {
+        const result = await dboperationsClient.getRidesCustomer(decoded.email); // Pass decoded email
+        res.status(200).json({ result });
+      }
+    } catch (error) {
+      console.error('Invalid token:', error.message);
+      return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+    }
+  });
 
 app.listen(API_PORT, () => {
   console.log(`Server is listening on port ${API_PORT}`);
 });
+
+
 
 
 

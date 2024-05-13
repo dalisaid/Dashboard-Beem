@@ -42,6 +42,65 @@ const getuserdata = async (role, id) => {
     throw error; // Throw the error to handle it outside this function
   }
 };
+
+/********************************************getadmin data  */
+
+const getadmindata = async () => {
+  try {
+    let pool = await sql.connect(config);
+    let admin = await pool.request().query("SELECT * from dashboarduser");
+    const result = admin.recordset;
+
+    return result;
+  } catch (error) {
+    console.log(error);
+    throw error; // Rethrow the error to handle it in the calling function
+  }
+}
+
+/********************************************updateadmin data  */
+
+const updateadmindata = async ({ userid, firstName, lastName, email, phone, password }) => {
+  try {
+    const pool = await sql.connect(config);
+    const query = `
+      UPDATE dashboarduser
+      SET firstName = @firstName, 
+          lastName = @lastName, 
+          email = @email, 
+          phone = @phone, 
+          password = @password 
+      WHERE userid = @userid
+    `;
+    const result = await pool.request()
+      .input('userid', sql.Int, userid)
+      .input('firstName', sql.VarChar, firstName)
+      .input('lastName', sql.VarChar, lastName)
+      .input('email', sql.VarChar, email)
+      .input('phone', sql.VarChar, phone)
+      .input('password', sql.VarChar, password)
+      .query(query);
+
+    // Close the connection after executing the query
+    pool.close();
+
+    // Check if any rows were affected
+    if (result.rowsAffected.length === 0) {
+      // No rows were updated, probably because the user with the given id doesn't exist
+      return { status: 404, message: 'User not found' };
+    }
+
+    return { status: 200, message: 'User updated successfully' };
+  } catch (error) {
+    console.error('Error updating user:', error);
+    throw error;
+  }
+};
+
+
+
+
+
 /********************************************sends sql query to database and check if user exists  */
 
 const checkUser = async (email, password) => {
@@ -54,26 +113,28 @@ const checkUser = async (email, password) => {
       .input('email', sql.VarChar, email)
       .input('password', sql.VarChar, password)
       .query(`
-                SELECT *
-                FROM dashboarduser 
-                WHERE email = @email AND pass = @password
+                SELECT * FROM dashboarduser 
+                WHERE email = @email AND password = @password
             `);
 
     // Check if the user exists
     if (result.recordset.length > 0) {
+      const user = result.recordset[0];
+      const role = user.role === 'admin' ? 'admin' : 'client';
 
       console.log('User authenticated successfully');
 
-      return { status: 200 };
+      return { status: 200, role }; // Return user role along with the authentication status
     } else {
       console.log('Invalid email or password');
       return { status: 401 };
     }
   } catch (error) {
     console.error('Error signing in:', error);
-
+    return { status: 500 }; // Internal Server Error
   }
 };
+
 /**************************************** Drivers***************************/
 
 const getDrivers = async () => {
@@ -187,6 +248,7 @@ const addCustomer = async ({ CIN, fullName,gender, city, phone, email,password }
   }
 };
 
+
 const updateUser = async ({ id, CIN, fullName, city, phone, email, role }) => {
   try {
     const pool = await sql.connect(config);
@@ -201,7 +263,6 @@ const updateUser = async ({ id, CIN, fullName, city, phone, email, role }) => {
     `;
     const result = await pool.request()
       .input('role', sql.VarChar, role)
-
       .input('id', sql.Int, id)
       .input('CIN', sql.VarChar, CIN)
       .input('fullName', sql.VarChar, fullName)
@@ -447,7 +508,9 @@ const getEarning = async () => {
 }
 
 
+
 module.exports = {
   getusercount, updateUser, getuserdata, checkUser, getDrivers, getCustomers, addDriver, Deletedriver, DeleteCustomer, addCustomer,
-  getRides, DriverActivity, getTransaction, TransactionActivity,GetLast10Transaction,genderCustomers,gettotalcustomers,gettotaldrivers,getEarning
+  getRides, DriverActivity, getTransaction, TransactionActivity,GetLast10Transaction,genderCustomers
+  ,gettotalcustomers,gettotaldrivers,getEarning,getadmindata,updateadmindata
 }

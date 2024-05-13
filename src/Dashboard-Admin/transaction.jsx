@@ -6,6 +6,8 @@ import Box from '@mui/material/Box';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 
+import {DataTable} from '../components/DataTable';
+
 
 
 
@@ -87,9 +89,12 @@ export const Transaction = () => {
   return (
     <div style={{ marginLeft: '250px', marginTop: "120px" }}>
 
+
       <Box sx={{ height: 100, width: '95%', marginTop: "20px" }}>
         <h1>Transaction</h1>
+        <DataTable rows={TransactionData} columns={columns} />
 
+{/**
 
         <Box sx={{ height: 750, width: '100%', marginTop: '10px' }}>
           <DataGrid
@@ -107,6 +112,7 @@ export const Transaction = () => {
             disableRowSelectionOnClick
             slots={{ toolbar: GridToolbar }} />
         </Box>
+         */}
       </Box>
 
     </div>

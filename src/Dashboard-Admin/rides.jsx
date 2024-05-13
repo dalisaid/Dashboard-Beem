@@ -257,10 +257,6 @@ export const Rides = () => {
 
                     </Table>
 
-
-
-
-
                     <Box sx={{ height: 750, width: '100%', marginTop: '10px' }}>
                         <DataGrid
                             rows={RidesData}
@@ -280,22 +276,6 @@ export const Rides = () => {
                             disableRowSelectionOnClick
                             slots={{ toolbar: GridToolbar }} />
                     </Box>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                     {/***************************************************
 

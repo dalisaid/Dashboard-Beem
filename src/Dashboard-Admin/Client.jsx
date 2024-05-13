@@ -5,6 +5,7 @@ import { Table, Form, FormControl, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import '../css/App.css';
+import {DataTable} from '../components/DataTable';
 
 import Modal from 'react-bootstrap/Modal';
 import { Statistic, Space, Card } from 'antd'; // Import Typography and Space from Ant Design
@@ -12,12 +13,15 @@ import { UserOutlined } from '@ant-design/icons'; // Import UserOutlined from An
 import Box from '@mui/material/Box';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { Doughnut } from 'react-chartjs-2';
-import { Statistique } from './statistic';
+import { Statistique } from '../Dashboard-Admin/statistic';
+
+import {AddModal} from '../components/modal';
 
 
+import {SearchInput} from '../components/SearchInput';
 
 
-
+import {AddButton} from '../components/AddButton';
 
 
 export const ClientsTable = () => {
@@ -178,7 +182,7 @@ export const ClientsTable = () => {
 
 
 
-
+  
   const columns = [
     { field: 'id', headerName: 'ID', width: 90 },
     {
@@ -319,7 +323,9 @@ export const ClientsTable = () => {
         <h1>Customers</h1>
         
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <AddButton onClick={handleShowModal} text="Add Driver" />
 
+{/**
         <Button
           onClick={handleShowModal}
           style={{
@@ -338,21 +344,20 @@ export const ClientsTable = () => {
         >
           Add Customer
         </Button>
-        <Form className="mt-3 mr-3">
-        <div style={{ position: 'relative' }}>
-          <FormControl
-            type="text"
-            placeholder="Search"
-            style={{
-              borderRadius: '20px',
-              width: '350px',
-            }}
-            value={search}
-            onChange={(e) => setsearch(e.target.value)}
-          />
-        </div>
-      </Form>
+         */}
+        <SearchInput value={search} onChange={(e) => setsearch(e.target.value)} />
+
+
+
+
+
       </div>
+
+      <div>
+      <DataTable rows={filteredItems} columns={columns} handleDeleteCustomer={handleDeleteCustomer} role={role} />
+
+      </div>
+      {/** 
         <Box sx={{ height: 750, width: '100%', marginTop: '10px' }}>
           <DataGrid
             rows={filteredItems}
@@ -369,6 +374,18 @@ export const ClientsTable = () => {
             disableRowSelectionOnClick
             slots={{ toolbar: GridToolbar }} />
         </Box>
+        */}
+
+<AddModal
+          show={showModal}
+          handleClose={handleCloseModal}
+          handleSubmit={handleSubmit}
+          formData={formData}
+          handleChange={handleChange}
+          buttonLabel="Add Customer"
+
+        />
+        {/** 
         <Modal show={showModal} onHide={handleCloseModal} centered>
           <Modal.Header closeButton>
             <Modal.Title style={{ textAlign: 'center' }}>Add Driver</Modal.Title>
@@ -436,6 +453,7 @@ export const ClientsTable = () => {
             </Form>
           </Modal.Body>
         </Modal>
+        */}
       </Box>
     </div>
 

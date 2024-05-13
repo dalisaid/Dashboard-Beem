@@ -173,7 +173,7 @@ const totalAmount = parseFloat(TransactionActivity.reduce((total, transaction) =
 
   return (
 
-    <div style={{ marginLeft: '250px', }}>
+    <div style={{ marginLeft: '250px', marginTop:"35px"}}>
       <h2>DASHBOARD</h2>
       <h5>Welcome to your dashboard</h5>
       <Statistique/>

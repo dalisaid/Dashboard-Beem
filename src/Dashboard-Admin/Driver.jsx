@@ -10,10 +10,15 @@ import { UserOutlined } from '@ant-design/icons';
 import Box from '@mui/material/Box';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 
+import { DataTable } from '../components/DataTable';
+
+import { AddModal } from '../components/modal';
 
 
+import {SearchInput} from '../components/SearchInput';
 
 
+import {AddButton} from '../components/AddButton';
 
 
 
@@ -24,7 +29,7 @@ export const DriversTable = () => {
   // State for storing driver data
   const [DriverData, setDriverData] = useState([]);
   let today = new Date();
-  
+
 
 
   // Function to fetch driver data from server
@@ -73,14 +78,14 @@ export const DriversTable = () => {
 
   // State for form data
   const [formData, setFormData] = useState({
-    
+
     CIN: '',
     fullName: '',
-    gender:'',
+    gender: '',
     city: '',
     phone: '',
     email: '',
-    password:''
+    password: ''
   });
 
 
@@ -105,6 +110,7 @@ export const DriversTable = () => {
 
 
   // Delete driver function
+
   const handleDeletedriver = async (driverId) => {
     try {
       await axios.delete(`http://localhost:5000/deleteDriver/${driverId}`, {        // Send a DELETE request to the server to delete the driver
@@ -133,63 +139,18 @@ export const DriversTable = () => {
 
 
   // Function to get total count of drivers
-
-
+  /*
+  
+  */
   const columns = [
     { field: 'id', headerName: 'ID', width: 90 },
-    {
-      field: 'CIN',
-      headerName: 'CIN',
-      width: 150,
-
-    },
-    {
-      field: 'fullName',
-      headerName: 'Full name',
-      width: 150,
-      flex: 1
-
-    },
-    {
-      field: 'gender',
-      headerName: 'Gender',
-      width: 150,
-
-    },
-    {
-      field: 'city',
-      headerName: 'City',
-      width: 150,
-
-    },
-    {
-      field: 'phone',
-      headerName: 'Phone',
-      type: 'number',
-      width: 110,
-      headerAlign: 'left',
-      align: 'left',
-      flex: 1
-
-    },
-    {
-      field: 'email',
-      headerName: 'Email',
-      headerAlign: 'left',
-      align: 'left',
-      width: 160,
-      flex: 1
-
-    },
-    {
-      field: 'CreationDate',
-      headerName: 'CreationDate',
-      headerAlign: 'left',
-      align: 'left',
-      width: 160,
-      flex: 1
-
-    },
+    { field: 'CIN', headerName: 'CIN', width: 150 },
+    { field: 'fullName', headerName: 'Full name', width: 150, flex: 1 },
+    { field: 'gender', headerName: 'Gender', width: 150 },
+    { field: 'city', headerName: 'City', width: 150 },
+    { field: 'phone', headerName: 'Phone', type: 'number', width: 110, headerAlign: 'left', align: 'left', flex: 1 },
+    { field: 'email', headerName: 'Email', headerAlign: 'left', align: 'left', width: 160, flex: 1 },
+    { field: 'CreationDate', headerName: 'CreationDate', headerAlign: 'left', align: 'left', width: 160, flex: 1 },
     {
       field: 'delete',
       headerName: 'Delete',
@@ -197,7 +158,6 @@ export const DriversTable = () => {
       disableColumnMenu: true,
       sortable: false,
       renderCell: (params) => (
-
         <BsFillTrashFill className="delete" style={{ color: '#e10d05', marginRight: '5mm' }} onClick={() => handleDeletedriver(params.row.id)} />
       ),
     },
@@ -208,14 +168,11 @@ export const DriversTable = () => {
       disableColumnMenu: true,
       sortable: false,
       renderCell: (params) => (
-
         <Link to={`/profil/${role}/${params.row.id}`} style={{ textDecoration: 'none', color: 'black', marginRight: '1mm' }}>
           <BsFillPencilFill className="edit-btn" />
         </Link>
       ),
     },
-
-
   ];
 
   const getTotalDriversCount = () => {
@@ -227,45 +184,59 @@ export const DriversTable = () => {
 
 
     <div style={{ marginLeft: '250px', marginTop: "40px" }}>
-<Statistique/>
 
-     
+      <Statistique />
+
+
       <Box sx={{ height: 100, width: '95%', marginTop: "20px" }}>
         <h1>Drivers</h1>
-       
+
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-  <Button
-    onClick={handleShowModal}
-    style={{
-      padding: "10px 22px",
-      backgroundColor: "#584cac",
-      borderRadius: "6px",
-      color: "#fff",
-      border: "none",
-      fontSize: "18px",
-      fontWeight: "400",
-      cursor: "pointer",
-      boxShadow: "0 5px 10px black rgba(0,0,0,0.1)",
-      marginTop: '10px'
-    }}
-  >
-    Add Driver
-  </Button>
-  <Form className="mt-3 mr-3">
-    <div style={{ position: 'relative' }}>
-      <FormControl
-        type="text"
-        placeholder="Search"
-        style={{
-          borderRadius: '20px',
-          width: '350px',
-        }}
-        value={search}
-        onChange={(e) => setsearch(e.target.value)}
-      />
-    </div>
-  </Form>
-</div>
+        <AddButton onClick={handleShowModal} text="Add Driver" />
+
+          {/** 
+          <Button
+            onClick={handleShowModal}
+            style={{
+              padding: "10px 22px",
+              backgroundColor: "#584cac",
+              borderRadius: "6px",
+              color: "#fff",
+              border: "none",
+              fontSize: "18px",
+              fontWeight: "400",
+              cursor: "pointer",
+              boxShadow: "0 5px 10px black rgba(0,0,0,0.1)",
+              marginTop: '10px'
+            }}
+          >
+            Add Driver
+          </Button>
+*/}
+          <SearchInput value={search} onChange={(e) => setsearch(e.target.value)} />
+
+          {/** 
+          <Form className="mt-3 mr-3">
+            <div style={{ position: 'relative' }}>
+              <FormControl
+                type="text"
+                placeholder="Search"
+                style={{
+                  borderRadius: '20px',
+                  width: '350px',
+                }}
+                value={search}
+                onChange={(e) => setsearch(e.target.value)}
+              />
+            </div>
+          </Form>
+          */}
+        </div>
+
+        <div>
+          <DataTable rows={filteredItems} columns={columns} handleDeletedriver={handleDeletedriver} role={role} />
+        </div>
+        {/*
         <Box sx={{ height: 750, width: '100%', marginTop: '10px' }}>
           <DataGrid
             rows={filteredItems}
@@ -282,6 +253,17 @@ export const DriversTable = () => {
             disableRowSelectionOnClick
             slots={{ toolbar: GridToolbar  }} />
         </Box>
+        */}
+        <AddModal
+          show={showModal}
+          handleClose={handleCloseModal}
+          handleSubmit={handleSubmit}
+          formData={formData}
+          handleChange={handleChange}
+          buttonLabel="Add Driver"
+
+        />
+        {/**
         <Modal show={showModal} onHide={handleCloseModal} centered>
           <Modal.Header closeButton>
             <Modal.Title style={{ textAlign: 'center' }}>Add Driver</Modal.Title>
@@ -349,6 +331,7 @@ export const DriversTable = () => {
             </Form>
           </Modal.Body>
         </Modal>
+         */}
       </Box>
     </div>
   );
