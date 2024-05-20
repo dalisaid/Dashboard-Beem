@@ -19,7 +19,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 
 
 
-export const Settings = () => {
+export const ClientSettings = () => {
   const [userData, setUserData] = useState({
     userid: '',
     firstName: '',
@@ -27,7 +27,6 @@ export const Settings = () => {
     email: '',
     phone: '',
     password: '',
-    role:''
 
   });
 
@@ -40,7 +39,7 @@ export const Settings = () => {
 
   const getAdmin = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/admin', {
+      const response = await axios.get('http://localhost:5000/client/clientdata', {
         withCredentials: true
       });
 
@@ -51,38 +50,19 @@ export const Settings = () => {
        
       
     } else {
-      console.error('Failed to fetch admin data:', response.statusText);
-      alert('Error getting admin data ');
+      console.error('Failed to fetch Client data:', response.statusText);
+      alert('Error getting client data ');
     }
   } catch (error) {
     console.error('Error:', error);
     alert('Network error or other issue occurred');
   }
   };
-      const handleInputChange = (event) => {
+    const handleInputChange = (event) => {
     const { name, value } = event.target;
     const updatedData = { ...userData, [name]: value };
     setUserData(updatedData);
     setIsUpdated(true);
-  };
-
-  const updateAdmin = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post('http://localhost:5000/updateadmin', userData, {
-        withCredentials: true // Ensure credentials are included in the request
-      });
-      console.log('Response:', response.data);
-      alert('Profile updated successfully');
-      if (userData.email || userData.password) {
-        window.location.href = 'http://localhost:3000';
-      } else if (userData.firstName || userData.lastName || userData.phone) {
-        window.location.reload();
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Network error or other issue occurred');
-    }
   };
 
   useEffect(() => {
@@ -92,7 +72,7 @@ export const Settings = () => {
   return (
     <div style={{ marginLeft: '250px', marginTop: "40px" }}>
       
-      <form onSubmit={updateAdmin}>
+      <form >
         <Card>
           <CardContent>
             <Stack spacing={2} sx={{ alignItems: 'center' }}>

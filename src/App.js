@@ -3,8 +3,12 @@ import './css/App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { SignIn, SignUp } from './Dashboard-Admin/Authentification';
+
 import { QueryClient, QueryClientProvider } from 'react-query';
 import './css/App.css';
+
+
+
 import { Sidebar } from './Dashboard-Admin/AdminSidebar';
 import { DriversTable } from './Dashboard-Admin/Driver';
 import { ClientsTable } from './Dashboard-Admin/Client';
@@ -16,95 +20,116 @@ import { Rides } from './Dashboard-Admin/rides';
 import {Settings} from './Dashboard-Admin/settings'
 import {Account} from './Dashboard-Admin/account'
 
- import {SidebarClient} from './Dashboard-Client/ClientSidebar'
- import {RidesClient} from './Dashboard-Client/ridesClient'
- import {SettingsClient} from './Dashboard-Client/SettingsClient'
- import {DashboardClient} from './Dashboard-Client/dashboardClient'
+
+
+import { ClientSignIn,ClientSignUp } from './Dashboard-Client/Clientauthentification';
+ import {ClientSidebar} from './Dashboard-Client/ClientSidebar'
+ import {ClientRides} from './Dashboard-Client/Clientrides'
+ import {ClientSettings} from './Dashboard-Client/ClientSettings'
+ import {ClientDashboard} from './Dashboard-Client/Clientdashboard'
+import { ClientNavBar } from './Dashboard-Client/Clientnavbar';
+
+ import { DriverSidebar } from './Dashboard-Driver/DriverSidebar';
+ import { DriverSettings } from './Dashboard-Driver/DriverSettings';
+ import { DriverNavBar } from './Dashboard-Driver/Drivernavbar';
+ import { DriverSignIn } from './Dashboard-Driver/Driverauthentification';
 
 
 
+import AdminPrivateRoutes from './Dashboard-Admin/Adminprivateroutes';
+import ClientPrivateRoutes from './Dashboard-Client/Clientprivateroutes';
+import DriverPrivateRoutes from './Dashboard-Driver/Driverprivateroutes';
 
 const queryClient = new QueryClient();
 
 const App = () => {
 
   return (
+    <div style={{}}>
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <Routes>
+            <Route path="/" element={<DriverSignIn />} />
+            <Route path="/ClientSignIn" element={<ClientSignIn />} />
+            <Route path="/AdminSignIn" element={<SignIn />} />
+            <Route path="/DriverSignin" element={<DriverSignIn />} />
+
+            
 
 
-    
-    <div style={{ }}>
 
-    <QueryClientProvider client={queryClient}>
-    
-   <Router>
-     <Routes>
-       <Route path="/" element={<SignIn />} />
-       <Route path="/SignUp" element={<SignUp />} />
-     {/**
-       <Route
-         path="/*"
-         element={
-           <div style={{ display: 'flex' }}>
-             
-             <SidebarClient  />
-             <div style={{ flex: 1 }}>
-             <NavBar />
-             
-               <Routes>
-               
-               <Route path="/dashboardclient" element={<DashboardClient/>} />
-                 <Route path="/ridesClient" element={<RidesClient />} />
-                 <Route path="/settingsClient" element={<SettingsClient/>} />
+            {/* Client routes */}
+            <Route element={<ClientPrivateRoutes/>}>
+            <Route
+              path="/client/*"
+              element={
+                <div style={{ display: 'flex' }}>
+                  <ClientSidebar />
+                  <div style={{ flex: 1 }}>
+                    <ClientNavBar />
+                    <Routes>
+                      <Route path="Clientdashboard" element={<ClientDashboard />} />
+                      <Route path="Clientrides" element={<ClientRides />} />
+                      <Route path="Clientsettings" element={<ClientSettings />} />
+                    </Routes>
+                  </div>
+                </div>
+              }
+            />
+            </Route>
 
-                 
-               </Routes>
-             </div>
-           </div>
-         }
-       />
 
-       </Routes>
-   </Router>
-      */}
+            {/* Client routes */}
+            <Route element={<DriverPrivateRoutes/>}>
+            <Route
+              path="/driver/*"
+              element={
+                <div style={{ display: 'flex' }}>
+                  <DriverSidebar />
+                  <div style={{ flex: 1 }}>
+                    <DriverNavBar />
+                    <Routes>
+                    <Route path="driverdashboard" element={<p>wip</p>} />
+                      
+                      <Route path="driversettings" element={<DriverSettings />} />
+                    </Routes>
+                  </div>
+                </div>
+              }
+            />
+            </Route>
 
-       <Route
-         path="/*"
-         element={
-           <div style={{ display: 'flex' }}>
-             
-             <Sidebar  />
-             <div style={{ flex: 1 }}>
-             <NavBar />
-             
-               <Routes>
-               
-                 <Route path="/drivers" element={<DriversTable  />} />
-                 <Route path="/Clients" element={<ClientsTable />} />
-                 <Route path="/profil/:role/:userid" element={<ProfilDetails />} />
-                 <Route path="/dashboard" element={<Dashboard />} />
-                 <Route path="/transaction" element={<Transaction />} />
-                 <Route path="/rides" element={<Rides />} />
-                 <Route path="/settings" element={<Settings/>} />
-                 <Route path="/account" element={<Account/>} />
+            {/* Admin routes */}
+            <Route element={<AdminPrivateRoutes/>}>
+            <Route
+              path="/admin/*"
+              element={
+                <div style={{ display: 'flex' }}>
+                  <Sidebar />
+                  <div style={{ flex: 1 }}>
+                    <NavBar />
+                    <Routes>
+                      <Route path="drivers" element={<DriversTable />} />
+                      <Route path="Clients" element={<ClientsTable />} />
+                      <Route path="profil/:role/:userid" element={<ProfilDetails />} />
+                      <Route path="dashboard" element={<Dashboard />} />
+                      <Route path="transaction" element={<Transaction />} />
+                      <Route path="rides" element={<Rides />} />
+                      <Route path="settings" element={<Settings />} />
+                      <Route path="account" element={<Account />} />
+                    </Routes>
+                  </div>
+                </div>
+              }
+            />
+            </Route>
 
-                 
-
-      
-               </Routes>
-             </div>
-           </div>
-         }
-       />
-    
-     </Routes>
-   </Router>
-
-          
- </QueryClientProvider>
-   
- </div>
-    
+          </Routes>
+        </Router>
+      </QueryClientProvider>
+    </div>
   );
+  
 };
 
 export default App;

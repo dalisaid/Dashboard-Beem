@@ -28,7 +28,7 @@ import axios from 'axios';
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-export const  NavBar =() =>{
+export const  ClientNavBar =() =>{
 
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -45,36 +45,47 @@ export const  NavBar =() =>{
 
   
 
+
+ 
+  
+   
+    
+  
+
   const [userData, setUserData] = useState([]);
 
-  const getAdmin = async () => {
+  const getuser = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/admin', {
-        withCredentials: true
-      });
+      const response = await axios.get('http://localhost:5000/client/clientdata', {
+          withCredentials: true
+        });
 
-    if (response.status===200) {
-      
-      
-        setUserData(response.data.result);
-       
-      
-    } else {
-      console.error('Failed to fetch admin data:', response.statusText);
-      alert('Error getting admin data ');
+      if (response.status===200) {
+        
+        
+          setUserData(response.data.result);
+         
+        
+      } else {
+        console.error('Failed to fetch Client data:', response.statusText);
+        alert('Error getting client data ');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Network error or other issue occurred');
     }
-  } catch (error) {
-    console.error('Error:', error);
-    alert('Network error or other issue occurred');
-  }
-};
+  };
 
-useEffect(() => {
-  
-  getAdmin();
-}, []);
+  useEffect(() => {
+    
+    getuser();
+  }, []);
 
 
+
+
+
+        
 
 
 
@@ -104,7 +115,7 @@ useEffect(() => {
 
 
 
-
+  
 
 
 
@@ -142,7 +153,7 @@ useEffect(() => {
           aria-expanded={open ? 'true' : undefined}
           style={{marginLeft:'30px'}}
         >
-            <Avatar sx={{ width: 55, height: 55 }} > {userData.firstName ? userData.firstName[0] : ""}</Avatar>
+            <Avatar sx={{ width: 55, height: 55 }} > {userData.fullName ? userData.fullName[0] : ""}</Avatar>
         </IconButton>
       <Menu
         anchorEl={anchorEl}
@@ -180,14 +191,14 @@ useEffect(() => {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <MenuItem onClick={handleClose}>
-          <Avatar />  {userData.firstName} {userData.lastName}
+          <Avatar />  {userData.fullName} 
         </MenuItem>
         <MenuItem onClick={handleClose}>
           <Avatar /> {userData.email}
         </MenuItem>
         <Divider />
        
-        <MenuItem onClick={handleClose} component={Link} to="/settings">
+        <MenuItem onClick={handleClose} component={Link} to="/client/clientsettings">
   <ListItemIcon>
     <Settings fontSize="small" />
   </ListItemIcon>

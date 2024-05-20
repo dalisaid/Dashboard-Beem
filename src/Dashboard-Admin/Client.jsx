@@ -149,35 +149,8 @@ export const ClientsTable = () => {
       Customer.email.toLowerCase().includes(search);
   });
 
-  useEffect(() => {
-    const genderCustomers = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/gendercustomer', {
-          withCredentials: true
-        });
-        if (response.status === 200) {
-          setgenderCustomers(response.data.result);
-          console.log('customer gender', response.data.result)
-        } else {
-          console.log('Unexpected status code:', response.status);           // Handle other status codes if needed
-          alert('Error getting data from token');
-        }
-      } catch (error) {
-        console.error('Error:', error);         // Handle network errors or other issues
-        alert('Network error or other issue occurred');
-      }
-    };
-
-    genderCustomers();    // Call the function when component mounts
-
-  }, []);
-  console.log('Gender', Customergender)
-
-  const maleCount = Customergender.find(customer => customer.gender === 'Male')?.TotalCustomers || 0;
-  const femaleCount = Customergender.find(customer => customer.gender === 'Female')?.TotalCustomers || 0;
-
-  console.log('male:', maleCount)
-  console.log('female:', femaleCount)
+  
+ 
 
 
 
@@ -259,7 +232,7 @@ export const ClientsTable = () => {
       sortable: false,
       renderCell: (params) => (
 
-        <Link to={`/profil/${role}/${params.row.id}`} style={{ textDecoration: 'none', color: 'black', marginRight: '1mm' }}>
+        <Link to={`/admin/profil/${role}/${params.row.id}`} style={{ textDecoration: 'none', color: 'black', marginRight: '1mm' }}>
           <BsFillPencilFill className="edit-btn" />
         </Link>
       ),
@@ -267,17 +240,8 @@ export const ClientsTable = () => {
 
 
   ];
-  const pieChartData = {
-    labels: ['Male', 'Female'],
-    datasets: [
-      {
-        label: 'Customers',
-        data: [maleCount, femaleCount], // Pass the counts of male and female customers
-        backgroundColor: ['#FF6384', '#36A2EB'],
-        hoverBackgroundColor: ['#FF6384', '#36A2EB']
-      },
-    ],
-  };
+
+  
 
   // Get total number of customers
   const getTotalCustomersCount = () => {

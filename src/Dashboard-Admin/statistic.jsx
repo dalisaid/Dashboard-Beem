@@ -58,7 +58,7 @@ export const Statistique = () => {
                     onMouseLeave={() => setHovered1(false)}
                     numbers={customercount.totalCustomers}
                     newThisMonth={customercount.newCustomersThisMonth}
-                    cardName="customers"
+                    cardName="new customers added this month"
                     icon={faUsers}
                 />
                 <Card
@@ -67,7 +67,7 @@ export const Statistique = () => {
                     onMouseLeave={() => setHovered2(false)}
                     numbers={drivercount.TotalDrivers}
                     newThisMonth={drivercount.newDriversThisMonth}
-                    cardName="drivers"
+                    cardName="new drivers added this month"
                     icon={faUsers}
                 />
                 <Card
@@ -76,7 +76,7 @@ export const Statistique = () => {
                     onMouseLeave={() => setHovered3(false)}
                     numbers={totalusers}
                     newThisMonth={totalnewusers}
-                    cardName="users"
+                    cardName="new users added this month"
                     icon={faUsers}
                 />
                 <Card

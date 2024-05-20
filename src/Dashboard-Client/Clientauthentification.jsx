@@ -8,7 +8,7 @@ const authenticateUser = async ({ email, password, navigate }) => {
 
   
   try {
-    const response = await axios.post('http://localhost:5000/login', {
+    const response = await axios.post('http://localhost:5000/client/login', {
   email,
   password
 
@@ -19,7 +19,7 @@ const authenticateUser = async ({ email, password, navigate }) => {
     if (response.status === 200) {
       // Handle successful signin
       console.log('Login successful');
-      navigate('/admin/dashboard');
+      navigate('/client/Clientdashboard');
     } else {
       // Handle failed signin
       console.error('Failed to login:', response.status, response.statusText);
@@ -34,7 +34,7 @@ const authenticateUser = async ({ email, password, navigate }) => {
 
 
 
-export const SignIn = () => {
+export const ClientSignIn = () => {
 
 
   
@@ -68,10 +68,10 @@ export const SignIn = () => {
       marginRight: '10px', // Add margin to the right
     }}
   />
-  <h4 style={{ color: '#F64C02', margin: '0' }}>Beem Smart Taxi</h4>
+  <h4 style={{ color: '#F64C02', margin: '0' }}>Beem Smart Taxi </h4>
 </div>
 
-        <h3 className="text-center">admin Sign In</h3>
+        <h3 className="text-center"> client Sign In</h3>
 
         <Form onSubmit={handleSubmit}>
           <Form.Group className='mb-2' controlId="formBasicEmail">
@@ -115,7 +115,7 @@ export const SignIn = () => {
   );
 };
 
-export const SignUp = () => {
+export const ClientSignUp = () => {
 
   return (
     <div className='login template d-flex justify-content-center align-items-center vh-100 bg'>

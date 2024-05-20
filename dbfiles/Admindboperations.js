@@ -45,11 +45,13 @@ const getuserdata = async (role, id) => {
 
 /********************************************getadmin data  */
 
-const getadmindata = async () => {
+const getadmindata = async (email) => {
   try {
     let pool = await sql.connect(config);
-    let admin = await pool.request().query("SELECT * from dashboarduser");
-    const result = admin.recordset;
+    let admin = await pool.request()
+    .input('email', sql.VarChar, email)
+    .query(`SELECT * from dashboarduser where email=@email`);
+    const result = admin.recordset[0];
 
     return result;
   } catch (error) {
@@ -113,18 +115,17 @@ const checkUser = async (email, password) => {
       .input('email', sql.VarChar, email)
       .input('password', sql.VarChar, password)
       .query(`
-                SELECT * FROM dashboarduser 
+                SELECT *
+                FROM dashboarduser 
                 WHERE email = @email AND password = @password
-            `);
+                `);
 
     // Check if the user exists
     if (result.recordset.length > 0) {
-      const user = result.recordset[0];
-      const role = user.role === 'admin' ? 'admin' : 'client';
 
       console.log('User authenticated successfully');
 
-      return { status: 200, role }; // Return user role along with the authentication status
+      return { status: 200 };
     } else {
       console.log('Invalid email or password');
       return { status: 401 };
@@ -134,7 +135,6 @@ const checkUser = async (email, password) => {
     return { status: 500 }; // Internal Server Error
   }
 };
-
 /**************************************** Drivers***************************/
 
 const getDrivers = async () => {
@@ -419,23 +419,7 @@ const GetLast10Transaction = async () => {
 }
 
 
-const genderCustomers = async () => {
-  try {
-    let pool = await sql.connect(config);
-    let Transaction = await pool.request().query(`SELECT 
-    gender,
-    COUNT(id) AS TotalCustomers
-FROM 
-    Customers
-GROUP BY 
-    gender;`);
-    const result = Transaction.recordset;
 
-    return result;
-  } catch (error) {
-    console.log(error);
-  }
-}
 
 
 
@@ -511,6 +495,6 @@ const getEarning = async () => {
 
 module.exports = {
   getusercount, updateUser, getuserdata, checkUser, getDrivers, getCustomers, addDriver, Deletedriver, DeleteCustomer, addCustomer,
-  getRides, DriverActivity, getTransaction, TransactionActivity,GetLast10Transaction,genderCustomers
+  getRides, DriverActivity, getTransaction, TransactionActivity,GetLast10Transaction
   ,gettotalcustomers,gettotaldrivers,getEarning,getadmindata,updateadmindata
 }

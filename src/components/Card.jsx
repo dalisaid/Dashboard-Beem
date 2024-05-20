@@ -50,7 +50,7 @@ export const Card = ({ hovered, onMouseEnter, onMouseLeave, numbers, newThisMont
                     {numbers}
                 </div>
                 <div className="cardName" style={getCardNameStyle(hovered)}>
-                    +{newThisMonth} {cardName} added this month
+                    +{newThisMonth} {cardName}
                 </div>
             </div>
             <div className="iconBx" style={getIconBxStyle(hovered)}>

@@ -1,24 +1,22 @@
 const express = require('express');
-const dboperations = require('./dbfiles/dboperations');
-const dboperationsClient = require('./dbfiles/dboperationsClient');
-
+const dboperations = require('../dbfiles/Admindboperations');
 const cors = require('cors');
-const sql = require('mssql');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-const API_PORT = process.env.PORT || 5000;
-const app = express();
+// Set up Express router
+const router = express.Router();
 
-app.use(cors({
+// Middleware
+router.use(cors({
   origin: 'http://localhost:3000', // Replace with your allowed origin
   credentials: true
-
 }));
-app.use(bodyParser.json());
-app.use(cookieParser(process.env.JWT_SECRET));
+router.use(bodyParser.json());
+router.use(cookieParser(process.env.JWT_SECRET));
+
 
 
 /****************************Token */
@@ -31,11 +29,29 @@ const generateToken = (payload) => {
 
 
 
-/******************************* */
+/*******************************validate token */
 
+router.get('/validatetoken', function (req, res) {
+  const token = req.cookies.authToken;
+  let valid = { token: false };
 
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (!decoded) {
+      console.log('Generated token:', token);
+      return res.status(401).json({ message: 'Unauthorized: No token provided or invalid token', valid });
+    } else {
+      valid.token = true;
+      res.status(200).json(valid);
+    }
+  } catch (error) {
+    console.error('Invalid token:', error.message);
+    return res.status(401).json({ message: 'Unauthorized: Invalid token', valid });
+  }
+});
 /*******************************************simple function for data acquisition useless as of now */
-app.get('/api', function (req, res) {
+router.get('/api', function (req, res) {
   console.log('here is your data !');
 
   // Call the getUser function from dboperations
@@ -51,26 +67,36 @@ app.get('/api', function (req, res) {
 });
 
 /********************************** checks with the database if a user exists and sends his data back */
-app.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+router.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-  const result = await dboperations.checkUser(email, password);
-  /*******token is generated even when operation is failed needs to be fixed */
-  const token = generateToken({ email, password });
+    const result = await dboperations.checkUser(email, password);
 
-  console.log('Generated token:', token);
-  res.cookie('authToken', token, { sameSite: 'None', secure: true, httpOnly: true });
-  res.status(result.status).json({});
+    if (result.status === 200) {
+      const Role='admin';
+      const token = generateToken({ email, password,Role });
+
+      console.log('Generated token:', token);
+      res.cookie('authToken', token, { sameSite: 'None', secure: true, httpOnly: true });
+      return res.status(result.status).json({});
+    } else {
+      console.log('Invalid email or password');
+      return res.status(result.status).json({ message: 'Invalid email or password' });
+    }
+  } catch (error) {
+    console.error('Error connecting or authenticating user:', error.message);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
 });
 
-
-app.get('/logout', (req, res) => {
+router.get('/logout', (req, res) => {
   // Invalidate the user's session (e.g., clear session data)
   // Clear the HTTP-only authentication cookie
   res.clearCookie('authToken');
   res.send('Logged out successfully.');     // Send response indicating successful logout
 });
-app.get('/connecteduser', (req, res) => {
+router.get('/connecteduser', (req, res) => {
   const token = req.cookies.authToken;
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -89,7 +115,7 @@ app.get('/connecteduser', (req, res) => {
 
 /*********************************Driver*************************** */
 
-app.get('/getDrivers', async (req, res) => {    /****************/
+router.get('/getDrivers', async (req, res) => {    /****************/
   const token = req.cookies.authToken;
 
   try {
@@ -109,7 +135,7 @@ app.get('/getDrivers', async (req, res) => {    /****************/
 });
 
 
-app.post('/addDriver', async (req, res) => {
+router.post('/addDriver', async (req, res) => {
   try {
     const token = req.cookies.authToken; // Get the JWT token from the request cookies
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -128,7 +154,7 @@ app.post('/addDriver', async (req, res) => {
 
 
 
-app.delete('/deleteDriver/:id', async (req, res) => {
+router.delete('/deleteDriver/:id', async (req, res) => {
   try {
     const token = req.cookies.authToken;
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -148,7 +174,7 @@ app.delete('/deleteDriver/:id', async (req, res) => {
 /*********************Customers********************** */
 
 
-app.get('/getCustomers', async (req, res) => {
+router.get('/getCustomers', async (req, res) => {
   const token = req.cookies.authToken;
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -168,7 +194,7 @@ app.get('/getCustomers', async (req, res) => {
 
 
 
-app.delete('/deleteCustomer/:id', async (req, res) => {
+router.delete('/deleteCustomer/:id', async (req, res) => {
   try {
     const customerId = req.params.id; // Change variable name to customerId
     await dboperations.DeleteCustomer(customerId);       // Call the deleteCustomer function to delete the customer from the database
@@ -181,7 +207,7 @@ app.delete('/deleteCustomer/:id', async (req, res) => {
 
 
 
-app.post('/addCustomer', async (req, res) => {
+router.post('/addCustomer', async (req, res) => {
   try {
     const token = req.cookies.authToken; // Get the JWT token from the request cookies
 
@@ -201,7 +227,7 @@ app.post('/addCustomer', async (req, res) => {
 
 /********************************** */
 
-app.get('/userdata/:role/:driverid', async (req, res) => {
+router.get('/userdata/:role/:driverid', async (req, res) => {
   try {
     const token = req.cookies.authToken; // Get the JWT token from the request cookies
     const decoded = jwt.verify(token, process.env.JWT_SECRET); 
@@ -224,15 +250,15 @@ app.get('/userdata/:role/:driverid', async (req, res) => {
 });
 
 
-app.post('/updateUser', async (req, res) => {
+router.post('/updateUser', async (req, res) => {
   try {
     const token = req.cookies.authToken; // Get the JWT token from the request cookies
-
-    if (!token) {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decoded) {
       return res.status(401).json({ message: 'Unauthorized: Missing token' }); // If no token is found, respond with a 401 Unauthorized error
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify the JWT token to ensure authentication
+     // Verify the JWT token to ensure authentication
     const { id, CIN, fullName, city, phone, email, role } = req.body; // Extract driver details from request body
 
     if (role === 'Customers' || role === 'Drivers') {
@@ -248,7 +274,7 @@ app.post('/updateUser', async (req, res) => {
 });
 
 
-app.get('/getRides', async (req, res) => {
+router.get('/getRides', async (req, res) => {
   try {
     const token = req.cookies.authToken;
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -267,7 +293,7 @@ app.get('/getRides', async (req, res) => {
 
 
 
-app.get('/getTransaction', async (req, res) => {
+router.get('/getTransaction', async (req, res) => {
   try {
     const token = req.cookies.authToken;
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -289,30 +315,10 @@ app.get('/getTransaction', async (req, res) => {
 
 
 
-/****************************************************to delete */
-app.get('/gendercustomer', async (req, res) => {
-  try {
-    const token = req.cookies.authToken;
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (!decoded) {
-      console.log('Generated token:', token);
-      return res.status(401).json({ message: 'Unauthorized: No token provided or invalid token' });
-    }else {
-      const result = await dboperations.genderCustomers();         // If the token is valid, proceed with fetching data
-      res.status(200).json({ result });
-      
-    
-  }
-} catch (err) {
-    console.error(err);
-    res.status(500).send('Error fetching data');
-  } 
-    
-   
-});
+
 
 /**************************************************** */
-app.get('/ChartData', async (req, res) => {
+router.get('/ChartData', async (req, res) => {
   try {
     const token = req.cookies.authToken;
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -346,7 +352,7 @@ app.get('/ChartData', async (req, res) => {
 
 
 
-app.get('/Stats', async (req, res) => {
+router.get('/Stats', async (req, res) => {
   const token = req.cookies.authToken;
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -369,19 +375,18 @@ app.get('/Stats', async (req, res) => {
 
 
 
-app.get('/admin', async (req, res) => {
+router.get('/admin', async (req, res) => {
   try {
     const token = req.cookies.authToken;
-    if (!token) {
-      return res.status(401).json({ message: 'Unauthorized: No token provided' });
-    }
+    
     
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     if (!decoded) {
       console.log('Generated token:', token);
       return res.status(401).json({ message: 'Unauthorized: Invalid token' });
     } else {
-      const result = await dboperations.getadmindata();
+      const email=decoded.email
+      const result = await dboperations.getadmindata(email);
       res.status(200).json({ result });
     }
   } catch (err) {
@@ -391,7 +396,7 @@ app.get('/admin', async (req, res) => {
 });
 
 
-  app.post('/updateadmin', async (req, res) => {
+  router.post('/updateadmin', async (req, res) => {
     try {
       const token = req.cookies.authToken;
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -410,31 +415,11 @@ app.get('/admin', async (req, res) => {
   });
   
 
-/**************************************************************client*/
-
-
-  app.get('/getridesCustomer', async (req, res) => {
-    const token = req.cookies.authToken;
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      if (!decoded) {
-        console.log('Generated token:', token);
-        return res.status(401).json({ message: 'Unauthorized: No token provided or invalid token' });
-      } else {
-        const result = await dboperationsClient.getRidesCustomer(decoded.email); // Pass decoded email
-        res.status(200).json({ result });
-      }
-    } catch (error) {
-      console.error('Invalid token:', error.message);
-      return res.status(401).json({ message: 'Unauthorized: Invalid token' });
-    }
-  });
-
-app.listen(API_PORT, () => {
-  console.log(`Server is listening on port ${API_PORT}`);
-});
 
 
 
+
+
+module.exports = router;
 
 

@@ -4,6 +4,7 @@ import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons
 import { Button } from 'react-bootstrap';
 import {SidebarLink} from '../components/SideBarLink';
 import { faChartBar, faUser, faCar, faMoneyCheckAlt, faCog, faUserCircle, faUsers } from '@fortawesome/free-solid-svg-icons';
+import zIndex from '@mui/material/styles/zIndex';
 
 export const Sidebar = () => {
     const [expanded, setExpanded] = useState(true);
@@ -13,6 +14,7 @@ export const Sidebar = () => {
     };
 
     const sidebarStyle = {
+        zIndex:'2',
         width: expanded ? '280px' : '100px',
         height: '100%',
         position: 'fixed',
@@ -24,6 +26,7 @@ export const Sidebar = () => {
     };
 
     const buttonStyle = {
+        
         fontSize: expanded ? '30px' : '20px',
         marginLeft: expanded ? '35px' : '2',
         transition: 'font-size 0.2s ease, margin-left 0.1s ease'
@@ -36,13 +39,13 @@ export const Sidebar = () => {
     };
 
     const links = [
-        { to: '/dashboard', icon: faChartBar, text: 'Dashboard' },
-        { to: '/Drivers', icon: faUser, text: 'Drivers' },
-        { to: '/Clients', icon: faUsers, text: 'Customers' },
-        { to: '/rides', icon: faCar, text: 'Rides' },
-        { to: '/transaction', icon: faMoneyCheckAlt, text: 'Transaction' },
-        { to: '/feedback', icon: faUserCircle, text: 'FeedBack' },
-        { to: '/settings', icon: faCog, text: 'Settings' },  
+        { to: '/admin/dashboard', icon: faChartBar, text: 'Dashboard' },
+        { to: '/admin/Drivers', icon: faUser, text: 'Drivers' },
+        { to: '/admin/Clients', icon: faUsers, text: 'Customers' },
+        { to: '/admin/rides', icon: faCar, text: 'Rides' },
+        { to: '/admin/transaction', icon: faMoneyCheckAlt, text: 'Transaction' },
+        { to: '/admin/feedback', icon: faUserCircle, text: 'FeedBack' },
+        { to: '/admin/settings', icon: faCog, text: 'Settings' },  
     ];
     
     return (

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-export const DashboardClient = () => {
+export const ClientDashboard = () => {
 
     const [RidesCustomer, setRidesCustomer] = useState([]);
 
     const getRidesCustomer = async () => {
         try {
-          const response = await axios.get('http://localhost:5000/getridesCustomer', {
+          const response = await axios.get('http://localhost:5000/client/getridesCustomer', {
             withCredentials: true
           });
           if (response.status === 200) {

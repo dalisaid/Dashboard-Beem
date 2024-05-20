@@ -5,7 +5,7 @@ import { Button } from 'react-bootstrap';
 import {SidebarLink} from '../components/SideBarLink';
 import { faChartBar, faUser, faCar, faMoneyCheckAlt, faCog, faUserCircle, faUsers } from '@fortawesome/free-solid-svg-icons';
 
-export const SidebarClient = () => {
+export const ClientSidebar = () => {
     const [expanded, setExpanded] = useState(true);
 
     const handleToggle = () => {
@@ -13,6 +13,7 @@ export const SidebarClient = () => {
     };
 
     const sidebarStyle = {
+        zIndex:'2',
         width: expanded ? '280px' : '100px',
         height: '100%',
         position: 'fixed',
@@ -36,9 +37,9 @@ export const SidebarClient = () => {
     };
 
     const links = [
-        { to: '/dashboardclient', icon: faChartBar, text: 'Dashboard' },
-        { to: '/ridesClient', icon: faCar, text: 'Rides' },
-        { to: '/settingsClient', icon: faCog, text: 'Settings' },  
+        { to: '/client/clientdashboard', icon: faChartBar, text: 'Dashboard' },
+        { to: '/client/Clientrides', icon: faCar, text: 'Rides' },
+        { to: '/client/ClientSettings', icon: faCog, text: 'Settings' },  
     ];
     
     return (

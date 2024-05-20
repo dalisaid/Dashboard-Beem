@@ -168,7 +168,7 @@ export const DriversTable = () => {
       disableColumnMenu: true,
       sortable: false,
       renderCell: (params) => (
-        <Link to={`/profil/${role}/${params.row.id}`} style={{ textDecoration: 'none', color: 'black', marginRight: '1mm' }}>
+        <Link to={`/admin/profil/${role}/${params.row.id}`} style={{ textDecoration: 'none', color: 'black', marginRight: '1mm' }}>
           <BsFillPencilFill className="edit-btn" />
         </Link>
       ),

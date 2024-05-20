@@ -19,7 +19,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 
 
 
-export const SettingsClient = () => {
+export const DriverSettings = () => {
   const [userData, setUserData] = useState({
     userid: '',
     firstName: '',
@@ -39,29 +39,24 @@ export const SettingsClient = () => {
 
   const getAdmin = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/admin', {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
-        }
+      const response = await axios.get('http://localhost:5000/driver/driverdata', {
+        withCredentials: true
       });
-  
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Admin data:', data);
-        if (data.result && data.result.length > 0) {
-          console.log('Admin data:', data.result[0]);
-          setUserData(data.result[0]);
-        }
-      } else {
-        console.error('Failed to fetch admin data:', response.statusText);
-        alert('Error getting data from token');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Network error or other issue occurred');
+
+    if (response.status===200) {
+      
+      
+        setUserData(response.data.result);
+       
+      
+    } else {
+      console.error('Failed to fetch driver data:', response.statusText);
+      alert('Error getting driver data ');
     }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Network error or other issue occurred');
+  }
   };
     const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -111,7 +106,7 @@ export const SettingsClient = () => {
         </Card>
 
         <Card>
-          <CardHeader subheader="The information can be edited" title="Profile" />
+          <CardHeader subheader="The information can be edited" title="Profile ROD IL S5AT BIL FULL NAME YA SAMER" />
           <Divider />
           <CardContent>
             <Grid container spacing={3}>
