@@ -38,8 +38,9 @@ export const DriverSidebar = () => {
 
     const links = [
         { to: '/driver/driverdashboard', icon: faChartBar, text: 'Dashboard' },
-        
-        { to: '/driver/DriverSettings', icon: faCog, text: 'Settings' },  
+        { to: '/driver/DriverRides', icon: faCar, text: 'Rides' },  
+        { to: '/driver/DriverTransaction', icon: faCar, text: 'Transaction' },  
+        { to: '/driver/DriverSettings', icon: faCog, text: 'Account' },  
     ];
     
     return (

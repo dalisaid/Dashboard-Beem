@@ -185,7 +185,7 @@ export const DriversTable = () => {
 
     <div style={{ marginLeft: '250px', marginTop: "40px" }}>
 
-      <Statistique />
+     {/** <Statistique /> */}
 
 
       <Box sx={{ height: 100, width: '95%', marginTop: "20px" }}>
@@ -260,7 +260,7 @@ export const DriversTable = () => {
           handleSubmit={handleSubmit}
           formData={formData}
           handleChange={handleChange}
-          buttonLabel="Add Driver"
+          buttonLabel="Save Changes"
 
         />
         {/**

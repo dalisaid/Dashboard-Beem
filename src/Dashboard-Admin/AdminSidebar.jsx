@@ -45,7 +45,7 @@ export const Sidebar = () => {
         { to: '/admin/rides', icon: faCar, text: 'Rides' },
         { to: '/admin/transaction', icon: faMoneyCheckAlt, text: 'Transaction' },
         { to: '/admin/feedback', icon: faUserCircle, text: 'FeedBack' },
-        { to: '/admin/settings', icon: faCog, text: 'Settings' },  
+        { to: '/admin/settings', icon: faCog, text: 'Account' },  
     ];
     
     return (

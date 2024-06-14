@@ -38,8 +38,7 @@ export const ClientSidebar = () => {
 
     const links = [
         { to: '/client/clientdashboard', icon: faChartBar, text: 'Dashboard' },
-        { to: '/client/Clientrides', icon: faCar, text: 'Rides' },
-        { to: '/client/ClientSettings', icon: faCog, text: 'Settings' },  
+        { to: '/client/ClientSettings', icon: faCog, text: 'Account' },  
     ];
     
     return (

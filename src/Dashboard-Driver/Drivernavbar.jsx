@@ -41,15 +41,6 @@ export const  DriverNavBar =() =>{
   };
 
  
-
-
-  
-
-
- 
-  
-   
-    
   
 
   const [userData, setUserData] = useState([]);

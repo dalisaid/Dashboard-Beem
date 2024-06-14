@@ -106,39 +106,33 @@ export const DriverSettings = () => {
         </Card>
 
         <Card>
-          <CardHeader subheader="The information can be edited" title="Profile ROD IL S5AT BIL FULL NAME YA SAMER" />
+          <CardHeader subheader="The information can be edited"  />
           <Divider />
           <CardContent>
             <Grid container spacing={3}>
-              <Grid item md={6} xs={12}>
+
+
+            <Grid md={6} xs={12}>
                 <FormControl fullWidth required>
-                  <InputLabel>First name</InputLabel>
-                  <OutlinedInput
-                    value={userData.firstName}
-                    label="First name"
-                    name="firstName"
-                    onChange={handleInputChange}
-                  />
+                  <InputLabel>Full Name</InputLabel>
+                  <OutlinedInput value={userData.fullName} label="FullName" name="fullName" onChange={handleInputChange} />
                 </FormControl>
               </Grid>
-              <Grid md={6} xs={12}>
-                <FormControl fullWidth required>
-                  <InputLabel>Last name</InputLabel>
-                  <OutlinedInput value={userData.lastName} label="Last name" name="lastName" onChange={handleInputChange} />
-                </FormControl>
-              </Grid>
-              <Grid md={6} xs={12}>
-                <FormControl fullWidth required>
-                  <InputLabel>Email address</InputLabel>
-                  <OutlinedInput value={userData.email} label="Email address" name="email" onChange={handleInputChange} />
-                </FormControl>
-              </Grid>
+
               <Grid md={6} xs={12}>
                 <FormControl fullWidth required>
                   <InputLabel>Phone</InputLabel>
                   <OutlinedInput value={userData.phone} label="Phone" name="phone" onChange={handleInputChange} />
                 </FormControl>
               </Grid>
+             
+              <Grid md={6} xs={12}>
+                <FormControl fullWidth required>
+                  <InputLabel>Email address</InputLabel>
+                  <OutlinedInput value={userData.email} label="Email address" name="email" onChange={handleInputChange} />
+                </FormControl>
+              </Grid>
+            
               <Grid md={6} xs={12}>
                 <FormControl fullWidth>
                   <InputLabel>Password</InputLabel>

@@ -197,7 +197,7 @@ export const ProfilDetails = () => { // Remove 'export' from here
 
                   }}
                 >
-                  update account information
+                  Update Account Information
                 </Button>
                 <MDBCardBody>
                   {[
@@ -270,7 +270,7 @@ export const ProfilDetails = () => { // Remove 'export' from here
 
         <Modal show={showModal} onHide={handleCloseModal} centered>
           <Modal.Header closeButton>
-            <Modal.Title style={{ textAlign: 'center' }}>Add Driver</Modal.Title>
+            <Modal.Title style={{ textAlign: 'center' }}>Update Driver</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form onSubmit={handleSubmit}>

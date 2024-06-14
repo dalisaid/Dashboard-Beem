@@ -8,7 +8,6 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import './css/App.css';
 
 
-
 import { Sidebar } from './Dashboard-Admin/AdminSidebar';
 import { DriversTable } from './Dashboard-Admin/Driver';
 import { ClientsTable } from './Dashboard-Admin/Client';
@@ -30,11 +29,14 @@ import { ClientSignIn,ClientSignUp } from './Dashboard-Client/Clientauthentifica
 import { ClientNavBar } from './Dashboard-Client/Clientnavbar';
 
  import { DriverSidebar } from './Dashboard-Driver/DriverSidebar';
+ import { DashboardDriver } from './Dashboard-Driver/Driverdashboard';
  import { DriverSettings } from './Dashboard-Driver/DriverSettings';
+ import { DriverRides } from './Dashboard-Driver/Driverrides';
+ import { DriverTransaction } from './Dashboard-Driver/Drivertransaction';
  import { DriverNavBar } from './Dashboard-Driver/Drivernavbar';
  import { DriverSignIn } from './Dashboard-Driver/Driverauthentification';
 
-
+ 
 
 import AdminPrivateRoutes from './Dashboard-Admin/Adminprivateroutes';
 import ClientPrivateRoutes from './Dashboard-Client/Clientprivateroutes';
@@ -49,7 +51,7 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <Router>
           <Routes>
-            <Route path="/" element={<DriverSignIn />} />
+            <Route path="/" element={<SignIn />} />
             <Route path="/ClientSignIn" element={<ClientSignIn />} />
             <Route path="/AdminSignIn" element={<SignIn />} />
             <Route path="/DriverSignin" element={<DriverSignIn />} />
@@ -79,7 +81,7 @@ const App = () => {
             </Route>
 
 
-            {/* Client routes */}
+            {/* Driver routes */}
             <Route element={<DriverPrivateRoutes/>}>
             <Route
               path="/driver/*"
@@ -89,9 +91,12 @@ const App = () => {
                   <div style={{ flex: 1 }}>
                     <DriverNavBar />
                     <Routes>
-                    <Route path="driverdashboard" element={<p>wip</p>} />
-                      
+                    <Route path="driverdashboard" element={<DashboardDriver/>} />
+
                       <Route path="driversettings" element={<DriverSettings />} />
+                      <Route path="driverrides" element={<DriverRides />} />
+                      <Route path="drivertransaction" element={<DriverTransaction />} />
+
                     </Routes>
                   </div>
                 </div>

@@ -126,7 +126,7 @@ export const Settings = () => {
         </Card>
 
         <Card>
-          <CardHeader subheader="The information can be edited" title="Profile ROD IL S5AT BIL FULL NAME YA SAMER" />
+          <CardHeader subheader="The information can be edited" />
           <Divider />
           <CardContent>
             <Grid container spacing={3}>

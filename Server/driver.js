@@ -90,6 +90,8 @@ router.post('/login', async (req, res) => {
     }
   });
 
+
+
   router.get('/driverdata', async (req, res) => {
     try {
       const token = req.cookies.authToken;
@@ -115,8 +117,9 @@ router.post('/login', async (req, res) => {
 
 
   router.get('/getridesDriver', async (req, res) => {
-    const token = req.cookies.authToken;
     try {
+      const token = req.cookies.authToken;
+
       const decoded = jwt.verify(token, process.env.DRIVER_SECRET);
       if (!decoded) {
         console.log('Generated token:', token);
@@ -133,6 +136,49 @@ router.post('/login', async (req, res) => {
 
 
 
+  router.get('/getDriverTransaction', async (req, res) => {
+    try {
+      const token = req.cookies.authToken;
+
+      const decoded = jwt.verify(token, process.env.DRIVER_SECRET);
+      if (!decoded) {
+        console.log('Generated token:', token);
+        return res.status(401).json({ message: 'Unauthorized: No token provided or invalid token' });
+      } else {
+
+        const result = await dboperations.getDriverTransaction(decoded.email); // Pass decoded email
+        res.status(200).json({ result });
+      }
+    } catch (error) {
+      console.error('Invalid token:', error.message);
+      return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+    }
+  });
+
+
+  router.get('/Chartdata', async (req, res) => {
+          try {
+            const token = req.cookies.authToken;
+
+            const decoded = jwt.verify(token, process.env.DRIVER_SECRET);
+            if (!decoded) {
+              console.log('Generated token:', token);
+              return res.status(401).json({ message: 'Unauthorized: No token provided or invalid token' });
+            } else {
+
+        const RidesCompleted = await dboperations.getRidesCompleted(decoded.email);
+        const ridesmonth = await dboperations.getDriverRides(decoded.email);
+        const last5Transactions= await dboperations.getlast5transaction(decoded.email);
+        const lastRides= await dboperations.getlastRides(decoded.email);
+  
+        res.status(200).json({ ridesmonth, RidesCompleted,last5Transactions,lastRides });
+      }
+    } catch (error) {
+      console.error('Invalid token:', error.message);
+      return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+    }
+  });
+  
 
   /************************************************* */
   

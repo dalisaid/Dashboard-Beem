@@ -277,7 +277,7 @@ export const ClientsTable = () => {
 
 
     <div style={{ marginLeft: '250px', marginTop: "40px" }}>
-    <Statistique/>
+        {/** <Statistique/>  */} 
 
 
 
@@ -287,7 +287,7 @@ export const ClientsTable = () => {
         <h1>Customers</h1>
         
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <AddButton onClick={handleShowModal} text="Add Driver" />
+        <AddButton onClick={handleShowModal} text="Add Customer" />
 
 {/**
         <Button
@@ -346,7 +346,7 @@ export const ClientsTable = () => {
           handleSubmit={handleSubmit}
           formData={formData}
           handleChange={handleChange}
-          buttonLabel="Add Customer"
+          buttonLabel="Save Changes"
 
         />
         {/** 

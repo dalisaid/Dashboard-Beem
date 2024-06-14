@@ -71,7 +71,7 @@ export const DriverSignIn = () => {
   <h4 style={{ color: '#F64C02', margin: '0' }}>Beem Smart Taxi </h4>
 </div>
 
-        <h3 className="text-center"> driver Sign In</h3>
+        <h3 className="text-center"> Driver Sign In</h3>
 
         <Form onSubmit={handleSubmit}>
           <Form.Group className='mb-2' controlId="formBasicEmail">
@@ -106,9 +106,6 @@ export const DriverSignIn = () => {
             </Button>
           </div>
 
-          <p className='text-end'>
-            Forgot <Link to="/">Password ?</Link> <Link to="/signup">Sign Up</Link>
-          </p>
         </Form>
       </div>
     </div>

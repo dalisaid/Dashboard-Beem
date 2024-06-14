@@ -191,7 +191,7 @@ useEffect(() => {
   <ListItemIcon>
     <Settings fontSize="small" />
   </ListItemIcon>
-  Settings
+  Account
 </MenuItem>
 
         <MenuItem onClick={disconnect}>
