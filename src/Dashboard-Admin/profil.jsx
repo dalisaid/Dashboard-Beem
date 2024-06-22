@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Form, Button } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCab, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
-
+import { Button, FormControl, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, TextField } from '@mui/material';
 import {
   MDBCol,
   MDBContainer,
@@ -33,6 +33,7 @@ export const ProfilDetails = () => { // Remove 'export' from here
   const [revenuegenerated, setRevenueGenerated] = useState();
   const [ridescompleted, setRidesCompleted] = useState();
 
+  const [isUpdated, setIsUpdated] = useState(false);
 
 
 
@@ -70,11 +71,13 @@ export const ProfilDetails = () => { // Remove 'export' from here
   const [formData, setFormData] = useState({
     role: role,
     id: userid,
-    CIN: '',
-    fullName: '',
-    city: '',
-    phone: '',
-    email: ''
+    CIN: "",
+    fullName: "",
+    gender:"",
+    city: "",
+    phone: "",
+    email: "",
+    password: ""
   });
 
 
@@ -107,6 +110,7 @@ export const ProfilDetails = () => { // Remove 'export' from here
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+     setIsUpdated(true);
   };
 
   /************************************************** */
@@ -273,66 +277,103 @@ export const ProfilDetails = () => { // Remove 'export' from here
             <Modal.Title style={{ textAlign: 'center' }}>Update Driver</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Form onSubmit={handleSubmit}>
-              <Form.Group controlId="id">
-                <Form.Label>ID</Form.Label>
-                <Form.Control type="text" name="id" value={user.id} readOnly />
-              </Form.Group>
-              <Form.Group controlId="CIN">
-                <Form.Label>CIN</Form.Label>
-                <Form.Control type="text" name="CIN" value={formData.CIN} onChange={handleChange} required />
-              </Form.Group>
-              <Form.Group controlId="fullName">
-                <Form.Label>Full Name</Form.Label>
-                <Form.Control type="text" name="fullName" value={formData.fullName} onChange={handleChange} required />
-              </Form.Group>
-              <Form.Group controlId="gender">
-                <Form.Label>Gender</Form.Label>
-                <div>
-                  <Form.Check
-                    inline
-                    type="radio"
-                    label="Male"
-                    name="gender"
-                    value="Male"
-                    checked={formData.gender === "Male"}
-                    onChange={handleChange}
-                    required
-                  />
-                  <Form.Check
-                    inline
-                    type="radio"
-                    label="Female"
-                    name="gender"
-                    value="Female"
-                    checked={formData.gender === "Female"}
-                    onChange={handleChange}
-                    required
-                  />
-
-                </div>
-              </Form.Group>
-              <Form.Group controlId="city">
-                <Form.Label>City</Form.Label>
-                <Form.Control type="text" name="city" value={formData.city} onChange={handleChange} required />
-              </Form.Group>
-              <Form.Group controlId="phone">
-                <Form.Label>Phone</Form.Label>
-                <Form.Control type="text" name="phone" value={formData.phone} onChange={handleChange} required />
-              </Form.Group>
-              <Form.Group controlId="email">
-                <Form.Label>Email</Form.Label>
-                <Form.Control type="email" name="email" value={formData.email} onChange={handleChange} style={{ marginBottom: '20px' }} required />
-              </Form.Group>
-              <Form.Group controlId="password">
-                <Form.Label>password</Form.Label>
-                <Form.Control type="password" name="password" value={formData.password} onChange={handleChange} style={{ marginBottom: '20px' }} required />
-              </Form.Group>
-              <div className="d-flex justify-content-between">
-                <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
-                <Button variant="success" type="submit">Save Changes</Button>
-              </div>
-            </Form>
+          <form onSubmit={handleSubmit}>
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            label="ID"
+            value={formData.id}
+            InputProps={{ readOnly: true }}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            label="CIN"
+            name="CIN"
+            value={formData.CIN}
+            onChange={handleChange}
+            required
+            type="text"
+          inputProps={{ pattern: "[0-9]{4}[0-9]{4}" }}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            label="Full Name"
+            name="fullName"
+            value={formData.fullName}
+            onChange={handleChange}
+            required
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <FormControl component="fieldset" required>
+            <FormLabel component="legend">Gender</FormLabel>
+            <RadioGroup
+              row
+              aria-label="gender"
+              name="gender"
+              value={formData.gender}
+              onChange={handleChange}
+            >
+              <FormControlLabel value="Male" control={<Radio />} label="Male" />
+              <FormControlLabel value="Female" control={<Radio />} label="Female" />
+            </RadioGroup>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            label="City"
+            name="city"
+            value={formData.city}
+            onChange={handleChange}
+            required
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            label="Phone"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            required
+            type="text"
+            inputProps={{ pattern: "[0-9]{3}[0-9]{3}[0-9]{4}" }}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            label="Email"
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            label="Password"
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+        </Grid>
+      </Grid>
+      <div style={{ marginTop: '20px', textAlign: 'right' }}>
+        <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
+        <Button variant="success" type="submit">Save Changes</Button>
+      </div>
+    </form>
           </Modal.Body>
         </Modal>
       </section>

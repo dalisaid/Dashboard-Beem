@@ -4,9 +4,11 @@ import '../css/App.css';
 import { faUsers, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 import { Card } from '../components/Card';
 import { Bar, Doughnut } from 'react-chartjs-2';
-import Chart from 'chart.js/auto';
+import { Chart, registerables } from 'chart.js';
 import { DataGrid } from '@mui/x-data-grid';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
+Chart.register(...registerables,ChartDataLabels);
 export const DashboardDriver = () => {
 
 

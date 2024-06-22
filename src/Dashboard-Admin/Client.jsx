@@ -141,12 +141,12 @@ export const ClientsTable = () => {
   // Search
   const [search, setsearch] = useState('');
   const filteredItems = CustomerData.filter((Customer) => {
-    return search.toLowerCase() === '' ? Customer : String(Customer.id).toLowerCase().includes(search) ||
-      String(Customer.CIN).toLowerCase().includes(search) ||
-      Customer.fullName.toLowerCase().includes(search) ||
-      Customer.city.toLowerCase().includes(search) ||
-      String(Customer.phone).toLowerCase().includes(search) ||
-      Customer.email.toLowerCase().includes(search);
+    return search.toLowerCase() === '' ? Customer : String(Customer.id).includes(search) ||
+      String(Customer.CIN).includes(search) ||
+      Customer.fullName.includes(search) ||
+      Customer.city.includes(search) ||
+      String(Customer.phone).includes(search) ||
+      Customer.email.includes(search);
   });
 
   

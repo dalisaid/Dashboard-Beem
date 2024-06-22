@@ -5,15 +5,15 @@ const config = require('./dbconfig'),
 const getuserdata = async (role, id) => {
   try {
     let pool = await sql.connect(config);
-    if(role === 'Drivers'){
+    if (role === 'Drivers') {
       let user = await pool.request()
         .input('id', sql.Int, id)
         .query(`SELECT * from  ${role} where id=@id`);
-      
+
       let rev = await pool.request()
         .input('id', sql.Int, id)
         .query(`select SUM(amount) as revenue from [Transaction] where DriverID=@id;`);
-      
+
       let rides = await pool.request()
         .input('id', sql.Int, id)
         .query(`select count(*) as ridescompleted from rides where DriverID=@id;`);
@@ -27,7 +27,7 @@ const getuserdata = async (role, id) => {
       let user = await pool.request()
         .input('id', sql.Int, id)
         .query(`SELECT * from  ${role} where id=@id`);
-      
+
       let rides = await pool.request()
         .input('id', sql.Int, id)
         .query(`select count(*) as ridescompleted from rides where CustomerID=@id;`);
@@ -49,8 +49,8 @@ const getadmindata = async (email) => {
   try {
     let pool = await sql.connect(config);
     let admin = await pool.request()
-    .input('email', sql.VarChar, email)
-    .query(`SELECT * from dashboarduser where email=@email`);
+      .input('email', sql.VarChar, email)
+      .query(`SELECT * from dashboarduser where email=@email`);
     const result = admin.recordset[0];
 
     return result;
@@ -150,7 +150,7 @@ const getDrivers = async () => {
 }
 /**************************************** */
 
-const addDriver = async ({ CIN, fullName,gender, city, phone, email,password }) => {
+const addDriver = async ({ CIN, fullName, gender, city, phone, email, password }) => {
   try {
     const pool = await sql.connect(config);
     const query = `
@@ -181,10 +181,24 @@ const addDriver = async ({ CIN, fullName,gender, city, phone, email,password }) 
 const Deletedriver = async (driverId) => {
   try {
     const pool = await sql.connect(config);
-    const query = `DELETE FROM Drivers WHERE id = @id`;
+
+    // Update  rides table
+    const updateRidesQuery = `UPDATE rides SET DriverID = NULL WHERE DriverID = @id`;
+    await pool.request()
+      .input('id', sql.Int, driverId)
+      .query(updateRidesQuery);
+
+    // Update  transaction table
+    const updateTransactionQuery = `UPDATE [Transaction] SET DriverID = NULL WHERE DriverID = @id`;
+    await pool.request()
+      .input('id', sql.Int, driverId)
+      .query(updateTransactionQuery);
+
+    // Delete the driver
+    const deleteQuery = `DELETE FROM Drivers WHERE id = @id`;
     const result = await pool.request()
       .input('id', sql.Int, driverId)
-      .query(query);
+      .query(deleteQuery);
 
     return result;
   } catch (error) {
@@ -212,6 +226,14 @@ const getCustomers = async () => {
 const DeleteCustomer = async (CustomerId) => {
   try {
     const pool = await sql.connect(config);
+
+    // Update  rides table
+    const updateRidesQuery = `UPDATE rides SET CustomerID = NULL WHERE CustomerID = @id`;
+    await pool.request()
+      .input('id', sql.Int, CustomerId)
+      .query(updateRidesQuery);
+
+
     const query = `DELETE FROM Customers WHERE id = @id`;
     const result = await pool.request()
       .input('id', sql.Int, CustomerId)
@@ -224,7 +246,7 @@ const DeleteCustomer = async (CustomerId) => {
   }
 };
 /**************************************** */
-const addCustomer = async ({ CIN, fullName,gender, city, phone, email,password }) => {
+const addCustomer = async ({ CIN, fullName, gender, city, phone, email, password }) => {
   try {
     const pool = await sql.connect(config);
     const query = `
@@ -294,11 +316,11 @@ const getRides = async () => {
   try {
     let pool = await sql.connect(config);
     let Rides = await pool.request().query(`SELECT 
-    r.id ,
-    r.DriverID,
-    r.CustomerID,
-    d.fullName AS DriverFullName,
-    c.fullName AS CustomerFullName,
+    r.id,
+    COALESCE(r.DriverID, 0) AS DriverID,
+    COALESCE(r.CustomerID, 0) AS CustomerID,
+    COALESCE(d.fullName,'DELETED') AS DriverFullName,
+    COALESCE(c.fullName,'DELETED')  AS CustomerFullName,
     r.StartLatitude,
     r.StartLongitude,
     r.DestinationLatitude,
@@ -306,9 +328,9 @@ const getRides = async () => {
     r.DateRides
 FROM 
     rides r
-JOIN 
+LEFT JOIN 
     Drivers d ON r.DriverID = d.id
-JOIN
+LEFT JOIN
     Customers c ON r.CustomerID = c.id;`);
     const result = Rides.recordset;
 
@@ -341,14 +363,14 @@ const getTransaction = async () => {
     let pool = await sql.connect(config);
     let Transaction = await pool.request().query(`SELECT 
     t.id,
-    t.DriverID,
-    d.FullName AS DriverFullName,
+    COALESCE(t.DriverID, 0) AS DriverID,
+    COALESCE(d.fullName,'DELETED') AS DriverFullName,
     t.Amount,
     t.TransactionDate
 
 FROM 
     [Transaction] t
-JOIN 
+LEFT  JOIN 
     Drivers d ON t.DriverID = d.id;`);
     const result = Transaction.recordset;
 
@@ -427,16 +449,12 @@ const gettotalcustomers = async () => {
   try {
     let pool = await sql.connect(config);
     let CustomerTotalResult = await pool.request().query("SELECT COUNT(*) AS total FROM customers");
-    let CustomerThisMonth = await pool.request().query(`SELECT 
-    COUNT(id) AS TotalCustomers,
-    (SELECT COUNT(id) 
+    let CustomerThisMonth = await pool.request().query(`   SELECT COUNT(id) AS NewCustomersThisMonth
      FROM [SQLTEST].[dbo].[Customers]
      WHERE MONTH(CreationDate) = MONTH(GETDATE()) 
-       AND YEAR(CreationDate) = YEAR(GETDATE())) AS NewCustomersThisMonth
-FROM 
-    [SQLTEST].[dbo].[Customers];
+       AND YEAR(CreationDate) = YEAR(GETDATE())
 `)
-    
+
     // Extract counts from the query results
     const customerTotal = CustomerTotalResult.recordset[0].total;
     const customerTotalThismonth = CustomerThisMonth.recordset[0].NewCustomersThisMonth;
@@ -454,15 +472,12 @@ const gettotaldrivers = async () => {
     let pool = await sql.connect(config);
     let DriverTotalResult = await pool.request().query("SELECT COUNT(*) AS total FROM drivers");
     let DriverThisMonth = await pool.request().query(`SELECT 
-    COUNT(id) AS Total_Drivers,
-    (SELECT COUNT(id) 
+   COUNT(id) AS NewDriversThisMonth
      FROM [SQLTEST].[dbo].[Drivers]
      WHERE MONTH(CreationDate) = MONTH(GETDATE()) 
-       AND YEAR(CreationDate) = YEAR(GETDATE())) AS NewDriversThisMonth
-FROM 
-    [SQLTEST].[dbo].[Drivers];
+       AND YEAR(CreationDate) = YEAR(GETDATE())
 `)
-    
+
     // Extract counts from the query results
     const DriverTotal = DriverTotalResult.recordset[0].total;
     const DriverTotalThismonth = DriverThisMonth.recordset[0].NewDriversThisMonth;
@@ -478,13 +493,26 @@ FROM
 const getEarning = async () => {
   try {
     let pool = await sql.connect(config);
-    let result = await pool.request().query(`
+    let Total = await pool.request().query(`
       SELECT SUM([Amount]) AS TotalAmount
       FROM [SQLTEST].[dbo].[Transaction]
     `);
-    const totalAmount = result.recordset[0].TotalAmount;
+    let Totalthismonth = await pool.request().query(`
+      SELECT 
+          COALESCE(SUM(Amount), 0) AS NewEarnings
+      FROM 
+          [SQLTEST].[dbo].[Transaction]
+      WHERE 
+          MONTH(TransactionDate) = MONTH(GETDATE()) 
+          AND YEAR(TransactionDate) = YEAR(GETDATE());
+  `);
+  
+  const totalAmount = Total.recordset[0].TotalAmount;
+  const totalAmountthismonth = Totalthismonth.recordset[0].NewEarnings;
+  console.log(totalAmountthismonth);
 
-    return totalAmount;
+
+    return {TotalRevenue:totalAmount,TotalRevenueThisMonth:totalAmountthismonth};
   } catch (error) {
     console.log(error);
     throw error;
@@ -495,6 +523,6 @@ const getEarning = async () => {
 
 module.exports = {
   getusercount, updateUser, getuserdata, checkUser, getDrivers, getCustomers, addDriver, Deletedriver, DeleteCustomer, addCustomer,
-  getRides, DriverActivity, getTransaction, TransactionActivity,GetLast10Transaction
-  ,gettotalcustomers,gettotaldrivers,getEarning,getadmindata,updateadmindata
+  getRides, DriverActivity, getTransaction, TransactionActivity, GetLast10Transaction
+  , gettotalcustomers, gettotaldrivers, getEarning, getadmindata, updateadmindata
 }

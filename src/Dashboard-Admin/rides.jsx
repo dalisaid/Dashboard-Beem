@@ -127,31 +127,37 @@ export const Rides = () => {
 
     const columns = [
         { field: 'id', headerName: 'RideID', width: 90 },
+
         {
             field: 'DriverID',
             headerName: 'DriverID',
             width: 150,
-
+         
         },
         {
             field: 'CustomerID',
             headerName: 'CustomerID',
             width: 150,
-            flex: 1
+            flex: 1,
+          
 
         },
         {
             field: 'DriverFullName',
             headerName: 'DriverFullName',
             width: 150,
-            flex: 1
+            flex: 1,
+           
+            
 
         },
         {
             field: 'CustomerFullName',
             headerName: 'CustomerFullName',
             width: 150,
-            flex: 1
+            flex: 1,
+           
+            
 
         },
         {
@@ -258,25 +264,25 @@ export const Rides = () => {
                     </Table>
 
                     <Box sx={{ height: 750, width: '100%', marginTop: '10px' }}>
-                        <DataGrid
-                            rows={RidesData}
-                            columns={columns}
-                            loading={loading}
-
-                            loadingOverlay={loadingOverlay}
-                            initialState={{
-                                pagination: {
-                                    paginationModel: {
-                                        pageSize: 11,
-                                    },
-                                },
-                            }}
-                            pageSizeOptions={[5]}
-                            checkboxSelection
-                            disableRowSelectionOnClick
-                            slots={{ toolbar: GridToolbar }} />
-                    </Box>
-
+   
+    
+        <DataGrid
+            rows={RidesData}
+            columns={columns}
+            loadingOverlay={loadingOverlay}
+            initialState={{
+                pagination: {
+                    paginationModel: {
+                        pageSize: 11,
+                    },
+                },
+            }}
+            pageSizeOptions={[5]}
+            checkboxSelection
+            disableRowSelectionOnClick
+            slots={{ toolbar: GridToolbar }} />
+  
+</Box>
                     {/***************************************************
 
 

@@ -7,7 +7,7 @@ import {Card} from '../components/Card';
 export const Statistique = () => {
     const [customercount, setcustomercount] = useState({ totalCustomers: 0, newCustomersThisMonth: 0 });
     const [drivercount, setdrivercount] = useState({ TotalDrivers: 0, newDriversThisMonth: 0 });
-    const [amount, setAmount] = useState(null);
+    const [amount, setAmount] = useState({ TotalRevenue: 0, TotalRevenueThisMonth: 0 });
     const [hovered1, setHovered1] = useState(false);
     const [hovered2, setHovered2] = useState(false);
     const [hovered3, setHovered3] = useState(false);
@@ -83,7 +83,8 @@ export const Statistique = () => {
                     hovered={hovered4}
                     onMouseEnter={() => setHovered4(true)}
                     onMouseLeave={() => setHovered4(false)}
-                    numbers={amount}
+                    numbers={amount.TotalRevenue}
+                    newThisMonth={amount.TotalRevenueThisMonth}
                     cardName="Earnings"
                     icon={faMoneyBill}
                 />

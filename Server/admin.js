@@ -406,6 +406,7 @@ router.get('/admin', async (req, res) => {
       } else {
         const { userid, firstName, lastName, email, phone, password } = req.body;
         const result = await dboperations.updateadmindata({ userid, firstName, lastName, email, phone, password });
+        res.clearCookie('authToken');
         res.status(result.status).json({ message: result.message });
       }
     } catch (err) {

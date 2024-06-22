@@ -21,9 +21,10 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 
 export const DriverSettings = () => {
   const [userData, setUserData] = useState({
-    userid: '',
-    firstName: '',
-    lastName: '',
+    id: '',
+    fullName: '',
+    gender: '',
+    city: '',
     email: '',
     phone: '',
     password: '',
@@ -37,7 +38,7 @@ export const DriverSettings = () => {
     setSelectedFile(event.target.files[0]);
   };
 
-  const getAdmin = async () => {
+  const getDriver = async () => {
     try {
       const response = await axios.get('http://localhost:5000/driver/driverdata', {
         withCredentials: true
@@ -64,28 +65,45 @@ export const DriverSettings = () => {
     setUserData(updatedData);
     setIsUpdated(true);
   };
-
+  const updateDriver = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:5000/driver/updateDriverprofile', userData, {
+        withCredentials: true // Ensure credentials are included in the request
+      });
+      console.log('Response:', response.data);
+      alert('Profile updated successfully');
+      if (userData.email || userData.password) {
+        window.location.href = 'http://localhost:3000';
+      } else if (userData.fullName || userData.phone) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Network error or other issue occurred');
+    }
+  };
   useEffect(() => {
-    getAdmin();
+    getDriver();
   }, []);
 
   return (
     <div style={{ marginLeft: '250px', marginTop: "40px" }}>
       
-      <form >
+      <form onSubmit={updateDriver}>
         <Card>
           <CardContent>
             <Stack spacing={2} sx={{ alignItems: 'center' }}>
-              <Avatar
+            <Avatar
                 src={selectedFile ? URL.createObjectURL(selectedFile) : userData.avatar}
                 alt="Avatar"
                 sx={{ height: '80px', width: '80px' }}
               >
-                {userData.firstName ? userData.firstName[0] : ""}
+                {userData.fullName ? userData.fullName[0] : ""}
               </Avatar>
               <Stack spacing={1} sx={{ textAlign: 'center' }}>
-                <Typography variant="h5">{userData.firstName} {userData.lastName}</Typography>
-                <Typography color="text.secondary" variant="body2">
+              <Typography variant="h5">{userData.fullName} </Typography>
+              <Typography color="text.secondary" variant="body2">
                 </Typography>
                 <Typography color="text.secondary" variant="body2">
                 </Typography>
@@ -110,33 +128,47 @@ export const DriverSettings = () => {
           <Divider />
           <CardContent>
             <Grid container spacing={3}>
-
-
-            <Grid md={6} xs={12}>
+              <Grid item md={6} xs={12}>
                 <FormControl fullWidth required>
-                  <InputLabel>Full Name</InputLabel>
-                  <OutlinedInput value={userData.fullName} label="FullName" name="fullName" onChange={handleInputChange} />
+                  <InputLabel>Full name</InputLabel>
+                  <OutlinedInput
+                    value={userData.fullName}
+                    label="Full name"
+                    name="fullName"
+                    onChange={handleInputChange}
+                    required
+                  />
                 </FormControl>
               </Grid>
 
-              <Grid md={6} xs={12}>
-                <FormControl fullWidth required>
-                  <InputLabel>Phone</InputLabel>
-                  <OutlinedInput value={userData.phone} label="Phone" name="phone" onChange={handleInputChange} />
-                </FormControl>
-              </Grid>
-             
               <Grid md={6} xs={12}>
                 <FormControl fullWidth required>
                   <InputLabel>Email address</InputLabel>
-                  <OutlinedInput value={userData.email} label="Email address" name="email" onChange={handleInputChange} />
+                  <OutlinedInput value={userData.email} label="Email address" name="email" onChange={handleInputChange}
+                    required
+                    type="email"
+                  />
                 </FormControl>
               </Grid>
-            
+              <Grid md={6} xs={12}>
+                <FormControl fullWidth required>
+                  <InputLabel>city</InputLabel>
+                  <OutlinedInput value={userData.city} label="city" name="city" onChange={handleInputChange} required />
+                </FormControl>
+              </Grid>
+              <Grid md={6} xs={12}>
+                <FormControl fullWidth required>
+                  <InputLabel>Phone</InputLabel>
+                  <OutlinedInput value={userData.phone} label="Phone" name="phone" onChange={handleInputChange} 
+                  required
+                  type="text"
+                  inputProps={{ pattern: "[0-9]{3}[0-9]{3}[0-9]{4}" }}/>
+                </FormControl>
+              </Grid>
               <Grid md={6} xs={12}>
                 <FormControl fullWidth>
                   <InputLabel>Password</InputLabel>
-                  <OutlinedInput value={userData.password} label="Password" name="password" type="password" onChange={handleInputChange} />
+                  <OutlinedInput value={userData.password} label="Password" name="password" type="password" onChange={handleInputChange}required />
                 </FormControl>
               </Grid>
             </Grid>

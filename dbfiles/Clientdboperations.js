@@ -92,8 +92,44 @@ const config = require('./dbconfig'),
   
 
 
+  const updateclientdata = async ({ id, fullName, email,city, phone, password }) => {
+    try {
+      const pool = await sql.connect(config);
+      const query = `
+        UPDATE Customers
+        SET fullName = @fullName,
+        city = @city,  
+            email = @email, 
+            phone = @phone, 
+            password = @password 
+        WHERE id = @id
+      `;
+      const result = await pool.request()
+        .input('id', sql.Int, id)
+        .input('fullName', sql.VarChar, fullName)
+        .input('city', sql.VarChar, city)
+
+        .input('email', sql.VarChar, email)
+        .input('phone', sql.VarChar, phone)
+        .input('password', sql.VarChar, password)
+        .query(query);
   
+      // Close the connection after executing the query
+      pool.close();
+  
+      // Check if any rows were affected
+      if (result.rowsAffected.length === 0) {
+        // No rows were updated, probably because the user with the given id doesn't exist
+        return { status: 404, message: 'User not found' };
+      }
+  
+      return { status: 200, message: 'User updated successfully' };
+    } catch (error) {
+      console.error('Error updating user:', error);
+      throw error;
+    }
+  };
 
   module.exports = {
-    getRidesCustomer,checkUser,getclientdata
+    getRidesCustomer,checkUser,getclientdata,updateclientdata
   }

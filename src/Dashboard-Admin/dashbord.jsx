@@ -5,8 +5,10 @@ import { Chart, registerables } from 'chart.js';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import { Statistique } from './statistic';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-Chart.register(...registerables);
+Chart.register(...registerables,ChartDataLabels);
+
 
 export const Dashboard = () => {
   const [ratioData, setRatioData] = useState({ drivers: 0, customers: 0 });
@@ -101,7 +103,29 @@ const getChartData = async () => {
     ],
   };
 
+  const totalRidesCompleted = driverActivity.reduce((total, activity) => total + activity.ridescompleted, 0);
 
+  const pieChartData2 = {
+    labels: ['Rides completed'],
+    datasets: [
+      {
+        label: 'Rides',
+        data: [totalRidesCompleted],
+        backgroundColor: [
+          'rgba(68, 24, 121, 0.4)', 
+          'rgba(225, 70, 8, 0.4)',    
+        ],       
+         hoverBackgroundColor: [ 
+        'rgba(68, 24, 121, 0.8)', 
+        'rgba(225, 70, 8, 0.8)']
+      },
+    ],
+  };
+
+ 
+  
+
+console.log(driverActivity)
 
   const LinechartData = {
     labels: TransactionActivity.map((Transaction) => new Date(2021, Transaction.Month - 1, 1).toLocaleString('default', { month: 'long' })),
@@ -198,7 +222,7 @@ const totalAmount = parseFloat(TransactionActivity.reduce((total, transaction) =
       <div style={{ display: 'flex', height: '60vh', marginTop: '20px' }}>
         <div style={{ height: '60vh', width: '100vh', border: '1px solid #ddd', borderRadius: '5px', padding: '20px', marginRight: '20px', boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.1)' }}>
           <h4>Driver Activity</h4>
-          
+          <h3 style={{ color: 'var(--blue)' }}>{totalRidesCompleted} Rides completed</h3>
             <Bar data={BarchartData} options={BarchartOptions} />
          
         </div>
@@ -206,8 +230,8 @@ const totalAmount = parseFloat(TransactionActivity.reduce((total, transaction) =
           <div>
           <h4>User Distribution</h4> 
             <Doughnut data={pieChartData} />
-          </div>
-        </div>
+            </div>
+    </div>
       </div>
     </div>
 

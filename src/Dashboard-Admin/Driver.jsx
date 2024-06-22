@@ -65,12 +65,12 @@ export const DriversTable = () => {
 
   // Search
   const filteredItems = DriverData.filter((driver) => {
-    return search.toLowerCase() === '' ? driver : String(driver.id).toLowerCase().includes(search) ||
-      String(driver.CIN).toLowerCase().includes(search) ||
-      driver.fullName.toLowerCase().includes(search) ||
-      driver.city.toLowerCase().includes(search) ||
-      String(driver.phone).toLowerCase().includes(search) ||
-      driver.email.toLowerCase().includes(search);
+    return search.toLowerCase() === '' ? driver : String(driver.id).includes(search) ||
+      String(driver.CIN).includes(search) ||
+      driver.fullName.includes(search) ||
+      driver.city.includes(search) ||
+      String(driver.phone).includes(search) ||
+      driver.email.includes(search);
   });
 
 

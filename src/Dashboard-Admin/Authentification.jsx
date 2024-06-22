@@ -92,7 +92,7 @@ export const SignIn = () => {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
+              
             />
           </Form.Group>
 

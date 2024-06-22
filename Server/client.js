@@ -136,6 +136,23 @@ router.post('/login', async (req, res) => {
 
   /************************************************* */
   
-
+  router.post('/updateClientprofile', async (req, res) => {
+    try {
+      const token = req.cookies.authToken;
+      const decoded = jwt.verify(token, process.env.CLIENT_SECRET);
+      if (!decoded) {
+        console.log('Generated token:', token);
+        return res.status(401).json({ message: 'Unauthorized: No token provided or invalid token' });
+      } else {
+        const { id, fullName,city,  email, phone, password } = req.body;
+        const result = await dboperations.updateclientdata({ id, fullName, city, email, phone, password });
+        res.clearCookie('authToken');
+        res.status(result.status).json({ message: result.message });
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Error updating client data');
+    }
+  });
 
 module.exports = router;
